@@ -187,7 +187,7 @@ const { acilis, kapanis } = isletme.saatler;
     .way { padding: 18px 20px; }
     .place { height: auto; display: flex; flex-direction: column; }
     .place__map { position: relative; height: 44vh; }
-    .place__panel { position: relative; left: 0; bottom: 0; width: 100%; box-shadow: none; padding: 32px var(--margin); }
+    .place__panel { position: relative; left: 0; bottom: 0; width: 100%; box-shadow: none; padding: 32px var(--margin); } /* removes the desktop shadow */
     .cert-block { grid-template-columns: 1fr; padding: 96px var(--margin); }
   }
   @media (prefers-reduced-motion: reduce) {
@@ -210,8 +210,8 @@ const { acilis, kapanis } = isletme.saatler;
 })();
 </script>
 
-<script type="module" is:inline>
-import { animate, stagger, inView } from "https://cdn.jsdelivr.net/npm/motion@12.23.12/+esm";
+<script>
+import { animate, stagger, inView } from 'motion';
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 if (reduce) { document.body.classList.add('is-in'); }
 else {

@@ -7,14 +7,6 @@ import '../styles/home.css';
 const { whatsapp } = isletme;
 ---
 <Base yol="/">
-  <Fragment slot="head">
-    <script type="importmap" is:inline>
-    { "imports": {
-      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
-      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
-    } }
-    </script>
-  </Fragment>
 
 <div class="stage">
 <video class="stage__video" muted loop playsinline preload="none" poster="/video/hero-yatay.jpg" aria-hidden="true"
@@ -179,8 +171,8 @@ document.querySelectorAll('.goal').forEach(btn => {
   });
 });
 </script>
-<script type="module" is:inline>
-import { animate, stagger, press } from "https://cdn.jsdelivr.net/npm/motion@12.23.12/+esm";
+<script>
+import { animate, stagger, press } from 'motion';
 
 window.__motion = true;
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -203,9 +195,9 @@ document.addEventListener('goal:change', () => {
   animate('#pads-front .pad.is-on .pad__body', { scale: [1, 1.22, 1] }, { duration: 0.45, ease, delay: stagger(0.03) });
 });
 </script>
-<script type="module" is:inline>
+<script>
 // EMS story: the figure is rebuilt from joint positions on every scroll frame
-import { scroll } from "https://cdn.jsdelivr.net/npm/motion@12.23.12/+esm";
+import { scroll } from 'motion';
 
 const section = document.getElementById('ems-nedir');
 const reduceStory = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -419,7 +411,7 @@ if (reduceStory) {
       if (!e.isIntersecting || started) return;
       started = true;
       try {
-        const { createEms3D } = await import('/js/ems3d.js');
+        const { createEms3D } = await import('../scripts/ems3d.js');
         ems3d = await createEms3D(holder, { modelUrl: '/model/ems-manken.glb' });
         ems3d.setProgress(lastP);
         holder.parentElement.classList.add('is-3d');

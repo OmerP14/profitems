@@ -158,6 +158,9 @@ const ad = (h: typeof zay) => (h as { kisaAd?: string }).kisaAd ?? h.ad;
   .zones strong, .s-b__zones strong { display: block; color: var(--ink); font-weight: 700; }
   .zones { margin-bottom: 0; }
 
+  /* the red slabs may run past the screen edge; cut them there */
+  .s-a, .s-c, .s-d { overflow-x: hidden; overflow-x: clip; }
+
   /* 1 */
   .s-a { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 48px var(--margin); align-items: center; padding: 160px var(--margin); scroll-margin-top: 0; }
   .s-a__img { aspect-ratio: 4 / 3; margin-left: calc(-1 * var(--margin)); }
@@ -217,8 +220,8 @@ const ad = (h: typeof zay) => (h as { kisaAd?: string }).kisaAd ?? h.ad;
   }
 </style>
 
-<script type="module" is:inline>
-import { animate, stagger, inView } from "https://cdn.jsdelivr.net/npm/motion@12.23.12/+esm";
+<script>
+import { animate, stagger, inView } from 'motion';
 window.__motion = true;
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 if (reduce) { document.body.classList.add('is-in'); }

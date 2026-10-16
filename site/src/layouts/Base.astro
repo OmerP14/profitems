@@ -61,8 +61,8 @@ const isletmeVerisi = {
 <slot />
 <Footer />
 <Chat />
-<script type="module" is:inline>
-import { animate, press } from "https://cdn.jsdelivr.net/npm/motion@12.23.12/+esm";
+<script>
+import { animate, press } from 'motion';
 const tap = { type: 'spring', stiffness: 400, damping: 20 };
 // press feedback on every control
 press('.goal, .btn, .chat__toggle, .chat__quick button', el => {

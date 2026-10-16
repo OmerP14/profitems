@@ -9,4 +9,6 @@ export default defineConfig({
   site,
   integrations: site ? [sitemap()] : [],
   devToolbar: { enabled: false },
+  // the 3D engine is one lazy chunk (~590 KB, loaded only near the EMS story)
+  vite: { build: { chunkSizeWarningLimit: 700 } },
 });

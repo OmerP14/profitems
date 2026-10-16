@@ -15,8 +15,8 @@ Bu plan üzerinde mutabık kalındı (16 Ekim 2026). Sayfalar bu sırayla, **bir
 |---|---|---|---|---|
 | 0 | Ana sayfa (giriş + EMS nasıl çalışır?) | `/` | ✅ Onaylandı (`yedek-anasayfa-v1`) | — |
 | 1 | İletişim | `/iletisim` | ✅ Onaylandı (`yedek-iletisim`) | — |
-| 2 | Hizmetler | `/hizmetler` | 🔨 Yapılıyor | Seans süresi, haftalık seans önerisi, paket/fiyat (sitede olacak mı?), ilk geliş süreci |
-| 3 | EMS Nedir? (SSS dahil) | `/ems-nedir` | ⏳ Bekliyor | Sık sorulan 5–10 soru ve cevapları, kimlerin yapmaması gerektiği (kullanıcı onayıyla) |
+| 2 | Hizmetler | `/hizmetler` | ✅ Onaylandı (`yedek-hizmetler`) | Seans süresi, haftalık seans, fiyat, ilk geliş süreci gelince "Bir seans nasıl geçer?" bölümü eklenecek |
+| 3 | EMS Nedir? (SSS dahil) | `/ems-nedir` | ⏭️ Sırada | Sık sorulan 5–10 soru ve cevapları, kimlerin yapmaması gerektiği (kullanıcı onayıyla) |
 | 4 | Hakkımızda ve Ekibimiz | `/hakkimizda` | ⏳ Bekliyor | Hocaların adı, fotoğrafı, uzmanlığı; kısa işletme hikâyesi |
 | 5 | Blog | `/blog` | ⏳ Bekliyor | Açılış için 2–3 yazı konusu |
 | 6 | KVKK, çerez politikası, 404 | `/kvkk`, `/cerez-politikasi` | ⏳ Bekliyor | KVKK taslağı bir avukat/muhasebeci tarafından kontrol edilmeli |

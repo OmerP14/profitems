@@ -1,0 +1,54 @@
+---
+// A small front-view body diagram: the pads of the given zones are lit, the rest stay dim.
+interface Props { zones: string[]; koyu?: boolean; etiket?: string }
+const { zones, koyu = false, etiket } = Astro.props;
+const pads = [
+  { z: 'agri', x: 158, y: 140, w: 24, h: 12 }, { z: 'agri', x: 218, y: 140, w: 24, h: 12 },
+  { z: 'sikilasma', x: 162, y: 160, w: 32, h: 22 }, { z: 'sikilasma', x: 206, y: 160, w: 32, h: 22 },
+  { z: 'zayiflama incelme', x: 170, y: 198, w: 26, h: 30 }, { z: 'zayiflama incelme', x: 204, y: 198, w: 26, h: 30 },
+  { z: 'incelme agri', x: 160, y: 244, w: 22, h: 32 }, { z: 'incelme agri', x: 218, y: 244, w: 22, h: 32 },
+  { z: 'sikilasma', x: 99, y: 125, w: 28, h: 18, r: 'rotate(-6 113 134)' }, { z: 'sikilasma', x: 273, y: 125, w: 28, h: 18, r: 'rotate(6 287 134)' },
+  { z: 'zayiflama sikilasma', x: 142, y: 360, w: 24, h: 36, r: 'rotate(23 154 378)' }, { z: 'zayiflama sikilasma', x: 234, y: 360, w: 24, h: 36, r: 'rotate(-23 246 378)' },
+];
+---
+<svg class:list={['bf', { 'bf--koyu': koyu }]} viewBox="60 20 280 560" role="img" aria-label={etiket}>
+  <g class="bf__body">
+    <path class="bf__limb" stroke-width="48" d="M176 330 L132 432" />
+    <path class="bf__limb" stroke-width="38" d="M132 432 L148 546" />
+    <path class="bf__limb" stroke-width="48" d="M224 330 L268 432" />
+    <path class="bf__limb" stroke-width="38" d="M268 432 L252 546" />
+    <path class="bf__limb" stroke-width="20" d="M150 556 L116 560" />
+    <path class="bf__limb" stroke-width="20" d="M250 556 L284 560" />
+    <path class="bf__limb" stroke-width="36" d="M150 140 L84 150" />
+    <path class="bf__limb" stroke-width="30" d="M84 150 L92 84" />
+    <path class="bf__limb" stroke-width="36" d="M250 140 L316 150" />
+    <path class="bf__limb" stroke-width="30" d="M316 150 L308 84" />
+    <circle cx="112" cy="132" r="21" /><circle cx="288" cy="132" r="21" />
+    <circle cx="94" cy="72" r="19" /><circle cx="306" cy="72" r="19" />
+    <rect x="186" y="92" width="28" height="32" />
+    <circle cx="200" cy="66" r="34" />
+    <path d="M138 132 Q200 112 262 132 L248 300 Q200 312 152 300 Z" />
+  </g>
+  <path class="bf__suit" d="M146 134 Q200 118 254 134 L244 296 Q200 306 156 296 Z" />
+  <path class="bf__suit" d="M152 292 Q200 304 248 292 L256 344 L214 352 L200 336 L186 352 L144 344 Z" />
+  {pads.map((p, i) => {
+    const on = p.z.split(' ').some(z => zones.includes(z));
+    return <rect class:list={['bf__pad', { 'is-on': on }]} x={p.x} y={p.y} width={p.w} height={p.h} rx="4" transform={p.r} style={`--i:${i}`} />;
+  })}
+</svg>
+
+<style>
+  .bf { display: block; width: 100%; height: auto; overflow: visible; }
+  .bf__body { fill: #c3c8cd; }
+  .bf__limb { stroke: #c3c8cd; stroke-linecap: round; fill: none; }
+  .bf__suit { fill: var(--ink); }
+  .bf__pad { fill: #4a5058; }
+  .bf__pad.is-on { fill: var(--accent); animation: bf-pulse 1.8s ease-in-out infinite; animation-delay: calc(var(--i) * 90ms); }
+  .bf--koyu .bf__body, .bf--koyu .bf__limb { fill: #3c4149; stroke: #3c4149; }
+  .bf--koyu .bf__body path, .bf--koyu .bf__body rect, .bf--koyu .bf__body circle { fill: #3c4149; }
+  .bf--koyu .bf__suit { fill: #15171a; }
+  .bf--koyu .bf__pad { fill: #2a2d33; }
+  .bf--koyu .bf__pad.is-on { fill: var(--accent); }
+  @keyframes bf-pulse { 50% { opacity: .55; } }
+  @media (prefers-reduced-motion: reduce) { .bf__pad.is-on { animation: none; } }
+</style>

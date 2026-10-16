@@ -103,6 +103,7 @@ img, svg { display: block; max-width: 100%; }
 .nav--light { color: var(--ink); }
 .nav__action { display: flex; align-items: center; gap: 8px; }
 .nav__links a[aria-current="page"] { color: var(--accent); }
+.nav--light .nav__links a[aria-current="page"], .nav--light .nav__links a:hover { color: var(--accent-deep); }
 .nav__menu {
   display: none; min-height: 44px; padding: 0 14px; border: 0; cursor: pointer;
   font: inherit; font-weight: 600; font-size: .9375rem;

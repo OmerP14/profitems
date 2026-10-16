@@ -6,18 +6,46 @@ import WhatsAppIcon from './WhatsAppIcon.astro';
 interface Props { tema?: 'koyu' | 'acik' }
 const { tema = 'acik' } = Astro.props;
 const logo = tema === 'koyu' ? '/img/logo-light.svg' : '/img/logo.svg';
+const yol = Astro.url.pathname.replace(/\/$/, '') || '/';
 ---
 <header class:list={['nav', { 'nav--light': tema === 'acik' }]}>
   <a class="nav__logo" href="/" aria-label="Profit EMS ana sayfa"><img src={logo} alt="Profit EMS" width="104" height="44"></a>
   <nav aria-label="Ana menü">
     <ul class="nav__links">
-      {menu.map(m => <li><a href={m.href}>{m.etiket}</a></li>)}
+      {menu.map(m => <li><a href={m.href} aria-current={m.href === yol ? 'page' : undefined}>{m.etiket}</a></li>)}
     </ul>
   </nav>
   <div class="nav__action">
     <a class="btn" href={whatsappLinki()} target="_blank" rel="noopener">
       <WhatsAppIcon />
-      WhatsApp'tan yaz
+      <span class="nav__wa-text">WhatsApp'tan yaz</span>
     </a>
+    <button class="nav__menu" type="button" aria-expanded="false" aria-controls="mobil-menu">Menü</button>
   </div>
 </header>
+
+<div class="mmenu" id="mobil-menu" hidden>
+  <nav aria-label="Mobil menü">
+    <ul>
+      <li><a href="/">Ana sayfa</a></li>
+      {menu.map(m => <li><a href={m.href}>{m.etiket}</a></li>)}
+    </ul>
+  </nav>
+  <a class="btn" href={whatsappLinki()} target="_blank" rel="noopener"><WhatsAppIcon /> WhatsApp'tan yaz</a>
+</div>
+
+<script is:inline>
+(() => {
+  const btn = document.querySelector('.nav__menu');
+  const panel = document.getElementById('mobil-menu');
+  const set = open => {
+    panel.hidden = !open;
+    btn.setAttribute('aria-expanded', String(open));
+    btn.textContent = open ? 'Kapat' : 'Menü';
+    document.documentElement.classList.toggle('menu-acik', open);
+  };
+  btn.addEventListener('click', () => set(panel.hidden));
+  panel.querySelectorAll('a').forEach(a => a.addEventListener('click', () => set(false)));
+  addEventListener('keydown', e => { if (e.key === 'Escape' && !panel.hidden) set(false); });
+})();
+</script>

@@ -30,3 +30,7 @@ export const haritaLinki = `https://www.google.com/maps/search/?api=1&query=${en
 
 export const whatsappLinki = (mesaj = 'Merhaba, Profit EMS hakkında bilgi almak istiyorum.') =>
   `https://wa.me/${isletme.whatsapp}?text=${encodeURIComponent(mesaj)}`;
+
+export const yolTarifiLinki = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${isletme.ad}, ${tamAdres}`)}`;
+
+export const haritaGomme = `https://www.google.com/maps?q=${encodeURIComponent(`${isletme.ad}, ${tamAdres}`)}&output=embed`;

@@ -1,0 +1,227 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import WhatsAppIcon from '../components/WhatsAppIcon.astro';
+import { isletme, whatsappLinki, yolTarifiLinki, haritaLinki, haritaGomme } from '../data/isletme';
+const { acilis, kapanis } = isletme.saatler;
+---
+<Base yol="/iletisim">
+<Nav tema="acik" />
+
+<main>
+  <section class="reach" aria-labelledby="iletisim-baslik">
+    <div class="reach__head">
+      <h1 class="reach__title" id="iletisim-baslik">
+        <span class="line"><span>Bize</span></span>
+        <span class="line"><span>ulaş</span></span>
+      </h1>
+      <p class="reach__lead" data-rise>{isletme.adres.ilce}, {isletme.adres.bina}. {isletme.saatler.metin}.</p>
+    </div>
+
+    <div class="reach__side">
+      <p class="status" id="durum" data-rise aria-live="polite">
+        <span class="status__dot" aria-hidden="true"></span>
+        <span id="durum-metin">{isletme.saatler.metin} açığız.</span>
+      </p>
+
+      <ul class="ways">
+        <li data-rise>
+          <a class="way way--wa" href={whatsappLinki('Merhaba, randevu almak istiyorum.')} target="_blank" rel="noopener">
+            <span class="way__label"><WhatsAppIcon /> WhatsApp'tan yaz</span>
+            <span class="way__note">Randevu ve bilgi için en hızlı yol</span>
+          </a>
+        </li>
+        <li data-rise>
+          <a class="way" href={`tel:${isletme.telefonUluslararasi}`}>
+            <span class="way__label">{isletme.telefon}</span>
+            <span class="way__note">Ara</span>
+          </a>
+        </li>
+        <li data-rise>
+          <a class="way" href={isletme.instagram} target="_blank" rel="noopener">
+            <span class="way__label">{isletme.instagramKullanici}</span>
+            <span class="way__note">Instagram</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="cert-block" aria-labelledby="belge-baslik">
+    <div class="cert-block__text" data-rise>
+      <h2 id="belge-baslik">Belgeli tesis</h2>
+      <p>Profit EMS, Türkiye Cimnastik Federasyonu yeterlilik belgesine sahip bir tesis.</p>
+      <p>Belgedeki QR kodu telefonunla okutarak tesis bilgisini kendin doğrulayabilirsin.</p>
+    </div>
+    <figure class="cert-block__img" data-rise>
+      <img src="/img/tcf-belge-buyuk.jpg" alt="Türkiye Cimnastik Federasyonu yeterlilik belgesi: Bu tesis Türkiye Cimnastik Federasyonu yeterlilik belgesine sahiptir. Tesis hakkında bilgi için QR kodu okutunuz." width="941" height="1100" decoding="async" fetchpriority="low">
+    </figure>
+  </section>
+  <section class="place" aria-labelledby="konum-baslik">
+    <div class="place__map">
+      <iframe src={haritaGomme} title="Profit EMS konumu, Google Haritalar" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+    <div class="place__panel" data-rise>
+      <h2 id="konum-baslik">Konum</h2>
+      <address>
+        {isletme.adres.sokak}<br>
+        {isletme.adres.postaKodu} {isletme.adres.ilce}/{isletme.adres.il}
+      </address>
+      <p class="place__hint">{isletme.adres.bina}, {isletme.adres.tarif}.</p>
+      <div class="place__actions">
+        <a class="btn" href={yolTarifiLinki} target="_blank" rel="noopener">Yol tarifi al</a>
+        <a class="btn btn--quiet" href={haritaLinki} target="_blank" rel="noopener">Haritada aç</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+</Base>
+
+<style>
+  /* first screen: the name of the page at poster size, the ways to reach on the right */
+  .reach {
+    display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: 48px var(--margin); align-items: end;
+    padding: 6vh var(--margin) 120px;
+  }
+  .reach__title {
+    margin: 0 0 24px;
+    text-transform: uppercase; font-style: italic; font-weight: 800;
+    font-variation-settings: "wdth" 62;
+    font-size: clamp(5rem, 15vw, 15rem); line-height: .92; letter-spacing: -0.02em;
+  }
+  .reach__title .line { display: block; overflow: hidden; padding: .03em .06em .02em 0; }
+  .reach__title .line > span { display: inline-block; }
+  .reach__lead { margin: 0; font-size: clamp(1.25rem, 1.1rem + .7vw, 1.625rem); max-width: 30ch; }
+
+  .status { display: flex; align-items: center; gap: 12px; margin: 0 0 20px; font-weight: 600; }
+  .status__dot { width: 12px; height: 12px; border-radius: 50%; background: var(--muted); flex: none; }
+  .status.is-open .status__dot { background: #19a35b; animation: beat 2s ease-in-out infinite; }
+  @keyframes beat { 50% { transform: scale(1.35); } }
+
+  .ways { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .way {
+    display: flex; flex-direction: column; gap: 2px;
+    padding: 22px 24px; background: var(--surface); text-decoration: none;
+    transition: background-color .2s, color .2s, transform .2s var(--ease-out);
+  }
+  .way:hover { background: var(--ink); color: #fff; }
+  .way:active { transform: scale(.985); }
+  .way__label { display: flex; align-items: center; gap: 12px; font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.25rem); font-weight: 700; line-height: 1.1; letter-spacing: -0.01em; }
+  .way__label :global(svg) { width: .9em; height: .9em; flex: none; }
+  .way__note { font-size: var(--step-small); color: var(--muted); }
+  .way:hover .way__note { color: var(--on-dark-muted); }
+  .way--wa { background: var(--accent); color: #fff; }
+  .way--wa .way__note { color: rgba(255, 255, 255, .85); }
+  .way--wa:hover { background: #c90f33; }
+
+  /* the map runs edge to edge; the address sits on it */
+  .place { position: relative; height: min(78vh, 760px); background: var(--surface); }
+  .place__map { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .place__map :global(iframe) { width: 100%; height: 100%; border: 0; display: block; filter: grayscale(.85) contrast(1.05); }
+  .place__panel {
+    position: absolute; left: var(--margin); bottom: var(--margin);
+    width: min(440px, calc(100% - 2 * var(--margin)));
+    background: #fff; padding: 32px;
+    box-shadow: 0 18px 50px rgba(0, 0, 0, .16); /* floats over the map */
+  }
+  .place__panel h2 {
+    margin: 0 0 16px; text-transform: uppercase; font-style: italic; font-weight: 800;
+    font-variation-settings: "wdth" 62; font-size: clamp(2.5rem, 4vw, 3.5rem); line-height: 1;
+  }
+  .place__panel address { font-style: normal; font-size: 1.25rem; font-weight: 600; line-height: 1.35; }
+  .place__hint { margin: 12px 0 24px; color: var(--muted); }
+  .place__actions { display: flex; flex-wrap: wrap; gap: 8px; }
+  .btn--quiet { background: var(--surface); color: var(--ink); }
+  .btn--quiet:hover { background: #cdd5da; }
+
+  /* the certificate, large, on a dark field */
+  .cert-block {
+    display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: 48px var(--margin); align-items: center;
+    background: var(--ink); color: #fff; padding: 140px var(--margin);
+  }
+  .cert-block h2 {
+    margin: 0 0 24px; text-transform: uppercase; font-style: italic; font-weight: 800;
+    font-variation-settings: "wdth" 62; font-size: clamp(3rem, 7vw, 6.5rem); line-height: .95; letter-spacing: -0.02em;
+  }
+  .cert-block p { margin: 0 0 12px; max-width: 38ch; font-size: clamp(1.125rem, 1rem + .4vw, 1.375rem); }
+  .cert-block__img { margin: 0; justify-self: center; }
+  .cert-block__img img { width: min(520px, 100%); height: auto; aspect-ratio: 941 / 1100; background: #fff; }
+
+  /* entrances (hidden only when script runs) */
+  :global(.js) .reach__title .line > span { transform: translateY(105%); }
+  :global(.js) [data-rise] { opacity: 0; transform: translateY(22px); }
+  :global(.is-in) .reach__title .line > span, :global(.is-in) [data-rise] { opacity: 1; transform: none; transition: transform .8s var(--ease-out), opacity .8s; }
+
+  /* the first screen sits on a dark gym photo that runs up behind the menu (portrait cut on phones) */
+  .reach {
+    position: relative; isolation: isolate;
+    margin-top: -88px; padding-top: calc(88px + 8vh); min-height: 100svh;
+    color: #fff; background: #000 url(/img/iletisim-2560.jpg) center 35% / cover no-repeat;
+  }
+  .reach::before { content: ""; position: absolute; inset: 0; z-index: -1; background: rgba(0, 0, 0, .42); }
+  .status__dot { background: var(--on-dark-muted); }
+  .way { background: #fff; color: var(--ink); }
+  .way:hover { background: var(--ink); color: #fff; }
+  .way--wa { background: var(--accent); color: #fff; }
+  .way--wa:hover { background: #c90f33; }
+  :global(.nav--light) { color: #fff; }
+  :global(.nav--light .nav__logo img) { content: url(/img/logo-light.svg); }
+  :global(.nav--light .nav__menu) { background: #fff; color: var(--ink); }
+
+  /* big or sharp screens get the 4K cut */
+  @media (min-width: 1921px), (min-width: 1200px) and (min-resolution: 2dppx) {
+    .reach { background-image: url(/img/iletisim-4k.jpg); }
+  }
+
+  @media (max-width: 860px) {
+    .reach {
+      grid-template-columns: 1fr; gap: 40px;
+      margin-top: -72px; padding: calc(72px + 3vh) var(--margin) 72px; min-height: 0;
+      background-image: url(/img/iletisim-mobil.jpg); background-position: center top;
+    }
+    .reach::before { background: rgba(0, 0, 0, .5); }
+    .reach__title { font-size: 26vw; }
+    .way { padding: 18px 20px; }
+    .place { height: auto; display: flex; flex-direction: column; }
+    .place__map { position: relative; height: 44vh; }
+    .place__panel { position: relative; left: 0; bottom: 0; width: 100%; box-shadow: none; padding: 32px var(--margin); }
+    .cert-block { grid-template-columns: 1fr; padding: 96px var(--margin); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :global(.js) .reach__title .line > span, :global(.js) [data-rise] { opacity: 1; transform: none; }
+  }
+</style>
+
+
+<script is:inline define:vars={{ acilis, kapanis }}>
+// is the studio open right now? (Konya time)
+(() => {
+  const el = document.getElementById('durum');
+  const text = document.getElementById('durum-metin');
+  const now = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Istanbul', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date());
+  const toMin = t => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
+  const n = toMin(now), o = toMin(acilis), c = toMin(kapanis);
+  if (n >= o && n < c) { el.classList.add('is-open'); text.textContent = `Şu an açığız. ${kapanis}'ye kadar buradayız.`; }
+  else if (n < o) text.textContent = `Şu an kapalıyız. Bugün ${acilis}'da açılıyoruz.`;
+  else text.textContent = `Şu an kapalıyız. Yarın ${acilis}'da açılıyoruz.`;
+})();
+</script>
+
+<script type="module" is:inline>
+import { animate, stagger, inView } from "https://cdn.jsdelivr.net/npm/motion@12.23.12/+esm";
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (reduce) { document.body.classList.add('is-in'); }
+else {
+  const ease = [0.22, 1, 0.36, 1];
+  animate('.reach__title .line > span', { y: ['105%', '0%'] }, { type: 'spring', stiffness: 140, damping: 20, delay: stagger(0.09) });
+  // each block rises the first time it comes into view
+  inView('[data-rise]', el => { animate(el, { opacity: [0, 1], y: [22, 0] }, { duration: 0.7, ease }); }, { amount: 0.2 });
+}
+</script>
+<script is:inline>
+// if Motion cannot load, show everything anyway
+setTimeout(() => { const t = document.querySelector('.reach__title .line > span'); if (t && getComputedStyle(t).transform !== 'none' && !t.style.transform) document.body.classList.add('is-in'); }, 1500);
+</script>

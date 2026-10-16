@@ -101,10 +101,40 @@ img, svg { display: block; max-width: 100%; }
 
 /* light navigation for pages without the video stage */
 .nav--light { color: var(--ink); }
+.nav__action { display: flex; align-items: center; gap: 8px; }
+.nav__links a[aria-current="page"] { color: var(--accent); }
+.nav__menu {
+  display: none; min-height: 44px; padding: 0 14px; border: 0; cursor: pointer;
+  font: inherit; font-weight: 600; font-size: .9375rem;
+  background: #fff; color: var(--ink);
+}
+.nav--light .nav__menu { background: var(--ink); color: #fff; }
+
+/* phone menu: a full-screen sheet with big links */
+.mmenu {
+  position: fixed; inset: 0; z-index: 20; background: var(--ink); color: #fff;
+  display: flex; flex-direction: column; justify-content: center; gap: 40px;
+  padding: 96px var(--margin) 48px;
+}
+.mmenu[hidden] { display: none; }
+.mmenu ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.mmenu ul a {
+  text-decoration: none; text-transform: uppercase; font-style: italic; font-weight: 800;
+  font-variation-settings: "wdth" 62; font-size: clamp(2.75rem, 13vw, 4rem); line-height: 1.05;
+}
+.mmenu ul a:hover { color: var(--accent); }
+.mmenu .btn { align-self: flex-start; }
+.menu-acik .nav { position: relative; z-index: 21; color: #fff; }
+.menu-acik .nav--light .nav__logo img { content: url(/img/logo-light.svg); }
+.menu-acik .nav--light .nav__menu { background: #fff; color: var(--ink); }
+.menu-acik .chat { display: none; }
 
 @media (max-width: 860px) {
   .nav { grid-template-columns: 1fr auto; padding: 14px var(--margin); }
   .nav > nav { display: none; }
+  .nav__menu { display: inline-flex; align-items: center; }
+  .nav__wa-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .nav__action .btn { padding: 0 12px; }
   .nav__logo img { height: 36px; }
   .btn { min-height: 44px; padding: 0 14px; gap: 8px; font-size: .9375rem; }
   .footer { padding-top: 72px; }

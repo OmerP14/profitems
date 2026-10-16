@@ -6,9 +6,14 @@ export const seo: Record<string, { baslik: string; aciklama: string }> = {
     baslik: 'Profit EMS | Konya EMS Stüdyosu – Selçuklu',
     aciklama: "Konya Selçuklu'da EMS stüdyosu. Zayıflama, sıkılaşma, incelme, bel ve boyun ağrıları için EMS. Her gün 10:00–22:00. WhatsApp'tan randevu al.",
   },
+  '/iletisim': {
+    baslik: 'İletişim ve Konum | Profit EMS Konya Selçuklu',
+    aciklama: "Profit EMS'e WhatsApp, telefon veya Instagram'dan ulaş. Kılınçarslan Mah., Avrukon Plaza, Selçuklu/Konya. Her gün 10:00–22:00 açığız.",
+  },
 };
 
 // Menüde görünen sayfalar. Yeni sayfa bitince buraya eklenir.
 export const menu = [
   { href: '/#ems-nedir', etiket: 'EMS nedir?' },
+  { href: '/iletisim', etiket: 'İletişim' },
 ];

@@ -220,6 +220,9 @@ export async function createEms3D(container, { modelUrl }) {
   }
 
   // the idle clip keeps the body breathing; our pose is layered on top each frame
+  // every frame starts from the rest pose, so offsets added on top never pile up
+  // (bones the idle clip does not animate, like the fingers, would otherwise keep turning)
+  const rest = Object.values(bones).map(b => [b, b.position.clone(), b.quaternion.clone()]);
   const mixer = new THREE.AnimationMixer(model);
   const idle = gltf.animations.find(a => a.name === 'idle') || gltf.animations[0];
   if (idle) mixer.clipAction(idle).play();
@@ -249,6 +252,25 @@ export async function createEms3D(container, { modelUrl }) {
     bone.updateMatrixWorld(true);
   }
   const fwd = new THREE.Vector3();
+  // curl every finger joint so the hands read as fists
+  const FINGERS = ['Index', 'Middle', 'Ring', 'Pinky'];
+  // curl the fingers: the raised hand a loose fist with the fingers still visible,
+  // the hand on the hip nearly open so the fingers rest on the waist
+  function fist(w) {
+    const curl = { Right: .85, Left: .2 };
+    for (const side of ['Left', 'Right']) {
+      const m = side === 'Right' ? -1 : 1;   // the left hand is a mirror image
+      const c = curl[side] * w;
+      for (const f of FINGERS) for (let k = 1; k <= 3; k++) {
+        const b = bones[`${side}Hand${f}${k}`];
+        if (b) b.rotation.y += m * (k === 1 ? 1.1 : 1.35) * c;
+      }
+      for (let k = 1; k <= 3; k++) {
+        const b = bones[`${side}HandThumb${k}`];
+        if (b) b.rotation.y += m * .4 * c;
+      }
+    }
+  }
   function pose(p, t) {
     // the turn, front -> back -> front
     const deg = p < .64 ? Math.PI * ease(seg(p, .5, .6)) : Math.PI - Math.PI * ease(seg(p, .68, .76));
@@ -273,21 +295,25 @@ export async function createEms3D(container, { modelUrl }) {
       fwd.set(0, -.08, 1).applyQuaternion(model.quaternion).normalize();
       for (const side of ['Left', 'Right']) { aim(B[side + 'Arm'], B[side + 'ForeArm'], fwd, s); aim(B[side + 'ForeArm'], B[side + 'Hand'], fwd, s); }
     }
-    // final flex, facing the viewer: upper arms out to the sides, forearms straight up
+    // final pose, facing the viewer: right arm flexed with the fist by the head, left hand on the hip, both hands closed
     if (a > .001) {
       model.updateMatrixWorld(true);
-      for (const side of ['Left', 'Right']) {
-        const out = new THREE.Vector3(side === 'Left' ? 1 : -1, .1, .18).applyQuaternion(model.quaternion).normalize();
-        const up = new THREE.Vector3(0, 1, .12).applyQuaternion(model.quaternion).normalize();
-        aim(B[side + 'Arm'], B[side + 'ForeArm'], out, a);
-        aim(B[side + 'ForeArm'], B[side + 'Hand'], up, a);
-      }
+      const W = v => new THREE.Vector3(...v).applyQuaternion(model.quaternion).normalize();
+      aim(B.RightArm, B.RightForeArm, W([-1, .3, .15]), a);
+      aim(B.RightForeArm, B.RightHand, W([.25, 1, .15]), a);
+      aim(B.LeftArm, B.LeftForeArm, W([.8, -.5, -.3]), a);
+      aim(B.LeftForeArm, B.LeftHand, W([-.5, -.8, .25]), a);
+      fist(a);
+      // turn the raised fist so its fingers face the viewer, and lay the other hand flat on the hip
+      if (B.RightHand) B.RightHand.rotation.x -= 1.5 * a;
+      if (B.LeftHand) B.LeftHand.rotation.y -= .9 * a;
     }
   }
 
   function frame() {
     const dt = Math.min(clock.getDelta(), .05);
     const t = clock.elapsedTime;
+    for (const [b, p0, q0] of rest) { b.position.copy(p0); b.quaternion.copy(q0); }
     mixer.update(dt);
     const p = progress;
     pose(p, t);

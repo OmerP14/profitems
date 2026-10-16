@@ -1,0 +1,74 @@
+---
+import '../styles/global.css';
+import Chat from '../components/Chat.astro';
+import Footer from '../components/Footer.astro';
+import { seo } from '../data/seo';
+import { isletme, haritaLinki } from '../data/isletme';
+
+interface Props { yol: string }
+const { yol } = Astro.props;
+const sayfa = seo[yol] ?? seo['/'];
+const canonical = Astro.site ? new URL(yol, Astro.site).href : null;
+
+// Google'a "bu bir yerel işletme" diyen bilgi (schema.org)
+const isletmeVerisi = {
+  '@context': 'https://schema.org',
+  '@type': 'HealthClub',
+  name: isletme.ad,
+  telephone: isletme.telefonUluslararasi,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: isletme.adres.sokak,
+    addressLocality: isletme.adres.ilce,
+    addressRegion: isletme.adres.il,
+    postalCode: isletme.adres.postaKodu,
+    addressCountry: 'TR',
+  },
+  openingHoursSpecification: [{
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+    opens: isletme.saatler.acilis,
+    closes: isletme.saatler.kapanis,
+  }],
+  hasMap: haritaLinki,
+  sameAs: [isletme.instagram],
+  ...(Astro.site ? { url: Astro.site.href } : {}),
+};
+---
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{sayfa.baslik}</title>
+<meta name="description" content={sayfa.aciklama}>
+{canonical && <link rel="canonical" href={canonical}>}
+<meta property="og:type" content="website">
+<meta property="og:locale" content="tr_TR">
+<meta property="og:site_name" content={isletme.ad}>
+<meta property="og:title" content={sayfa.baslik}>
+<meta property="og:description" content={sayfa.aciklama}>
+{canonical && <meta property="og:url" content={canonical}>}
+<script type="application/ld+json" set:html={JSON.stringify(isletmeVerisi)} />
+<link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,400..800;1,62..125,800&display=swap" rel="stylesheet">
+<script is:inline>document.documentElement.classList.add('js');</script>
+<slot name="head" />
+</head>
+<body>
+<slot />
+<Footer />
+<Chat />
+<script type="module" is:inline>
+import { animate, press } from "https://cdn.jsdelivr.net/npm/motion@12.23.12/+esm";
+const tap = { type: 'spring', stiffness: 400, damping: 20 };
+// press feedback on every control
+press('.goal, .btn, .chat__toggle, .chat__quick button', el => {
+  animate(el, { scale: 0.95 }, tap);
+  return () => animate(el, { scale: 1 }, tap);
+});
+</script>
+</body>
+</html>

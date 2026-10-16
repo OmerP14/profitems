@@ -1,0 +1,51 @@
+---
+import { isletme, tamAdres, whatsappLinki } from '../data/isletme';
+const cevaplar = {
+  yer: `${tamAdres}. ${isletme.adres.bina}, ${isletme.adres.tarif}.`,
+  saat: `${isletme.saatler.metin} açığız.`,
+  belge: 'Evet, tesisimiz Türkiye Cimnastik Federasyonu yeterlilik belgesine sahip.',
+  randevu: `Randevu için WhatsApp'tan yazabilir ya da ${isletme.telefon} numarasını arayabilirsin. <a href="${whatsappLinki('Merhaba, randevu almak istiyorum.')}" target="_blank" rel="noopener">WhatsApp'ı aç</a>`,
+};
+---
+<div class="chat">
+  <div class="chat__panel" id="chat-panel" role="dialog" aria-labelledby="chat-title" hidden>
+    <h2 id="chat-title">Profit EMS asistanı</h2>
+    <p>Hızlı sorular için. Gerisi WhatsApp'ta.</p>
+    <div class="chat__log" id="chat-log" aria-live="polite">
+      <p class="chat__msg">Merhaba! Ne öğrenmek istersin?</p>
+    </div>
+    <div class="chat__quick">
+      <button type="button" data-q="yer">Neredesiniz?</button>
+      <button type="button" data-q="saat">Saatleriniz?</button>
+      <button type="button" data-q="belge">Belgeniz var mı?</button>
+      <button type="button" data-q="randevu">Randevu almak istiyorum</button>
+    </div>
+  </div>
+  <button class="chat__toggle" type="button" aria-expanded="false" aria-controls="chat-panel" aria-label="Asistanı aç">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 4h16v12H8l-4 4V4Zm2 2v9.2L7.2 14H18V6H6Zm2 3h8v2H8V9Z"/></svg>
+  </button>
+</div>
+
+<script is:inline define:vars={{ cevaplar }}>
+const toggle = document.querySelector('.chat__toggle');
+const panel = document.getElementById('chat-panel');
+const log = document.getElementById('chat-log');
+toggle.addEventListener('click', () => {
+  const open = panel.hidden;
+  panel.hidden = !open;
+  toggle.setAttribute('aria-expanded', String(open));
+  toggle.setAttribute('aria-label', open ? 'Asistanı kapat' : 'Asistanı aç');
+});
+document.querySelectorAll('.chat__quick button').forEach(b => {
+  b.addEventListener('click', () => {
+    const me = document.createElement('p');
+    me.className = 'chat__msg chat__msg--me';
+    me.textContent = b.textContent;
+    const bot = document.createElement('p');
+    bot.className = 'chat__msg';
+    bot.innerHTML = cevaplar[b.dataset.q];
+    log.append(me, bot);
+    log.scrollTop = log.scrollHeight;
+  });
+});
+</script>

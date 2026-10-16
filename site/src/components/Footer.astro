@@ -1,0 +1,27 @@
+---
+import { isletme, haritaLinki, whatsappLinki } from '../data/isletme';
+const yil = new Date().getFullYear();
+---
+<footer class="footer">
+  <div class="footer__grid">
+    <a class="footer__logo" href="/" aria-label="Profit EMS ana sayfa"><img src="/img/logo-light.svg" alt="Profit EMS" width="360" height="153" loading="lazy"></a>
+    <div>
+      <h2>Adres</h2>
+      <address>
+        <a href={haritaLinki} target="_blank" rel="noopener">{isletme.adres.sokak}<br>{isletme.adres.postaKodu} {isletme.adres.ilce}/{isletme.adres.il}</a>
+      </address>
+      <p>{isletme.adres.bina}, {isletme.adres.tarif}</p>
+    </div>
+    <div>
+      <h2>Saatler</h2>
+      <p>{isletme.saatler.metin}</p>
+    </div>
+    <div>
+      <h2>İletişim</h2>
+      <p><a href={`tel:${isletme.telefonUluslararasi}`}>{isletme.telefon}</a></p>
+      <p><a href={whatsappLinki()} target="_blank" rel="noopener">WhatsApp</a></p>
+      <p><a href={isletme.instagram} target="_blank" rel="noopener">Instagram {isletme.instagramKullanici}</a></p>
+    </div>
+  </div>
+  <p class="footer__base">© {yil} {isletme.ad}. {isletme.sertifika}.</p>
+</footer>

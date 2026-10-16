@@ -1,0 +1,23 @@
+---
+import { menu } from '../data/seo';
+import { whatsappLinki } from '../data/isletme';
+import WhatsAppIcon from './WhatsAppIcon.astro';
+
+interface Props { tema?: 'koyu' | 'acik' }
+const { tema = 'acik' } = Astro.props;
+const logo = tema === 'koyu' ? '/img/logo-light.svg' : '/img/logo.svg';
+---
+<header class:list={['nav', { 'nav--light': tema === 'acik' }]}>
+  <a class="nav__logo" href="/" aria-label="Profit EMS ana sayfa"><img src={logo} alt="Profit EMS" width="104" height="44"></a>
+  <nav aria-label="Ana menü">
+    <ul class="nav__links">
+      {menu.map(m => <li><a href={m.href}>{m.etiket}</a></li>)}
+    </ul>
+  </nav>
+  <div class="nav__action">
+    <a class="btn" href={whatsappLinki()} target="_blank" rel="noopener">
+      <WhatsAppIcon />
+      WhatsApp'tan yaz
+    </a>
+  </div>
+</header>

@@ -1,0 +1,432 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import WhatsAppIcon from '../components/WhatsAppIcon.astro';
+import { isletme, whatsappLinki } from '../data/isletme';
+import '../styles/home.css';
+const { whatsapp } = isletme;
+---
+<Base yol="/">
+  <Fragment slot="head">
+    <script type="importmap" is:inline>
+    { "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    } }
+    </script>
+  </Fragment>
+
+<div class="stage">
+<video class="stage__video" muted loop playsinline preload="none" poster="/video/hero-yatay.jpg" aria-hidden="true"
+  data-src-wide="/video/hero-yatay.mp4" data-src-narrow="/video/hero-dikey.mp4"
+  data-poster-wide="/video/hero-yatay.jpg" data-poster-narrow="/video/hero-dikey.jpg"></video>
+
+<Nav tema="koyu" />
+
+<main>
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero__main">
+      <h1 class="hero__title" id="hero-title">
+        <span class="line"><span>Sıkılaş</span></span>
+        <span class="line"><span>İncel</span></span>
+      </h1>
+      <div class="hero__actions">
+        <a class="btn" href={whatsappLinki('Merhaba, randevu almak istiyorum.')} target="_blank" rel="noopener">
+          <WhatsAppIcon />
+          Randevu al
+        </a>
+        <a class="btn btn--light" href="#ems-nedir">EMS nasıl çalışır?</a>
+      </div>
+    </div>
+  </section>
+</main>
+</div>
+
+<section class="story" id="ems-nedir" aria-labelledby="story-title">
+  <div class="story__pin">
+    <div class="story__text">
+      <h2 class="story__title" id="story-title">EMS nasıl çalışır?</h2>
+      <ol class="story__steps">
+        <li class="story__step is-active">
+          <p class="story__big">Önce kıyafet.</p>
+          <p>Elektrotları taşıyan özel EMS kıyafetini giyersin.</p>
+        </li>
+        <li class="story__step">
+          <p class="story__big">Elektrotlar yerine oturur.</p>
+          <p>Göğüs, karın, kol, bel ve bacaklardaki pedler büyük kas gruplarının üstüne gelir.</p>
+        </li>
+        <li class="story__step">
+          <p class="story__big">Uyarı kaslara ulaşır.</p>
+          <p>Cihaz, pedler üzerinden kaslara hafif elektrik uyarıları gönderir ve kaslar kasılır.</p>
+        </li>
+        <li class="story__step">
+          <p class="story__big">Sırt ve bel de çalışır.</p>
+          <p>Arkadaki pedler sırt, bel ve kalça kaslarını da devreye sokar.</p>
+        </li>
+        <li class="story__step">
+          <p class="story__big">Sen hareket ettikçe.</p>
+          <p>Squat gibi basit hareketler sırasında kaslar uyarıyla birlikte çalışır.</p>
+        </li>
+        <li class="story__step">
+          <p class="story__big">Sıra sende.</p>
+          <p>Hedefini seç, figürde çalışan bölgeleri gör ve bize yaz.</p>
+          <fieldset class="goals">
+            <legend class="sr-only">Hedefin hangisi?</legend>
+            <div class="goals__list">
+              <button type="button" class="goal" data-goal="zayiflama" data-label="Zayıflama" aria-pressed="false">Zayıflama</button>
+              <button type="button" class="goal" data-goal="sikilasma" data-label="Sıkılaşma" aria-pressed="false">Sıkılaşma</button>
+              <button type="button" class="goal" data-goal="incelme" data-label="İncelme" aria-pressed="false">İncelme</button>
+              <button type="button" class="goal" data-goal="agri" data-label="Bel ve boyun ağrısı" aria-pressed="false">Bel ve boyun</button>
+            </div>
+          </fieldset>
+          <p class="goals__note" id="goal-note" aria-live="polite"></p>
+          <a class="btn" id="story-wa" href={whatsappLinki('Merhaba, EMS hakkında bilgi almak istiyorum.')} target="_blank" rel="noopener">WhatsApp'tan yaz</a>
+        </li>
+      </ol>
+    </div>
+
+    <figure class="story__figure" aria-hidden="true">
+      <div class="story__3d" id="ems-3d"></div>
+      <svg id="rig" viewBox="-20 20 440 580">
+        <defs><clipPath id="suit-clip"><rect id="suit-clip-rect" x="90" y="100" width="220" height="260" /></clipPath></defs>
+        <polygon class="fig-band" points="20,640 200,640 400,120 220,120" />
+        <g id="turn">
+          <path id="thighL" class="fig-limb" stroke-width="48" />
+          <path id="calfL" class="fig-limb" stroke-width="38" />
+          <path id="footL" class="fig-limb" stroke-width="20" />
+          <path id="thighR" class="fig-limb" stroke-width="48" />
+          <path id="calfR" class="fig-limb" stroke-width="38" />
+          <path id="footR" class="fig-limb" stroke-width="20" />
+          <path id="uarmL" class="fig-limb" stroke-width="36" />
+          <path id="farmL" class="fig-limb" stroke-width="30" />
+          <path id="uarmR" class="fig-limb" stroke-width="36" />
+          <path id="farmR" class="fig-limb" stroke-width="30" />
+          <circle id="bicepL" class="fig-body" r="21" />
+          <circle id="bicepR" class="fig-body" r="21" />
+          <circle id="handL" class="fig-body" />
+          <circle id="handR" class="fig-body" />
+          <g id="upper">
+            <rect class="fig-body" x="186" y="92" width="28" height="32" />
+            <circle class="fig-body" cx="200" cy="66" r="34" />
+            <path class="fig-body" d="M138 132 Q200 112 262 132 L248 300 Q200 312 152 300 Z" />
+            <g clip-path="url(#suit-clip)">
+              <path class="fig-suit" d="M146 134 Q200 118 254 134 L244 296 Q200 306 156 296 Z" />
+              <path class="fig-suit" d="M152 292 Q200 304 248 292 L256 344 L214 352 L200 336 L186 352 L144 344 Z" />
+              <path id="zip" class="zip" d="M200 128 L200 296" />
+              <rect x="186" y="286" width="28" height="18" fill="#2a2d33" />
+            </g>
+          </g>
+          <path id="strapArmL" class="fig-strap" stroke-width="10" />
+          <path id="strapArmR" class="fig-strap" stroke-width="10" />
+          <path id="strapLegL" class="fig-strap" stroke-width="12" />
+          <path id="strapLegR" class="fig-strap" stroke-width="12" />
+          <g id="wires"></g>
+          <g id="pads-front"></g>
+          <g id="pads-back"></g>
+        </g>
+      </svg>
+    </figure>
+  </div>
+</section>
+
+
+<script is:inline define:vars={{ whatsapp }}>
+// background clip: phones get the light portrait cut; skipped for reduced motion / data saver
+(() => {
+  const v = document.querySelector('.stage__video');
+  const narrow = matchMedia('(max-width: 860px)').matches;
+  v.poster = narrow ? v.dataset.posterNarrow : v.dataset.posterWide;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const saver = navigator.connection && navigator.connection.saveData;
+  if (reduce || saver) return;
+  v.src = narrow ? v.dataset.srcNarrow : v.dataset.srcWide;
+  v.play().catch(() => {});
+})();
+
+// entrance runs through Motion (module below); CSS fallback if it fails to load
+setTimeout(() => { if (!window.__motion) document.body.classList.add('is-in'); }, 1200);
+
+// goal picker (last step of the EMS story): lights that goal's pads and fills the WhatsApp message
+const rigEl = document.getElementById('rig');
+const note = document.getElementById('goal-note');
+const storyWa = document.getElementById('story-wa');
+const waBase = `https://wa.me/${whatsapp}?text=`;
+const notes = {
+  zayiflama: 'Zayıflama: karın ve bacak bölgeleri birlikte çalışır.',
+  sikilasma: 'Sıkılaşma: göğüs, kol ve bacak kasları çalışır.',
+  incelme: 'İncelme: karın ve bel çevresi öne çıkar.',
+  agri: 'Bel ve boyun: omuz ve bel bölgesi desteklenir.'
+};
+document.querySelectorAll('.goal').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const goal = btn.dataset.goal;
+    const was = btn.getAttribute('aria-pressed') === 'true';
+    const pads = rigEl.querySelectorAll('#pads-front .pad');
+    document.querySelectorAll('.goal').forEach(b => b.setAttribute('aria-pressed', 'false'));
+    if (was) {
+      rigEl.classList.remove('figure--focus');
+      note.textContent = '';
+      storyWa.href = waBase + encodeURIComponent('Merhaba, EMS hakkında bilgi almak istiyorum.');
+      document.dispatchEvent(new CustomEvent('goal:change', { detail: null }));
+      return;
+    }
+    btn.setAttribute('aria-pressed', 'true');
+    rigEl.classList.add('figure--focus');
+    pads.forEach(p => p.classList.toggle('is-on', (p.dataset.zones || '').split(' ').includes(goal)));
+    note.textContent = notes[goal];
+    storyWa.href = waBase + encodeURIComponent(`Merhaba, ${btn.dataset.label} hedefim için bilgi almak istiyorum.`);
+    document.dispatchEvent(new CustomEvent('goal:change', { detail: goal }));
+  });
+});
+</script>
+<script type="module" is:inline>
+import { animate, stagger, press } from "https://cdn.jsdelivr.net/npm/motion@12.23.12/+esm";
+
+window.__motion = true;
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const ease = [0.22, 1, 0.36, 1];
+const spring = { type: 'spring', stiffness: 140, damping: 20, mass: 1 };
+const tap = { type: 'spring', stiffness: 400, damping: 20 };
+
+// one orchestrated entrance: headline lines, then the certificate and the two actions
+if (reduce || document.body.classList.contains('is-in')) {
+  document.body.classList.add('is-in');
+} else {
+  animate('.hero__title .line > span', { y: ['105%', '0%'] }, { ...spring, delay: stagger(0.09) });
+  animate('.hero__actions > *', { y: [20, 0], opacity: [0, 1] }, { duration: 0.7, ease, delay: stagger(0.08, { startDelay: 0.35 }) });
+}
+
+// choosing a goal sends an impulse through the figure
+document.addEventListener('goal:change', () => {
+  if (reduce) return;
+  animate('#rig', { x: [0, -3, 3, -2, 1, 0] }, { duration: 0.35 });
+  animate('#pads-front .pad.is-on .pad__body', { scale: [1, 1.22, 1] }, { duration: 0.45, ease, delay: stagger(0.03) });
+});
+</script>
+<script type="module" is:inline>
+// EMS story: the figure is rebuilt from joint positions on every scroll frame
+import { scroll } from "https://cdn.jsdelivr.net/npm/motion@12.23.12/+esm";
+
+const section = document.getElementById('ems-nedir');
+const reduceStory = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const svgNS = 'http://www.w3.org/2000/svg';
+const $ = id => document.getElementById(id);
+const rig = $('rig');
+
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+const seg = (p, a, b) => clamp((p - a) / (b - a));
+const mix = (A, B, t) => [lerp(A[0], B[0], t), lerp(A[1], B[1], t)];
+const along = (A, B, t) => mix(A, B, t);
+const angle = (A, B) => Math.atan2(B[1] - A[1], B[0] - A[0]) * 180 / Math.PI;
+const line = (A, B) => `M${A[0].toFixed(1)} ${A[1].toFixed(1)} L${B[0].toFixed(1)} ${B[1].toFixed(1)}`;
+const mirror = P => [400 - P[0], P[1]];
+const perp = (A, B, t, len) => {
+  const C = along(A, B, t), dx = B[0] - A[0], dy = B[1] - A[1], l = Math.hypot(dx, dy) || 1;
+  const nx = -dy / l * len / 2, ny = dx / l * len / 2;
+  return line([C[0] - nx, C[1] - ny], [C[0] + nx, C[1] + ny]);
+};
+
+// pads: [zone, anchor] where anchor is a fixed torso point or a spot along a limb
+const FRONT = [
+  { z: 'agri', at: [170, 146], w: 24, h: 12 }, { z: 'agri', at: [230, 146], w: 24, h: 12 },
+  { z: 'sikilasma', at: [178, 171], w: 32, h: 22 }, { z: 'sikilasma', at: [222, 171], w: 32, h: 22 },
+  { z: 'zayiflama incelme', at: [183, 213], w: 26, h: 30 }, { z: 'zayiflama incelme', at: [217, 213], w: 26, h: 30 },
+  { z: 'incelme agri', at: [171, 260], w: 22, h: 32 }, { z: 'incelme agri', at: [229, 260], w: 22, h: 32 },
+  { z: 'sikilasma', limb: 'uarmL', t: .45, w: 28, h: 18 }, { z: 'sikilasma', limb: 'uarmR', t: .45, w: 28, h: 18 },
+  { z: 'zayiflama sikilasma', limb: 'thighL', t: .42, w: 36, h: 24 }, { z: 'zayiflama sikilasma', limb: 'thighR', t: .42, w: 36, h: 24 },
+];
+const BACK = [
+  { at: [172, 172], w: 30, h: 24 }, { at: [228, 172], w: 30, h: 24 },
+  { at: [176, 222], w: 26, h: 28 }, { at: [224, 222], w: 26, h: 28 },
+  { at: [180, 268], w: 28, h: 22 }, { at: [220, 268], w: 28, h: 22 },
+  { at: [180, 320], w: 30, h: 24 }, { at: [220, 320], w: 30, h: 24 },
+  { limb: 'uarmL', t: .5, w: 26, h: 16 }, { limb: 'uarmR', t: .5, w: 26, h: 16 },
+  { limb: 'thighL', t: .5, w: 34, h: 22 }, { limb: 'thighR', t: .5, w: 34, h: 22 },
+];
+
+function makePads(list, parent) {
+  return list.map((def, i) => {
+    const g = document.createElementNS(svgNS, 'g');
+    g.setAttribute('class', 'pad');
+    if (def.z) g.dataset.zones = def.z;
+    g.style.setProperty('--d', `${(i % 6) * 0.18}s`);
+    const r = `x="${-def.w / 2}" y="${-def.h / 2}" width="${def.w}" height="${def.h}" rx="4"`;
+    g.innerHTML = `<rect class="ring" ${r}/><rect class="pad__body" ${r}/><circle class="pad__snap" r="2.6"/>`;
+    parent.appendChild(g);
+    return { def, g };
+  });
+}
+const padsFront = makePads(FRONT, $('pads-front'));
+const padsBack = makePads(BACK, $('pads-back'));
+const wires = [0, 1, 2, 3].map(() => {
+  const p = document.createElementNS(svgNS, 'path');
+  p.setAttribute('class', 'fig-wire');
+  $('wires').appendChild(p);
+  return p;
+});
+
+function pose(p) {
+  const s = (1 - Math.cos(seg(p, .78, .93) * Math.PI * 4)) / 2;     // two squats
+  const a = ease(seg(p, .93, .99));                                   // final flex
+  const dy = 44 * s;
+  const J = {};
+  J.shL = [150, 140 + dy];
+  J.elL = mix([136, 222 + dy], [84, 150 + dy], a);
+  J.haL = mix([132, 296 + dy], [92, 84 + dy], a);
+  J.hiL = [178, 330 + dy];
+  J.knL = [lerp(174, 122, s), lerp(440, 448, s)];
+  J.anL = [166, 548];
+  for (const k of ['sh', 'el', 'ha', 'hi', 'kn', 'an']) J[k + 'R'] = mirror(J[k + 'L']);
+  return { J, s, a, dy };
+}
+
+function placePad({ def, g }, J, dy, k) {
+  let x, y, rot = 0;
+  if (def.at) { x = def.at[0]; y = def.at[1] + dy; }
+  else {
+    const side = def.limb.endsWith('L') ? 'L' : 'R';
+    const [A, B] = def.limb.startsWith('uarm') ? [J['sh' + side], J['el' + side]] : [J['hi' + side], J['kn' + side]];
+    [x, y] = along(A, B, def.t);
+    rot = angle(A, B);
+    if (rot > 90) rot -= 180; if (rot < -90) rot += 180;
+  }
+  g.setAttribute('transform', `translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${rot.toFixed(1)}) scale(${k.toFixed(3)})`);
+  g.style.display = k <= 0.001 ? 'none' : '';
+}
+
+const steps = [...section.querySelectorAll('.story__step')];
+// where the figure should be when each step sits at the reading line
+const anchors = [.14, .3, .42, .64, .86, 1];
+let current = -1;
+function fromSteps() {
+  const line = innerHeight * (innerWidth <= 860 ? .7 : .5);
+  const c = steps.map(el => { const r = el.getBoundingClientRect(); return r.top + r.height / 2; });
+  if (line <= c[0]) {
+    const h = steps[0].getBoundingClientRect().height;
+    return { p: anchors[0] * clamp(1 - (c[0] - line) / h), idx: 0 };
+  }
+  for (let i = 0; i < c.length - 1; i++) {
+    if (line < c[i + 1]) {
+      const f = (line - c[i]) / (c[i + 1] - c[i]);
+      return { p: lerp(anchors[i], anchors[i + 1], f), idx: f < .5 ? i : i + 1 };
+    }
+  }
+  return { p: 1, idx: steps.length - 1 };
+}
+
+function render(p) {
+  const { J, a, dy } = pose(p);
+  $('thighL').setAttribute('d', line(J.hiL, J.knL));
+  $('calfL').setAttribute('d', line(J.knL, J.anL));
+  $('footL').setAttribute('d', line([J.anL[0] - 2, 556], [J.anL[0] - 36, 560]));
+  $('thighR').setAttribute('d', line(J.hiR, J.knR));
+  $('calfR').setAttribute('d', line(J.knR, J.anR));
+  $('footR').setAttribute('d', line([J.anR[0] + 2, 556], [J.anR[0] + 36, 560]));
+  $('uarmL').setAttribute('d', line(J.shL, J.elL));
+  $('farmL').setAttribute('d', line(J.elL, J.haL));
+  $('uarmR').setAttribute('d', line(J.shR, J.elR));
+  $('farmR').setAttribute('d', line(J.elR, J.haR));
+  for (const side of ['L', 'R']) {
+    const b = along(J['sh' + side], J['el' + side], .5);
+    $('bicep' + side).setAttribute('cx', b[0]); $('bicep' + side).setAttribute('cy', b[1]);
+    $('bicep' + side).style.opacity = clamp((a - .4) / .4);
+    const h = J['ha' + side];
+    $('hand' + side).setAttribute('cx', h[0]); $('hand' + side).setAttribute('cy', h[1] - 10 * a);
+    $('hand' + side).setAttribute('r', lerp(13, 19, a));
+    $('strapArm' + side).setAttribute('d', perp(J['sh' + side], J['el' + side], .74, 34));
+    $('strapLeg' + side).setAttribute('d', perp(J['hi' + side], J['kn' + side], .8, 50));
+  }
+  $('upper').setAttribute('transform', `translate(0 ${dy.toFixed(1)})`);
+
+  // suit goes on
+  const suitT = ease(seg(p, .02, .13));
+  $('suit-clip-rect').setAttribute('height', (260 * suitT).toFixed(1));
+  const strapsOn = seg(p, .1, .14);
+  for (const id of ['strapArmL', 'strapArmR', 'strapLegL', 'strapLegR']) $(id).style.opacity = strapsOn;
+
+  // turn front -> back -> front
+  const deg = p < .64 ? 180 * ease(seg(p, .5, .6)) : 180 - 180 * ease(seg(p, .68, .76));
+  const sx = Math.cos(deg * Math.PI / 180);
+  const back = deg > 90;
+  $('turn').setAttribute('transform', `translate(200 0) scale(${Math.max(Math.abs(sx), .02).toFixed(3)} 1) translate(-200 0)`);
+  $('pads-front').style.display = back ? 'none' : '';
+  $('pads-back').style.display = back ? '' : 'none';
+  $('wires').style.display = back ? 'none' : '';
+  $('zip').style.display = back ? '' : 'none';
+
+  // pads pop in one by one; back pads the first time the back is shown
+  const frontT = seg(p, .16, .3) * padsFront.length;
+  padsFront.forEach((pd, i) => placePad(pd, J, dy, ease(clamp(frontT - i))));
+  const backT = seg(p, .58, .66) * padsBack.length;
+  padsBack.forEach((pd, i) => placePad(pd, J, dy, ease(clamp(backT - i))));
+
+  // current flows once every pad is on
+  const live = p > .31;
+  rig.classList.toggle('is-live', live);
+  $('wires').style.opacity = seg(p, .31, .36);
+  const belt = [200, 296 + dy];
+  [padsFront[2], padsFront[3], padsFront[10], padsFront[11]].forEach((pd, i) => {
+    const m = pd.g.getAttribute('transform').match(/translate\(([-\d.]+) ([-\d.]+)\)/);
+    const tx = +m[1], ty = +m[2];
+    const cx = (belt[0] + tx) / 2 + (tx < 200 ? -18 : 18);
+    wires[i].setAttribute('d', `M${belt[0]} ${belt[1]} Q${cx.toFixed(1)} ${((belt[1] + ty) / 2).toFixed(1)} ${tx} ${ty}`);
+  });
+
+}
+
+if (reduceStory) {
+  render(.31);                 // dressed, pads on, standing; text stays as a plain list
+} else {
+  section.classList.add('story--live');
+  let ems3d = null, lastP = 0;
+  render(0);
+  const stackMQ = matchMedia('(max-width: 860px)');
+  // phones: progress comes from how far the pinned section has scrolled, spread evenly over the steps
+  const fromSection = () => {
+    const r = section.getBoundingClientRect();
+    const q = clamp(-r.top / Math.max(r.height - innerHeight, 1));
+    const n = steps.length;
+    const s = q * n - .5;
+    if (s < 0) return { p: anchors[0] * clamp(1 + 2 * s), idx: 0 };
+    const i = Math.min(Math.floor(s), n - 1), f = s - i;
+    return { p: i >= n - 1 ? 1 : lerp(anchors[i], anchors[i + 1], f), idx: Math.min(Math.round(s), n - 1) };
+  };
+  const update = () => {
+    const { p, idx } = stackMQ.matches ? fromSection() : fromSteps();
+    lastP = p;
+    render(p);
+    if (ems3d) ems3d.setProgress(p);
+    if (idx !== current) {
+      steps.forEach((el, i) => { el.classList.toggle('is-active', i === idx); el.classList.toggle('is-past', i < idx); });
+      current = idx;
+    }
+  };
+  scroll(update, { target: section, offset: ['start end', 'end start'] });
+  const setMode = () => { section.classList.toggle('story--stack', stackMQ.matches); current = -1; update(); };
+  stackMQ.addEventListener('change', setMode);
+  addEventListener('resize', update);
+  setMode();
+
+  // the 3D mannequin loads only when the story is near; the SVG figure stays as the fallback
+  const holder = $('ems-3d');
+  const gl = (() => { try { return !!document.createElement('canvas').getContext('webgl2'); } catch { return false; } })();
+  if (gl) {
+    let started = false;
+    new IntersectionObserver(async ([e]) => {
+      if (ems3d) ems3d.setActive(e.isIntersecting);
+      if (!e.isIntersecting || started) return;
+      started = true;
+      try {
+        const { createEms3D } = await import('/js/ems3d.js');
+        ems3d = await createEms3D(holder, { modelUrl: '/model/ems-manken.glb' });
+        ems3d.setProgress(lastP);
+        holder.parentElement.classList.add('is-3d');
+        document.addEventListener('goal:change', ev => ems3d.setGoal(ev.detail));
+      } catch (err) { console.warn('3D figür yüklenemedi, çizim kullanılıyor', err); }
+    }, { rootMargin: '600px 0px' }).observe(section);
+  }
+}
+</script>
+</Base>

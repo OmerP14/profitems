@@ -7,14 +7,14 @@ Bu plan üzerinde mutabık kalındı (16 Ekim 2026). Sayfalar bu sırayla, **bir
 1. Sayfa tasarlanır ve kodlanır (masaüstü + mobil, SEO başlık/açıklaması dahil).
 2. Tarayıcıda ve ekran görüntüleriyle kontrol edilir.
 3. Kullanıcıya gösterilir; **onay gelmeden bir sonraki sayfaya geçilmez.**
-4. Onaydan sonra menüye ve ana sayfaya bağlanır, git'e kaydedilip `yedek-<sayfa>` etiketiyle yedeklenir.
+4. Onaydan sonra menüye ve ana sayfaya bağlanır, `main` dalına açıklamalı notla kaydedilip `yedek-<sayfa>` etiketiyle yedeklenir ve GitHub'a gönderilir (ayrı dal açılmaz).
 
 ## Sayfalar
 
 | # | Sayfa | Adres | Durum | Gerekenler |
 |---|---|---|---|---|
 | 0 | Ana sayfa (giriş + EMS nasıl çalışır?) | `/` | ✅ Onaylandı (`yedek-anasayfa-v1`) | — |
-| 1 | İletişim | `/iletisim` | ✅ Onaylandı (`yedek-iletisim`) | — |
+| 1 | İletişim | `/iletisim` | ✅ Onaylandı (`yedek-iletisim-v2`) | — |
 | 2 | Hizmetler | `/hizmetler` | ✅ Onaylandı (`yedek-hizmetler`) | Seans süresi, haftalık seans, fiyat, ilk geliş süreci gelince "Bir seans nasıl geçer?" bölümü eklenecek |
 | 3 | EMS Nedir? (SSS dahil) | `/ems-nedir` | ⏭️ Sırada | Sık sorulan 5–10 soru ve cevapları, kimlerin yapmaması gerektiği (kullanıcı onayıyla) |
 | 4 | Hakkımızda ve Ekibimiz | `/hakkimizda` | ⏳ Bekliyor | Hocaların adı, fotoğrafı, uzmanlığı; kısa işletme hikâyesi |

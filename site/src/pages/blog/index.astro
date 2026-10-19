@@ -1,0 +1,142 @@
+---
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/Nav.astro';
+import { yazilar, okumaSuresi, tarihYaz } from '../../data/blog';
+
+const [son, ...digerleri] = await yazilar();
+---
+<Base yol="/blog">
+<Nav tema="acik" />
+
+<main>
+  <!-- first screen: the page name, then the newest post at full weight -->
+  <section class="b-hero" aria-labelledby="blog-baslik">
+    <div class="b-hero__head">
+      <h1 class="b-hero__title" id="blog-baslik"><span class="line"><span>Blog</span></span></h1>
+      <p class="b-hero__lead" data-rise>EMS, antrenman ve stüdyomuz üzerine yazılar. Her biri tek bir soruya cevap veriyor.</p>
+    </div>
+
+    {son && (
+      <a class="feat" href={`/blog/${son.id}`} data-rise>
+        <figure class="feat__img"><img src={son.data.kapak} alt={son.data.kapakAlt} width="1440" height="1080" decoding="async" fetchpriority="high"></figure>
+        <div class="feat__text">
+          <h2>{son.data.baslik}</h2>
+          <p>{son.data.aciklama}</p>
+          <p class="meta"><time datetime={son.data.tarih.toISOString().slice(0, 10)}>{tarihYaz(son.data.tarih)}</time><span>{okumaSuresi(son)} dakikalık okuma</span></p>
+          <span class="feat__go" aria-hidden="true">Yazıyı oku</span>
+        </div>
+      </a>
+    )}
+  </section>
+
+  {digerleri.length > 0 && (
+    <section class="rest" aria-labelledby="diger-baslik">
+      <h2 class="sr-only" id="diger-baslik">Diğer yazılar</h2>
+      <ul class="rest__list">
+        {digerleri.map(y => (
+          <li data-rise>
+            <a href={`/blog/${y.id}`}>
+              <img src={y.data.kapak} alt="" width="1440" height="1080" loading="lazy" decoding="async">
+              <span class="rest__text">
+                <span class="rest__title">{y.data.baslik}</span>
+                <span class="rest__desc">{y.data.aciklama}</span>
+              </span>
+              <span class="meta rest__meta"><time datetime={y.data.tarih.toISOString().slice(0, 10)}>{tarihYaz(y.data.tarih)}</time><span>{okumaSuresi(y)} dakikalık okuma</span></span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+</main>
+</Base>
+
+<style>
+  .b-hero { padding: 2vh var(--margin) 120px; }
+  .b-hero__head { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 32px var(--margin); align-items: end; margin-bottom: 3.5vh; }
+  .b-hero__title {
+    margin: 0; text-transform: uppercase; font-style: italic; font-weight: 800; font-variation-settings: "wdth" 62;
+    font-size: clamp(4rem, min(10vw, 17vh), 10rem); line-height: .92; letter-spacing: -0.02em;
+  }
+  .b-hero__title .line { display: block; overflow: hidden; padding: .03em .06em .02em 0; }
+  .b-hero__title .line > span { display: inline-block; }
+  .b-hero__lead { margin: 0 0 1vw; max-width: 34ch; font-size: clamp(1.125rem, 1rem + .5vw, 1.5rem); line-height: 1.3; font-weight: 500; }
+
+  .meta { display: flex; flex-wrap: wrap; gap: 6px 20px; margin: 0; font-size: var(--step-small); font-weight: 600; color: var(--muted); }
+
+  /* newest post: photograph cut on the logo's slant, the title beside it on black */
+  .feat { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); text-decoration: none; background: var(--ink); color: #fff; margin: 0 calc(-1 * var(--margin)); height: clamp(380px, calc(100svh - 88px - 2vh - min(10vw, 17vh) - 3.5vh - 4vh), 620px); }
+  .feat__img { margin: 0; overflow: hidden; clip-path: polygon(0 0, 100% 0, 88% 100%, 0 100%); min-height: 100%; }
+  .feat__img img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s var(--ease-out); }
+  .feat__text { align-self: center; padding: 32px var(--margin) 32px 24px; }
+  .feat .meta { color: var(--on-dark-muted); }
+  .feat h2 {
+    margin: 0 0 20px; text-transform: uppercase; font-style: italic; font-weight: 800; font-variation-settings: "wdth" 62;
+    font-size: clamp(2.25rem, min(4vw, 7vh), 4.25rem); line-height: 1.04; letter-spacing: -0.02em;
+  }
+  .feat p:not(.meta) { margin: 0 0 20px; max-width: 40ch; font-size: clamp(1.0625rem, 1rem + .3vw, 1.25rem); }
+  .feat__go { margin-top: 20px; display: inline-flex; align-items: center; gap: 14px; font-weight: 700; }
+  .feat__go::after { content: ""; width: 34px; height: 12px; background: var(--accent); clip-path: polygon(30% 0, 100% 0, 70% 100%, 0 100%); transition: width .25s var(--ease-out); }
+  .feat:hover .feat__img img { transform: scale(1.04); }
+  .feat:hover .feat__go::after { width: 56px; }
+  .feat:hover h2 { color: var(--accent); }
+  .feat h2 { transition: color .2s; }
+
+  /* the other posts: big type rows with a small slanted picture */
+  .rest { padding: 0 var(--margin) 160px; }
+  .rest__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+  .rest__list a {
+    display: grid; grid-template-columns: 220px minmax(0, 1fr) 180px; gap: 32px; align-items: center; padding: 20px;
+    background: #fff; text-decoration: none; transition: background-color .2s;
+  }
+  .rest__list img { width: 100%; aspect-ratio: 4 / 3; height: auto; object-fit: cover; clip-path: polygon(0 0, 100% 0, 86% 100%, 0 100%); }
+  .rest__text { display: block; }
+  .rest__title {
+    display: block; margin-bottom: 10px; text-transform: uppercase; font-style: italic; font-weight: 800; font-variation-settings: "wdth" 62;
+    font-size: clamp(2rem, 3.4vw, 3.5rem); line-height: 1.04; letter-spacing: -0.01em; transition: color .2s;
+  }
+  .rest__desc { display: block; max-width: 60ch; }
+  .rest__meta { flex-direction: column; align-self: end; text-align: right; }
+  .rest__list a:hover { background: var(--surface); }
+  .rest__list a:hover .rest__title { color: var(--accent-deep); }
+
+  :global(.js) .b-hero__title .line > span { transform: translateY(105%); }
+  :global(.js) [data-rise] { opacity: 0; transform: translateY(22px); }
+  :global(.is-in) .b-hero__title .line > span, :global(.is-in) [data-rise] { opacity: 1; transform: none; transition: transform .8s var(--ease-out), opacity .8s; }
+
+  @media (max-width: 860px) {
+    .b-hero { padding-bottom: 72px; }
+    .b-hero__head { grid-template-columns: 1fr; margin-bottom: 40px; }
+    .b-hero__title { font-size: 26vw; }
+    .feat { height: auto; }
+    .feat__img img { aspect-ratio: 16 / 10; height: auto; }
+    .feat { grid-template-columns: 1fr; }
+    .feat__img { clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%); }
+    .feat__text { padding: 28px var(--margin) 40px; }
+    .rest { padding-bottom: 96px; }
+    .rest__list a { grid-template-columns: 1fr; gap: 14px; padding: 16px; }
+    .rest__meta { flex-direction: row; text-align: left; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :global(.js) .b-hero__title .line > span, :global(.js) [data-rise] { opacity: 1; transform: none; }
+  }
+</style>
+
+<script>
+import { animate, stagger, inView } from 'motion';
+window.__motion = true;
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (reduce) { document.body.classList.add('is-in'); }
+else {
+  const ease = [0.22, 1, 0.36, 1] as const;
+  animate('.b-hero__title .line > span', { y: ['105%', '0%'] }, { type: 'spring', stiffness: 140, damping: 20 });
+  document.querySelectorAll('.b-hero, .rest').forEach(block => {
+    inView(block, () => {
+      animate(block.querySelectorAll('[data-rise]'), { opacity: [0, 1], y: [22, 0] }, { duration: 0.7, ease, delay: stagger(0.08, { startDelay: 0.2 }) });
+    }, { amount: 0.1 });
+  });
+}
+</script>
+<script is:inline>
+setTimeout(() => { if (!window.__motion) document.body.classList.add('is-in'); }, 1500);
+</script>

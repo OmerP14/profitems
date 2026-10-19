@@ -289,25 +289,9 @@ function placePad({ def, g }, J, dy, k) {
 }
 
 const steps = [...section.querySelectorAll('.story__step')];
-// where the figure should be when each step sits at the reading line
+// where the figure should be while each step is on screen
 const anchors = [.14, .3, .42, .64, .86, 1];
 let current = -1;
-function fromSteps() {
-  const line = innerHeight * (innerWidth <= 860 ? .7 : .5);
-  const c = steps.map(el => { const r = el.getBoundingClientRect(); return r.top + r.height / 2; });
-  if (line <= c[0]) {
-    const h = steps[0].getBoundingClientRect().height;
-    return { p: anchors[0] * clamp(1 - (c[0] - line) / h), idx: 0 };
-  }
-  for (let i = 0; i < c.length - 1; i++) {
-    if (line < c[i + 1]) {
-      const f = (line - c[i]) / (c[i + 1] - c[i]);
-      return { p: lerp(anchors[i], anchors[i + 1], f), idx: f < .5 ? i : i + 1 };
-    }
-  }
-  return { p: 1, idx: steps.length - 1 };
-}
-
 function render(p) {
   const { J, a, dy } = pose(p);
   $('thighL').setAttribute('d', line(J.hiL, J.knL));
@@ -374,8 +358,7 @@ if (reduceStory) {
   section.classList.add('story--live');
   let ems3d = null, lastP = 0;
   render(0);
-  const stackMQ = matchMedia('(max-width: 860px)');
-  // phones: progress comes from how far the pinned section has scrolled, spread evenly over the steps
+  // the stage pins; progress comes from how far the section has scrolled, spread evenly over the steps
   const fromSection = () => {
     const r = section.getBoundingClientRect();
     const q = clamp(-r.top / Math.max(r.height - innerHeight, 1));
@@ -386,7 +369,7 @@ if (reduceStory) {
     return { p: i >= n - 1 ? 1 : lerp(anchors[i], anchors[i + 1], f), idx: Math.min(Math.round(s), n - 1) };
   };
   const update = () => {
-    const { p, idx } = stackMQ.matches ? fromSection() : fromSteps();
+    const { p, idx } = fromSection();
     lastP = p;
     render(p);
     if (ems3d) ems3d.setProgress(p);
@@ -396,10 +379,9 @@ if (reduceStory) {
     }
   };
   scroll(update, { target: section, offset: ['start end', 'end start'] });
-  const setMode = () => { section.classList.toggle('story--stack', stackMQ.matches); current = -1; update(); };
-  stackMQ.addEventListener('change', setMode);
+  section.classList.add('story--stack');
   addEventListener('resize', update);
-  setMode();
+  update();
 
   // the 3D mannequin loads only when the story is near; the SVG figure stays as the fallback
   const holder = $('ems-3d');

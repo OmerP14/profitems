@@ -5,9 +5,11 @@ import Footer from '../components/Footer.astro';
 import { seo } from '../data/seo';
 import { isletme, haritaLinki } from '../data/isletme';
 
-interface Props { yol: string }
-const { yol } = Astro.props;
-const sayfa = seo[yol] ?? seo['/'];
+// blog yazıları başlık/açıklamayı kendi dosyalarından verir; diğer sayfalar seo.ts'ten alır
+interface Props { yol: string; baslik?: string; aciklama?: string; gorsel?: string; tur?: 'website' | 'article' }
+const { yol, baslik, aciklama, gorsel, tur = 'website' } = Astro.props;
+const sayfa = baslik && aciklama ? { baslik, aciklama } : seo[yol] ?? seo['/'];
+const ogGorsel = gorsel && Astro.site ? new URL(gorsel, Astro.site).href : null;
 const canonical = Astro.site ? new URL(yol, Astro.site).href : null;
 
 // Google'a "bu bir yerel işletme" diyen bilgi (schema.org)
@@ -43,7 +45,8 @@ const isletmeVerisi = {
 <title>{sayfa.baslik}</title>
 <meta name="description" content={sayfa.aciklama}>
 {canonical && <link rel="canonical" href={canonical}>}
-<meta property="og:type" content="website">
+<meta property="og:type" content={tur}>
+{ogGorsel && <meta property="og:image" content={ogGorsel}>}
 <meta property="og:locale" content="tr_TR">
 <meta property="og:site_name" content={isletme.ad}>
 <meta property="og:title" content={sayfa.baslik}>

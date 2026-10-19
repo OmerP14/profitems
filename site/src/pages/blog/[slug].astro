@@ -1,0 +1,159 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/Nav.astro';
+import WhatsAppIcon from '../../components/WhatsAppIcon.astro';
+import { isletme, whatsappLinki } from '../../data/isletme';
+import { yazilar, okumaSuresi, tarihYaz, type Yazi } from '../../data/blog';
+
+export async function getStaticPaths() {
+  const hepsi = await yazilar();
+  return hepsi.map(yazi => ({ params: { slug: yazi.id }, props: { yazi, hepsi } }));
+}
+
+const { yazi, hepsi } = Astro.props as { yazi: Yazi; hepsi: Yazi[] };
+const { Content } = await render(yazi);
+const d = yazi.data;
+const yol = `/blog/${yazi.id}`;
+const digerleri = hepsi.filter(y => y.id !== yazi.id).slice(0, 3);
+const gun = d.tarih.toISOString().slice(0, 10);
+
+const yaziVerisi = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: d.baslik,
+  description: d.aciklama,
+  datePublished: gun,
+  inLanguage: 'tr-TR',
+  author: { '@type': 'Organization', name: isletme.ad },
+  publisher: { '@type': 'Organization', name: isletme.ad },
+  ...(Astro.site ? { image: new URL(d.kapak, Astro.site).href, mainEntityOfPage: new URL(yol, Astro.site).href } : {}),
+};
+---
+<Base yol={yol} baslik={`${d.baslik} | Profit EMS Konya`} aciklama={d.aciklama} gorsel={d.kapak} tur="article">
+<script slot="head" type="application/ld+json" set:html={JSON.stringify(yaziVerisi)} />
+<Nav tema="acik" />
+
+<main>
+  <article>
+    <header class="p-head">
+      <a class="back" href="/blog">Tüm yazılar</a>
+      <h1 class="p-title"><span class="line"><span>{d.baslik}</span></span></h1>
+      <p class="meta" data-rise><time datetime={gun}>{tarihYaz(d.tarih)}</time><span>{okumaSuresi(yazi)} dakikalık okuma</span></p>
+    </header>
+
+    <figure class="p-cover" data-rise>
+      <img src={d.kapak} alt={d.kapakAlt} width="1600" height="1200" decoding="async" fetchpriority="high">
+      {d.kapakKaynak && <figcaption>{d.kapakKaynak}</figcaption>}
+    </figure>
+
+    <div class="prose">
+      <Content />
+    </div>
+  </article>
+
+  <!-- close: one action, then the other posts -->
+  <section class="p-end" aria-labelledby="son-baslik">
+    <div class="p-end__ask">
+      <h2 id="son-baslik">Sorun mu var?</h2>
+      <p>Aklına takılanı bize yaz, sana uygun planı birlikte belirleyelim.</p>
+      <div class="p-end__actions">
+        <a class="btn" href={whatsappLinki('Merhaba, blogdaki yazınızı okudum, bir sorum var.')} target="_blank" rel="noopener"><WhatsAppIcon /> WhatsApp'tan yaz</a>
+        <a class="btn btn--dark" href={`tel:${isletme.telefonUluslararasi}`}>Ara: {isletme.telefon}</a>
+      </div>
+    </div>
+    {digerleri.length > 0 && (
+      <nav class="p-end__more" aria-label="Diğer yazılar">
+        <p class="p-end__label">Diğer yazılar</p>
+        <ul>
+          {digerleri.map(y => <li><a href={`/blog/${y.id}`}><img src={y.data.kapak} alt="" width="1440" height="1080" loading="lazy" decoding="async"><span>{y.data.baslik}</span></a></li>)}
+        </ul>
+      </nav>
+    )}
+  </section>
+</main>
+</Base>
+
+<style>
+  .p-head { padding: 4vh var(--margin) 48px; }
+  .back { display: inline-flex; align-items: center; gap: 14px; margin-bottom: 36px; font-weight: 700; text-decoration: none; }
+  .back::before { content: ""; width: 34px; height: 12px; background: var(--ink); clip-path: polygon(30% 0, 100% 0, 70% 100%, 0 100%); transition: background-color .2s, width .25s var(--ease-out); }
+  .back:hover { color: var(--accent-deep); }
+  .back:hover::before { background: var(--accent); width: 52px; }
+  .p-title {
+    margin: 0 0 28px; max-width: 20ch; text-transform: uppercase; font-style: italic; font-weight: 800; font-variation-settings: "wdth" 62;
+    font-size: clamp(3.25rem, 8vw, 8.5rem); line-height: 1.04; letter-spacing: -0.02em;
+  }
+  .p-title .line { display: block; overflow: hidden; padding: .03em .06em .02em 0; }
+  .p-title .line > span { display: inline-block; }
+  .meta { display: flex; flex-wrap: wrap; gap: 6px 20px; margin: 0; font-size: var(--step-small); font-weight: 600; color: var(--muted); }
+
+  .p-cover { margin: 0 0 96px; }
+  .p-cover img { width: 100%; height: auto; aspect-ratio: 21 / 9; object-fit: cover; object-position: 50% 35%; clip-path: polygon(0 0, 100% 0, 94% 100%, 0 100%); }
+  .p-cover figcaption { margin: 10px var(--margin) 0; font-size: var(--step-small); color: var(--muted); }
+
+  /* running text: one comfortable column, offset under the title's left edge */
+  .prose { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 7fr) minmax(0, 2fr); padding: 0 var(--margin) 140px; }
+  .prose > :global(*) { grid-column: 2; max-width: 66ch; }
+  .prose :global(p), .prose :global(li) { font-size: clamp(1.125rem, 1.05rem + .3vw, 1.3125rem); line-height: 1.6; }
+  .prose :global(p) { margin: 0 0 22px; }
+  .prose > :global(p:first-child) { font-size: clamp(1.25rem, 1.1rem + .6vw, 1.625rem); line-height: 1.4; font-weight: 500; margin-bottom: 48px; }
+  .prose :global(h2) {
+    margin: 56px 0 18px; text-transform: uppercase; font-style: italic; font-weight: 800; font-variation-settings: "wdth" 62;
+    font-size: clamp(2rem, 3.2vw, 3.25rem); line-height: .95; letter-spacing: -0.01em;
+  }
+  .prose :global(ul) { list-style: none; margin: 0 0 22px; padding: 0; display: grid; gap: 10px; }
+  .prose :global(ul li) { position: relative; padding-left: 36px; }
+  .prose :global(ul li)::before { content: ""; position: absolute; left: 0; top: .55em; width: 20px; height: 10px; background: var(--accent); clip-path: polygon(30% 0, 100% 0, 70% 100%, 0 100%); }
+  .prose :global(a) { color: var(--ink); font-weight: 600; text-decoration-color: var(--accent); text-decoration-thickness: 3px; text-underline-offset: 4px; }
+  .prose :global(a:hover) { color: var(--accent-deep); }
+
+  .p-end { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 48px var(--margin); padding: calc(120px + 8vh) var(--margin) 140px; background: var(--accent); color: #fff; clip-path: polygon(0 8vh, 100% 0, 100% 100%, 0 100%); }
+  .p-end h2 {
+    margin: 0 0 20px; text-transform: uppercase; font-style: italic; font-weight: 800; font-variation-settings: "wdth" 62;
+    font-size: clamp(3.25rem, 7vw, 7rem); line-height: .92; letter-spacing: -0.02em;
+  }
+  .p-end p { margin: 0 0 28px; max-width: 40ch; font-size: clamp(1.125rem, 1rem + .35vw, 1.3125rem); }
+  .p-end__actions { display: flex; flex-wrap: wrap; gap: 8px; }
+  .p-end .btn:not(.btn--dark) { background: #fff; color: var(--ink); }
+  .p-end .btn:not(.btn--dark):hover { background: #e3e7ea; }
+  .btn--dark { background: var(--ink); color: #fff; }
+  .btn--dark:hover { background: #1f2226; }
+  .p-end__more { align-self: end; }
+  .p-end__label { font-weight: 700; margin-bottom: 12px; }
+  .p-end__more ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+  .p-end__more a { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 18px; align-items: center; padding: 12px 20px 12px 12px; background: var(--accent-deep); text-decoration: none; font-weight: 700; font-size: clamp(1.0625rem, 1rem + .3vw, 1.25rem); transition: background-color .2s, color .2s; }
+  .p-end__more a:hover { background: #fff; color: var(--ink); }
+  .p-end__more img { width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; clip-path: polygon(0 0, 100% 0, 86% 100%, 0 100%); }
+
+  :global(.js) .p-title .line > span { transform: translateY(105%); }
+  :global(.js) [data-rise] { opacity: 0; transform: translateY(22px); }
+  :global(.is-in) .p-title .line > span, :global(.is-in) [data-rise] { opacity: 1; transform: none; transition: transform .8s var(--ease-out), opacity .8s; }
+
+  @media (max-width: 860px) {
+    .p-title { font-size: clamp(2.25rem, 10.5vw, 4.5rem); max-width: none; }
+    .p-cover { margin-bottom: 56px; }
+    .p-cover img { aspect-ratio: 4 / 3; clip-path: polygon(0 0, 100% 0, 100% 92%, 0 100%); }
+    .prose { grid-template-columns: 1fr; padding-bottom: 96px; }
+    .prose > :global(*) { grid-column: 1; }
+    .p-end { grid-template-columns: 1fr; padding: calc(96px + 6vh) var(--margin) 96px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :global(.js) .p-title .line > span, :global(.js) [data-rise] { opacity: 1; transform: none; }
+  }
+</style>
+
+<script>
+import { animate, stagger } from 'motion';
+window.__motion = true;
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (reduce) { document.body.classList.add('is-in'); }
+else {
+  const ease = [0.22, 1, 0.36, 1] as const;
+  animate('.p-title .line > span', { y: ['105%', '0%'] }, { type: 'spring', stiffness: 140, damping: 20 });
+  animate('.p-head [data-rise], .p-cover', { opacity: [0, 1], y: [22, 0] }, { duration: 0.7, ease, delay: stagger(0.08, { startDelay: 0.25 }) });
+}
+</script>
+<script is:inline>
+setTimeout(() => { if (!window.__motion) document.body.classList.add('is-in'); }, 1500);
+</script>

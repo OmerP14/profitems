@@ -88,7 +88,7 @@
 .is-in .hero__title .line:nth-child(2) > span { transition-delay: .09s; }
 .is-in .hero__cert > *, .is-in .hero__actions > * { transform: none; opacity: 1; transition: transform .7s var(--ease-out) .4s, opacity .7s .4s; }
 
-/* EMS story: the steps scroll past one by one, the figure stays beside them */
+/* EMS story: without script the steps are a plain list beside the figure */
 .story { position: relative; background: var(--bg); color: var(--ink); --body-tone: #3c4149; }
 .story__pin {
   display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
@@ -124,6 +124,18 @@
 .story--live .story__step.is-active > :nth-child(4) { transition-delay: .18s; }
 .story--live .story__step.is-active > :nth-child(5) { transition-delay: .24s; }
 
+/* pinned stage (every screen once the script runs): the figure holds still and each new step takes the old one's place */
+.story--stack { height: 420vh; }
+.story--stack .story__pin { position: sticky; top: 0; height: 100svh; overflow: hidden; align-items: center; }
+.story--stack .story__figure { position: relative; height: 100svh; }
+.story--stack .story__text { padding: 0; align-self: center; }
+.story--stack .story__steps { display: grid; }
+.story--stack .story__step { grid-area: 1 / 1; min-height: 0; justify-content: flex-start; }
+.story--stack .story__step:not(.is-active) { pointer-events: none; }
+.story--live.story--stack .story__step > * { opacity: 0; transform: translateY(28px); }
+.story--live.story--stack .story__step.is-past > * { opacity: 0; transform: translateY(-28px); transition-delay: 0s; }
+.story--live.story--stack .story__step.is-active > * { opacity: 1; transform: none; }
+
 #rig .fig-band { fill: var(--accent); }
 .story__3d { display: none; }
 .story__figure.is-3d #rig { visibility: hidden; }
@@ -152,21 +164,13 @@
   .story__step { min-height: 44svh; justify-content: flex-start; padding-top: 3vh; }
   .story__big { font-size: 1.5rem; }
 
-  /* phones: the whole stage pins, and each new step takes the old one's place */
+  /* phones: figure on top, the step underneath */
   .story--stack { height: 320vh; }
-  .story--stack .story__pin {
-    position: sticky; top: 0; height: 100svh; overflow: hidden;
-    grid-template-rows: auto minmax(0, 1fr); align-content: start;
-  }
-  .story--stack .story__figure { position: relative; height: 54svh; }
-  .story--stack .story__text { padding: 1vh 0 0; }
+  .story--stack .story__pin { grid-template-rows: auto minmax(0, 1fr); align-content: start; align-items: start; }
+  .story--stack .story__figure { height: 54svh; }
+  .story--stack .story__text { padding: 1vh 0 0; align-self: start; }
   .story--stack .story__title { font-size: 1.75rem; margin-bottom: 12px; }
-  .story--stack .story__steps { display: grid; }
-  .story--stack .story__step { grid-area: 1 / 1; min-height: 0; padding-top: 0; }
-  .story--stack .story__step:not(.is-active) { pointer-events: none; }
-  .story--live.story--stack .story__step > * { opacity: 0; transform: translateY(28px); }
-  .story--live.story--stack .story__step.is-past > * { opacity: 0; transform: translateY(-28px); transition-delay: 0s; }
-  .story--live.story--stack .story__step.is-active > * { opacity: 1; transform: none; }
+  .story--stack .story__step { padding-top: 0; }
 }
 
 @media (max-width: 860px) {

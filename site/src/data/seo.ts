@@ -14,6 +14,10 @@ export const seo: Record<string, { baslik: string; aciklama: string }> = {
     baslik: 'EMS Nedir, Nasıl Çalışır? Kimler Yapamaz | Profit EMS Konya',
     aciklama: "EMS nedir, bir seans nasıl geçer, kimler yapmamalı? Konya Selçuklu'daki Profit EMS'ten EMS antrenmanı hakkında sık sorulan soruların cevapları.",
   },
+  '/blog': {
+    baslik: 'EMS Blog: Antrenman, Seans ve Sağlık | Profit EMS Konya',
+    aciklama: "EMS nedir, nasıl çalışır, ilk seansa nasıl hazırlanılır? Konya Selçuklu'daki Profit EMS'ten EMS antrenmanı üzerine sade ve anlaşılır yazılar.",
+  },
   '/iletisim': {
     baslik: 'İletişim ve Konum | Profit EMS Konya Selçuklu',
     aciklama: "Profit EMS'e WhatsApp, telefon veya Instagram'dan ulaş. Kılınçarslan Mah., Avrukon Plaza, Selçuklu/Konya. Her gün 10:00–22:00 açığız.",
@@ -24,5 +28,6 @@ export const seo: Record<string, { baslik: string; aciklama: string }> = {
 export const menu = [
   { href: '/hizmetler', etiket: 'Hizmetler' },
   { href: '/ems-nedir', etiket: 'EMS nedir?' },
+  { href: '/blog', etiket: 'Blog' },
   { href: '/iletisim', etiket: 'İletişim' },
 ];

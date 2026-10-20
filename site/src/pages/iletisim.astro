@@ -157,7 +157,7 @@ const acikGen = ((saat(kapanis) - saat(acilis)) / 24) * 100;
   .find__map iframe { display: block; width: 100%; height: 100%; min-height: 560px; border: 0; filter: grayscale(.9) contrast(1.05); }
 
   /* ---------- certificate plaque ---------- */
-  .plaque { position: relative; isolation: isolate; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 48px var(--margin); align-items: center; background: var(--ink); color: #fff; padding: 160px var(--margin); min-height: 100svh; overflow: hidden; }
+  .plaque { position: relative; isolation: isolate; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 48px var(--margin); align-items: center; background: var(--ink); color: #fff; padding: clamp(72px, 11svh, 160px) var(--margin); min-height: 100svh; overflow: hidden; }
   /* the logo's red slash fills the right half behind the plaque */
   .plaque__band {
     position: absolute; z-index: -1; top: 0; bottom: 0; right: -6vw; width: 62vw;
@@ -171,7 +171,7 @@ const acikGen = ((saat(kapanis) - saat(acilis)) / 24) * 100;
   .plaque__wrap { justify-self: center; }
   .plaque__img { margin: 0; transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) rotate(-4deg); transition: transform .35s var(--ease-out); animation: float 6s ease-in-out infinite; }
   @keyframes float { 50% { translate: 0 -12px; } }
-  .plaque__img img { display: block; width: min(520px, 100%); height: auto; aspect-ratio: 856 / 1000; }
+  .plaque__img img { display: block; width: min(520px, 100%, 62svh); height: auto; aspect-ratio: 856 / 1000; }
 
   /* ---------- entrances (only when script runs) ---------- */
   :global(.js) .reach__title .line > span { transform: translateY(105%); }

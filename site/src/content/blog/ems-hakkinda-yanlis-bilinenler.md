@@ -2,8 +2,8 @@
 baslik: "EMS hakkında yanlış bilinenler"
 aciklama: "EMS acıtır mı, tek başına zayıflatır mı, sadece sporculara mı göre? EMS hakkında sık duyulan yanlışlar ve doğruları. Konya Profit EMS."
 tarih: 2026-10-19
-kapak: /img/iletisim-2560.jpg
-kapakAlt: "Karanlık bir spor salonunda ağır bir halteri kaldıran adam"
+kapak: /img/blog/ems-yelek.jpg
+kapakAlt: "Gövdesinde EMS yeleği, elinde halterle duran bir kadın"
 ---
 
 Kaslarla elektriğin ilişkisi yeni değil: 1862'de Fransız hekim Duchenne de Boulogne, ciltten verdiği elektrikle yüz kaslarını tek tek kasıp fotoğraflamıştı ([EMS nedir?](/ems-nedir) sayfasında o fotoğraflardan birini görebilirsin). Ama EMS hakkında bugün hâlâ çok yanlış bilgi dolaşıyor. En sık duyduklarımızı topladık.

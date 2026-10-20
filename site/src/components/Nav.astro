@@ -9,7 +9,7 @@ const logo = tema === 'koyu' ? '/img/logo-light.svg' : '/img/logo.svg';
 const yol = Astro.url.pathname.replace(/\/$/, '') || '/';
 ---
 <header class:list={['nav', { 'nav--light': tema === 'acik' }]}>
-  <a class="nav__logo" href="/" aria-label="Profit EMS ana sayfa"><img src={logo} alt="Profit EMS" width="104" height="44"></a>
+  <a class="nav__logo" href="/" aria-label="Profit EMS ana sayfa"><img src={logo} alt="Profit EMS" width="128" height="54"></a>
   <nav aria-label="Ana menü">
     <ul class="nav__links">
       {menu.map(m => <li><a href={m.href} aria-current={m.href === yol || yol.startsWith(m.href + '/') ? 'page' : undefined}>{m.etiket}</a></li>)}
@@ -27,7 +27,6 @@ const yol = Astro.url.pathname.replace(/\/$/, '') || '/';
 <div class="mmenu" id="mobil-menu" hidden>
   <nav aria-label="Mobil menü">
     <ul>
-      <li><a href="/">Ana sayfa</a></li>
       {menu.map(m => <li><a href={m.href}>{m.etiket}</a></li>)}
     </ul>
   </nav>

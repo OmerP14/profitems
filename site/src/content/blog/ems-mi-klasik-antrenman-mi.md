@@ -2,8 +2,8 @@
 baslik: "EMS mi, klasik antrenman mı?"
 aciklama: "EMS ile klasik antrenman arasındaki fark ne? Kaslar nasıl çalışır, hangisi kime uygun? Konya Profit EMS'ten sade bir karşılaştırma."
 tarih: 2026-10-19
-kapak: /img/hizmetler/zayiflama.jpg
-kapakAlt: "Spor salonunda dambıllarla lunge hareketi yapan bir kadın"
+kapak: /img/blog/ems-antrenor.jpg
+kapakAlt: "EMS kıyafetli bir kadın bench üzerinde çalışırken antrenörü cihazı tabletten ayarlıyor"
 ---
 
 Klasik bir antrenmanda kaslarını beyninden sinirler yoluyla gelen sinyal çalıştırır. EMS'te bu sinyale bir de kıyafetteki pedlerden gelen hafif elektrik uyarısı eklenir. Hareketler çoğu zaman aynıdır; değişen, o hareket sırasında kasın ne kadar yoğun çalıştığıdır.

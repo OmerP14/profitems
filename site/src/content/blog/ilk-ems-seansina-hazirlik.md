@@ -2,8 +2,8 @@
 baslik: "İlk EMS seansına hazırlık"
 aciklama: "İlk EMS seansından önce ne yapmalı, ne giyilir, seansta ne hissedilir? Konya'da EMS'e başlayacaklar için Profit EMS'ten kısa bir rehber."
 tarih: 2026-10-19
-kapak: /img/hizmetler/incelme.jpg
-kapakAlt: "Elleri belinde, spor salonunda duran bir kadın"
+kapak: /img/blog/ems-ilk-seans.jpg
+kapakAlt: "Antrenör EMS cihazını tabletten ayarlarken EMS kıyafetli bir kadın dambılla squat yapıyor"
 ---
 
 İlk EMS seansına gelmeden önce bilmen gerekenler az ve basit. Bu yazıda randevudan seans sonrasına kadar adım adım neye dikkat etmen gerektiğini anlattık.

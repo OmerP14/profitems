@@ -17,7 +17,7 @@ Bu plan üzerinde mutabık kalındı (16 Ekim 2026). Sayfalar bu sırayla, **bir
 | 1 | İletişim | `/iletisim` | ✅ Onaylandı (`yedek-iletisim-v2`) | — |
 | 2 | Hizmetler | `/hizmetler` | ✅ Onaylandı (`yedek-hizmetler`) | Seans süresi, haftalık seans, fiyat, ilk geliş süreci gelince "Bir seans nasıl geçer?" bölümü eklenecek |
 | 3 | EMS Nedir? (SSS dahil) | `/ems-nedir` | ✅ Onaylandı (`yedek-ems-nedir`) | Sık sorulan 5–10 soru ve cevapları, kimlerin yapmaması gerektiği (kullanıcı onayıyla) |
-| 4 | Hakkımızda ve Ekibimiz | `/hakkimizda` | ⏳ Bilgi bekleniyor | Hocaların adı, fotoğrafı, uzmanlığı; kısa işletme hikâyesi |
+| 4 | Ekibimiz | `/ekibimiz` | 🛠 Tasarım hazır, menüde; onay bekleniyor (20 Ekim 2026). Hocalar **örnek** veriyle (Mert Aksoy, Selin Kara, Derya Yıldız uydurma; gerçekleri gelince değişecek) (`site/src/data/ekip.ts`) | 3 hocanın adı, unvanı, kısa tanıtımı, çalıştığı hedefler ve 3:4 dikey fotoğrafı; işletme hikâyesi gelirse bu sayfaya bölüm olarak eklenir |
 | 5 | Blog | `/blog` | ✅ Onaylandı (`yedek-blog`) | 6 açılış yazısı yayında; yeni yazı = `site/src/content/blog/` içine bir `.md` dosyası |
 | 6 | KVKK, çerez politikası, 404 | `/kvkk`, `/cerez-politikasi` | ⏳ Bekliyor | KVKK taslağı bir avukat/muhasebeci tarafından kontrol edilmeli |
 | 7 | Ana sayfanın kalan bölümleri | `/` | ⏳ Bekliyor | Diğer sayfalar bittikçe her birine giden bölümler eklenir |
@@ -30,7 +30,7 @@ Bu plan üzerinde mutabık kalındı (16 Ekim 2026). Sayfalar bu sırayla, **bir
 
 **EMS Nedir?** — nasıl çalışır, bir seansın akışı, kimler yapmamalı, sık sorulan sorular.
 
-**Hakkımızda** — hikâye, hocalar, TCF belgesi.
+**Ekibimiz** — hocalar (seçilen hoca öne çıkar), TCF belgesi; hikâye bilgisi gelince eklenir.
 
 **Blog** — yayından sonra kullanıcının sürekli yazı ekleyeceği SEO bölümü; yeni yazı = tek metin dosyası.
 

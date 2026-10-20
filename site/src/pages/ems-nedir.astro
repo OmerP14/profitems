@@ -118,7 +118,7 @@ const waRandevu = whatsappLinki('Merhaba, randevu almak istiyorum.');
     <h2 class="faq__title" id="sorular-baslik" data-rise>Sık sorulan sorular</h2>
     <aside class="faq__side" aria-label="Soru sor">
       <!-- stock photo until the studio's own photographs arrive -->
-      <img class="faq__img" src="/img/hizmetler/sikilasma.jpg" alt="Dambıllarla omuz press hareketi yapan bir erkek" width="1440" height="1080" loading="lazy" decoding="async" data-rise>
+      <img class="faq__img" src="/img/ems-nedir/ems-antrenor-tablet.webp" alt="Antrenör EMS cihazını tabletten ayarlarken EMS kıyafetli bir kadın dambılla squat yapıyor" width="1200" height="1200" loading="lazy" decoding="async" data-rise>
       <p data-rise>Cevabını bulamadığın soruyu bize yaz.</p>
       <div class="faq__actions" data-rise>
         <a class="btn" href={whatsappLinki('Merhaba, EMS hakkında bir sorum var.')} target="_blank" rel="noopener"><WhatsAppIcon /> WhatsApp'tan sor</a>
@@ -169,7 +169,8 @@ const waRandevu = whatsappLinki('Merhaba, randevu almak istiyorum.');
     display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: end; gap: 32px var(--margin);
     min-height: calc(100svh - 88px); padding: 4vh var(--margin) calc(clamp(110px, 13vw, 190px) + 7vh);
   }
-  .e-hero__title { font-size: clamp(5rem, 17vw, 17rem); }
+  /* capped by height too, so the impulse train is never cut off at the bottom of a laptop screen */
+  .e-hero__title { font-size: clamp(5rem, min(17vw, 26svh), 17rem); }
   .e-hero__title .line { display: block; overflow: hidden; padding: .03em .06em .02em 0; }
   .e-hero__title .line > span { display: inline-block; }
   .e-hero__side { padding-bottom: 1.2vw; }

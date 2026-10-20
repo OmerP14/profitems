@@ -16,6 +16,13 @@ const ad = (h: typeof zay) => (h as { kisaAd?: string }).kisaAd ?? h.ad;
   <!-- the slash cut into the Profit EMS logo, at poster scale, runs every part of this page -->
   <section class="h-hero" aria-labelledby="hizmetler-baslik">
     <div class="h-hero__band" aria-hidden="true"><span></span></div>
+    <!-- the slash is a window onto the goal being chosen; the same photographs carry their alt text further down -->
+    <div class="h-show" aria-hidden="true">
+      <div class="h-show__win">
+        {hizmetler.map((h, i) => <img class:list={['h-show__img', { 'is-on': i === 0 }]} data-id={h.id} src={h.gorsel} srcset={h.srcset} sizes="(max-width: 860px) 68vw, 41vw" alt="" style={`object-position:${h.odak}`} width={h.boyut[0]} height={h.boyut[1]} decoding="async" fetchpriority={i === 0 ? 'high' : 'low'}>)}
+      </div>
+      <p class="h-show__zones"><strong>Çalışan bölgeler</strong><span>{hizmetler[0].bolgeler}</span></p>
+    </div>
     <div class="h-hero__text">
       <h1 class="h-hero__title" id="hizmetler-baslik">
         <span class="line"><span>Hedefini</span></span>{" "}
@@ -24,7 +31,7 @@ const ad = (h: typeof zay) => (h as { kisaAd?: string }).kisaAd ?? h.ad;
       <p class="h-hero__lead" data-rise>{isletme.adres.ilce}'daki stüdyomuzda dört hedef için EMS antrenmanı. Her hedefte kıyafetteki farklı pedler çalışır.</p>
       <nav aria-label="Hizmetler">
         <ul class="h-hero__list">
-          {hizmetler.map(h => <li data-rise><a href={`#${h.id}`}>{h.ad}</a></li>)}
+          {hizmetler.map((h, i) => <li data-rise><a class:list={{ 'is-on': i === 0 }} href={`#${h.id}`} data-id={h.id} data-bolgeler={h.bolgeler}>{ad(h)}</a></li>)}
         </ul>
       </nav>
     </div>
@@ -32,7 +39,7 @@ const ad = (h: typeof zay) => (h as { kisaAd?: string }).kisaAd ?? h.ad;
 
   <!-- 1 · photograph cut on the slant, words beside it -->
   <section class="s-a" id={zay.id} aria-labelledby="t-zay">
-    <div class="frame frame--r s-a__img"><figure class="cut cut--r"><img src={zay.gorsel} alt={zay.alt} width="1440" height="1080" decoding="async"></figure></div>
+    <div class="frame frame--r s-a__img"><figure class="cut cut--r"><img src={zay.gorsel} srcset={zay.srcset} sizes="(max-width: 860px) 100vw, 58vw" alt={zay.alt} style={`object-position:${zay.odak}`} width={zay.boyut[0]} height={zay.boyut[1]} decoding="async"></figure></div>
     <div class="s-a__text">
       <h2 id="t-zay" data-rise>{ad(zay)}</h2>
       <p data-rise>{zay.metin}</p>
@@ -45,7 +52,7 @@ const ad = (h: typeof zay) => (h as { kisaAd?: string }).kisaAd ?? h.ad;
 
   <!-- 2 · full-bleed photograph on a slanted band, words on it -->
   <section class="s-b" id={sik.id} aria-labelledby="t-sik">
-    <img class="s-b__img" src={sik.gorsel} alt={sik.alt} width="1440" height="1080" loading="lazy" decoding="async">
+    <img class="s-b__img" src={sik.gorsel} srcset={sik.srcset} sizes="100vw" alt={sik.alt} style={`object-position:${sik.odak}`} width={sik.boyut[0]} height={sik.boyut[1]} loading="lazy" decoding="async">
     <div class="s-b__text">
       <h2 id="t-sik" data-rise>{ad(sik)}</h2>
       <p data-rise>{sik.metin}</p>
@@ -66,12 +73,12 @@ const ad = (h: typeof zay) => (h as { kisaAd?: string }).kisaAd ?? h.ad;
         <p><strong>Çalışan bölgeler</strong>{inc.bolgeler}</p>
       </div>
     </div>
-    <div class="frame frame--l s-c__img"><figure class="cut cut--l"><img src={inc.gorsel} alt={inc.alt} width="1440" height="1080" loading="lazy" decoding="async"></figure></div>
+    <div class="frame frame--l s-c__img"><figure class="cut cut--l"><img src={inc.gorsel} srcset={inc.srcset} sizes="(max-width: 860px) 100vw, 58vw" alt={inc.alt} style={`object-position:${inc.odak}`} width={inc.boyut[0]} height={inc.boyut[1]} loading="lazy" decoding="async"></figure></div>
   </section>
 
   <!-- 4 · the black chapter -->
   <section class="s-d" id={bel.id} aria-labelledby="t-bel">
-    <div class="frame frame--r s-d__img"><figure class="cut cut--r"><img src={bel.gorsel} alt={bel.alt} width="1440" height="1080" loading="lazy" decoding="async"></figure></div>
+    <div class="frame frame--r s-d__img"><figure class="cut cut--r"><img src={bel.gorsel} srcset={bel.srcset} sizes="(max-width: 860px) 100vw, 50vw" alt={bel.alt} style={`object-position:${bel.odak}`} width={bel.boyut[0]} height={bel.boyut[1]} loading="lazy" decoding="async"></figure></div>
     <div class="s-d__text">
       <h2 id="t-bel" data-rise>{ad(bel)}</h2>
       <p data-rise>{bel.metin}</p>
@@ -125,7 +132,7 @@ const ad = (h: typeof zay) => (h as { kisaAd?: string }).kisaAd ?? h.ad;
 
 
   /* hero: a flat red slash enters from the right */
-  .h-hero { position: relative; overflow: hidden; min-height: calc(100svh - 88px); display: flex; align-items: center; padding: 4vh var(--margin) 12vh; }
+  .h-hero { position: relative; overflow: hidden; min-height: calc(100svh - 88px); display: flex; align-items: center; padding: 4vh var(--margin) 6vh; }
   .h-hero__band {
     position: absolute; top: -10%; bottom: -10%; right: -14vw; width: 66vw;
     background: var(--accent); clip-path: polygon(36% 0, 100% 0, 64% 100%, 0 100%);
@@ -135,22 +142,38 @@ const ad = (h: typeof zay) => (h as { kisaAd?: string }).kisaAd ?? h.ad;
     clip-path: polygon(30% 0, 34% 0, 2% 100%, -2% 100%);
   }
   .h-hero__text { position: relative; z-index: 1; max-width: 760px; }
-  .h-hero__title { font-size: clamp(4.5rem, 12vw, 12rem); margin-bottom: 32px; }
+  /* sized by height as well as width so the whole first screen fits on a laptop */
+  .h-hero__title { font-size: clamp(4.5rem, min(12vw, 19svh), 12rem); margin-bottom: clamp(16px, 3svh, 32px); }
   .h-hero__title .line { display: block; overflow: hidden; padding: .03em .06em .02em 0; }
   .h-hero__title .line > span { display: inline-block; }
-  .h-hero__lead { max-width: 36ch; margin-bottom: 40px; }
-  .h-hero__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+  .h-hero__lead { max-width: 36ch; margin-bottom: clamp(20px, 4svh, 40px); }
+  .h-hero__list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, max-content); gap: 4px 56px; }
   .h-hero__list a {
     display: inline-flex; align-items: center; gap: 18px; padding: 6px 0;
-    text-decoration: none; font-size: clamp(1.625rem, 1.2rem + 1.4vw, 2.5rem); font-weight: 700; letter-spacing: -0.01em;
+    text-decoration: none; font-size: clamp(1.5rem, min(1.2rem + 1.4vw, 4svh), 2.5rem); font-weight: 700; letter-spacing: -0.01em;
     transition: color .2s, transform .25s var(--ease-out);
   }
   .h-hero__list a::before {
     content: ""; width: 34px; height: 12px; flex: none; background: var(--ink);
     clip-path: polygon(30% 0, 100% 0, 70% 100%, 0 100%); transition: background-color .2s, width .25s var(--ease-out);
   }
-  .h-hero__list a:hover { color: var(--accent); transform: translateX(6px); }
-  .h-hero__list a:hover::before { background: var(--accent); width: 52px; }
+  .h-hero__list a:hover, .h-hero__list a.is-on { color: var(--accent); transform: translateX(6px); }
+  .h-hero__list a:hover::before, .h-hero__list a.is-on::before { background: var(--accent); width: 52px; }
+  .h-hero__list a:active { transform: translateX(6px) scale(.97); }
+
+  /* the window in the red slash: same slant as the band, the chosen goal's photograph inside */
+  .h-show { position: absolute; z-index: 0; right: 3vw; top: 7%; bottom: 7%; width: 41vw; display: flex; flex-direction: column; justify-content: flex-end; }
+  .h-show__win { position: relative; flex: 1; clip-path: polygon(34% 0, 100% 0, 66% 100%, 0 100%); background: var(--accent-deep); }
+  .h-show__img {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+    clip-path: polygon(52% 0, 54% 0, 48% 100%, 46% 100%);
+    transition: clip-path .9s cubic-bezier(.22, 1, .36, 1);
+  }
+  .h-show__img.is-on { z-index: 1; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+  .h-show__img.is-out { z-index: 0; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); transition: none; }
+  .h-show__zones { align-self: flex-start; margin: 18px 0 0 6%; max-width: 24ch; color: #fff; font-size: clamp(1rem, .9rem + .3vw, 1.25rem); font-weight: 600; line-height: 1.3; }
+  .h-show__zones strong { display: block; font-weight: 800; }
+  @media (max-width: 1180px) { .h-show { width: 37vw; right: 1vw; } }
 
   .zones { display: grid; grid-template-columns: 96px 1fr; gap: 20px; align-items: center; margin: 8px 0 28px; }
   .zones__fig { width: 96px; }
@@ -205,6 +228,10 @@ const ad = (h: typeof zay) => (h as { kisaAd?: string }).kisaAd ?? h.ad;
     .h-hero { min-height: 0; padding: 4vh var(--margin) 96px; align-items: flex-start; }
     .h-hero__band { top: 0; bottom: auto; height: 150px; right: -30vw; width: 100vw; }
     .h-hero__title { font-size: 24vw; margin-top: 150px; }
+    .h-hero__list { grid-template-columns: 1fr; }
+    .h-show { top: 0; bottom: auto; height: 150px; right: 0; width: 68vw; }
+    .h-show__win { clip-path: polygon(26% 0, 100% 0, 74% 100%, 0 100%); }
+    .h-show__zones { display: none; }
     .s-a, .s-c, .s-d { grid-template-columns: 1fr; padding: 96px var(--margin); }
     .s-a__img, .s-c__img { margin: 0 calc(-1 * var(--margin)); }
     .s-c__img { order: -1; }
@@ -217,6 +244,7 @@ const ad = (h: typeof zay) => (h as { kisaAd?: string }).kisaAd ?? h.ad;
     :global(.js) .h-hero__title .line > span, :global(.js) [data-rise] { opacity: 1; transform: none; }
     :global(.js) .cut--r:not(.is-open) { clip-path: polygon(14% 0, 100% 0, 86% 100%, 0 100%); }
     :global(.js) .cut--l:not(.is-open) { clip-path: polygon(0 0, 86% 0, 100% 100%, 14% 100%); }
+    .h-show__img { transition: none; }
   }
 </style>
 
@@ -247,5 +275,33 @@ setTimeout(() => { if (!window.__motion) document.body.classList.add('is-in'); }
   if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) { cuts.forEach(open); return; }
   const io = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) { open(e.target); io.unobserve(e.target); } }), { rootMargin: '0px 0px -12% 0px' });
   cuts.forEach(el => io.observe(el));
+})();
+
+// hero: pointing at (or tabbing to) a goal opens its photograph in the red slash.
+// Left alone, the four goals take turns until the visitor chooses one.
+(() => {
+  const links = [...document.querySelectorAll('.h-hero__list a')];
+  const imgs = [...document.querySelectorAll('.h-show__img')];
+  const zones = document.querySelector('.h-show__zones span');
+  if (!links.length || !imgs.length) return;
+  let cur = 0, timer;
+  const show = i => {
+    if (i === cur) return;
+    imgs.forEach(img => img.classList.remove('is-out'));
+    imgs[cur].classList.replace('is-on', 'is-out');
+    imgs[i].classList.add('is-on');
+    links[cur].classList.remove('is-on');
+    links[i].classList.add('is-on');
+    zones.textContent = links[i].dataset.bolgeler;
+    cur = i;
+  };
+  const stop = () => clearInterval(timer);
+  links.forEach((a, i) => {
+    a.addEventListener('pointerenter', () => { stop(); show(i); });
+    a.addEventListener('focus', () => { stop(); show(i); });
+  });
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    timer = setInterval(() => show((cur + 1) % links.length), 3200);
+  }
 })();
 </script>

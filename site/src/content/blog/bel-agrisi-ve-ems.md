@@ -2,8 +2,8 @@
 baslik: "Bel ağrısı ve EMS: bilmen gerekenler"
 aciklama: "Bel ve boyun ağrısı olanlar EMS yapabilir mi? Sırt kaslarının rolü, doktora ne zaman danışılmalı ve seansta nelere dikkat edilir? Konya Profit EMS."
 tarih: 2026-10-19
-kapak: /img/hizmetler/bel-boyun.jpg
-kapakAlt: "Öne eğilerek iki dambılı yerden kaldıran bir kadın"
+kapak: /img/blog/ems-bel-boyun.jpg
+kapakAlt: "EMS kıyafetiyle kablo makinesinde sırt çalışan bir kadın"
 ---
 
 Bel ve boyun ağrısı, uzun saatler masa başında çalışanların ve gün boyu ayakta kalanların en sık yaşadığı şikâyetlerden. Bu yazıda EMS'in bu konuda nerede durduğunu ve nerede durmadığını anlatıyoruz.

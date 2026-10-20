@@ -1,0 +1,288 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import WhatsAppIcon from '../components/WhatsAppIcon.astro';
+import { isletme, whatsappLinki } from '../data/isletme';
+import { ekip } from '../data/ekip';
+
+const ilkAd = (ad: string) => ad.split(' ')[0];
+// until a coach's details arrive the panel still stands, with "Yakında" in place of the name
+const randevu = (ad: string) => ad
+  ? { mesaj: `Merhaba, ${ad} ile EMS seansı için bilgi almak istiyorum.`, etiket: `${ilkAd(ad)} ile randevu al` }
+  : { mesaj: 'Merhaba, EMS seansı için randevu almak istiyorum.', etiket: 'Randevu al' };
+---
+<Base yol="/ekibimiz">
+<Nav tema="acik" />
+
+<main>
+  <section class="k-hero" aria-labelledby="ekip-baslik">
+    <h1 class="k-hero__title" id="ekip-baslik">
+      <span class="line"><span>Ekibimiz</span></span>
+    </h1>
+    <p class="k-hero__lead" data-rise>{isletme.adres.ilce}'daki stüdyomuzda seanslarını bu üç hoca yönetir. Hangisiyle çalışmak istediğini seç, ona yaz.</p>
+  </section>
+
+  <!-- the logo's slash, three times: one slanted panel per coach, the red showing through the seams -->
+  <section class="k-ekip" aria-label="Hocalar">
+    <ul class="trio">
+      {ekip.map((h, i) => (
+        <li class:list={['trio__p', { 'is-on': i === 0 }]} data-i={i}>
+          <img class="trio__img" src={`/img/ekip/${h.id}-1200.webp`} srcset={`/img/ekip/${h.id}-1200.webp 1200w, /img/ekip/${h.id}-1800.webp 1800w`} sizes="(max-width: 860px) 100vw, 55vw" alt={h.ad ? [h.ad, h.unvan].filter(Boolean).join(', ') : 'Profit EMS hocası'} width="1200" height="1600" style={`object-position:${h.odak}`} loading={i === 0 ? 'eager' : 'lazy'} decoding="async">
+          <span class="trio__kisa" aria-hidden="true">{h.ad ? ilkAd(h.ad) : 'Yakında'}</span>
+          <div class="trio__info">
+            <h2 class="trio__ad">
+              <button class="trio__sec" type="button" aria-expanded={i === 0 ? 'true' : 'false'} aria-controls={`${h.id}-detay`}>{h.ad || 'Yakında'}</button>
+            </h2>
+            {h.unvan && <p class="trio__unvan">{h.unvan}</p>}
+            <div class="trio__more" id={`${h.id}-detay`}><div class="trio__more-in">
+              {h.tanitim && <p class="trio__tanitim">{h.tanitim}</p>}
+              {h.alanlar.length > 0 && (
+                <ul class="trio__alan" aria-label="Çalıştığı hedefler">
+                  {h.alanlar.map(a => <li>{a}</li>)}
+                </ul>
+              )}
+              <a class="btn" href={whatsappLinki(randevu(h.ad).mesaj)} target="_blank" rel="noopener"><WhatsAppIcon /> {randevu(h.ad).etiket}</a>
+            </div></div>
+          </div>
+        </li>
+      ))}
+    </ul>
+    <!-- on a phone the strips are too narrow for words: the chosen coach's details sit underneath -->
+    <div class="k-detay" aria-live="polite">
+      {ekip.map((h, i) => (
+        <div class:list={['k-detay__item', { 'is-on': i === 0 }]}>
+          <p class="k-detay__ad">{h.ad || 'Yakında'}</p>
+          {h.unvan && <p class="k-detay__unvan">{h.unvan}</p>}
+          {h.tanitim && <p class="k-detay__tanitim">{h.tanitim}</p>}
+          {h.alanlar.length > 0 && (
+            <ul class="trio__alan" aria-label="Çalıştığı hedefler">
+              {h.alanlar.map(a => <li>{a}</li>)}
+            </ul>
+          )}
+          <a class="btn" href={whatsappLinki(randevu(h.ad).mesaj)} target="_blank" rel="noopener"><WhatsAppIcon /> {randevu(h.ad).etiket}</a>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- the certificate, small and close, as proof beside the people -->
+  <section class="k-belge" aria-labelledby="belge-baslik">
+    <figure class="k-belge__img" data-rise>
+      <img src="/img/tcf-belge.webp" alt="Türkiye Cimnastik Federasyonu yeterlilik belgesi: Bu tesis Türkiye Cimnastik Federasyonu yeterlilik belgesine sahiptir. Tesis hakkında bilgi için QR kodu okutunuz." width="856" height="1000" loading="lazy" decoding="async">
+    </figure>
+    <div class="k-belge__text">
+      <h2 id="belge-baslik" data-rise>Belgeli tesis</h2>
+      <p data-rise>Profit EMS, Türkiye Cimnastik Federasyonu yeterlilik belgesine sahip bir tesis. Belgedeki QR kodu telefonunla okutarak tesis bilgisini kendin doğrulayabilirsin.</p>
+      <a class="k-belge__link" href="/iletisim#belge-baslik" data-rise>Belgeyi büyük gör</a>
+    </div>
+  </section>
+
+  <section class="k-cta" aria-labelledby="tanis-baslik">
+    <h2 id="tanis-baslik" data-rise>Tanışalım</h2>
+    <p data-rise>Hangi hocayla çalışmak istediğini yaz, sana uygun saati birlikte bulalım. {isletme.saatler.metin} açığız.</p>
+    <div class="k-cta__actions" data-rise>
+      <a class="btn btn--light" href={whatsappLinki('Merhaba, Profit EMS hocalarıyla tanışmak ve randevu almak istiyorum.')} target="_blank" rel="noopener"><WhatsAppIcon /> WhatsApp'tan yaz</a>
+      <a class="btn btn--ghost" href={`tel:${isletme.telefonUluslararasi}`}>Ara: {isletme.telefon}</a>
+    </div>
+  </section>
+</main>
+</Base>
+
+<style>
+  h1, h2 {
+    margin: 0; text-transform: uppercase; font-style: italic; font-weight: 800;
+    font-variation-settings: "wdth" 62; line-height: .92; letter-spacing: -0.02em;
+  }
+  p { margin: 0 0 18px; max-width: 42ch; font-size: clamp(1.125rem, 1rem + .35vw, 1.3125rem); }
+
+  /* ---------- first screen: the word, the sentence ---------- */
+  .k-hero {
+    display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: end; gap: 24px var(--margin);
+    padding: 3vh var(--margin) 40px;
+  }
+  .k-hero__title { font-size: clamp(5rem, min(13vw, 21svh), 13rem); }
+  .k-hero__title .line { display: block; overflow: hidden; padding: .03em .06em .02em 0; }
+  .k-hero__title .line > span { display: inline-block; }
+  .k-hero__lead { margin: 0 0 1.2vw; font-size: clamp(1.25rem, 1.05rem + .6vw, 1.625rem); line-height: 1.3; font-weight: 500; max-width: 30ch; }
+
+  /* ---------- the three panels ---------- */
+  .k-ekip { --slant: 6vw; --seam: 10px; padding: 0 var(--margin); }
+  .trio {
+    list-style: none; margin: 0; padding: 0;
+    display: flex; height: min(76svh, 820px); min-height: 560px;
+    position: relative; isolation: isolate;
+  }
+  /* the red behind the panels, kept 2px inside the top and bottom so it only ever shows in the seams */
+  .trio::before { content: ""; position: absolute; inset: 2px 0; z-index: -1; background: var(--accent); }
+  .trio__p {
+    position: relative; isolation: isolate; overflow: hidden; flex: 1 1 0; min-width: 0;
+    background: var(--ink); color: #fff;
+    transition: flex-grow .75s cubic-bezier(.22, 1, .36, 1);
+  }
+  .trio__p + .trio__p { margin-left: calc(var(--seam) - var(--slant)); }
+  /* outer corners sit 1px past the box so no red bleeds round the edge; only the slanted seams show it */
+  .trio__p:first-child { clip-path: polygon(-1px -1px, calc(100% + 1px) -1px, calc(100% - var(--slant)) calc(100% + 1px), -1px calc(100% + 1px)); }
+  .trio__p:nth-child(2) { clip-path: polygon(var(--slant) -1px, calc(100% + 1px) -1px, calc(100% - var(--slant)) calc(100% + 1px), 0 calc(100% + 1px)); }
+  .trio__p:last-child { clip-path: polygon(var(--slant) -1px, calc(100% + 1px) -1px, calc(100% + 1px) calc(100% + 1px), 0 calc(100% + 1px)); }
+  .trio__p.is-on { flex-grow: 2.6; }
+
+  .trio__img {
+    position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover;
+    filter: grayscale(1) brightness(.55); transform: scale(1.04);
+    transition: filter .6s, transform 1.2s cubic-bezier(.22, 1, .36, 1);
+  }
+  .trio__p.is-on .trio__img { filter: none; transform: none; }
+  /* neutral scrim so the name reads on any photograph */
+  .trio__p::after { content: ""; position: absolute; inset: 40% 0 0; z-index: -1; background: linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, .82)); } /* scrim under text */
+
+  .trio__info { position: absolute; left: 0; right: 0; bottom: 0; padding: 0 calc(var(--slant) + 48px) 40px calc(var(--slant) + 28px); }
+  .trio__p:first-child .trio__info { padding-left: 32px; }
+  .trio__ad { font-size: clamp(1.5rem, 2.6vw, 3.25rem); margin-bottom: 6px; transition: font-size .5s cubic-bezier(.22, 1, .36, 1); }
+  .trio__p.is-on .trio__ad { font-size: clamp(3rem, 5.6vw, 6rem); }
+  .trio__sec { all: unset; cursor: pointer; display: block; }
+  /* the whole panel is the button's target */
+  .trio__sec::before { content: ""; position: absolute; inset: 0; }
+  .trio__sec:focus-visible { outline: none; }
+  .trio__p:has(.trio__sec:focus-visible) { outline: 3px solid #fff; outline-offset: -8px; }
+  .trio__unvan { margin: 0; white-space: nowrap; font-size: 1rem; font-weight: 600; color: var(--on-dark-muted); }
+
+  .trio__more {
+    display: grid; grid-template-rows: 0fr; opacity: 0;
+    transition: grid-template-rows .6s cubic-bezier(.22, 1, .36, 1), opacity .4s;
+  }
+  .trio__more-in { min-height: 0; overflow: hidden; }
+  .trio__p.is-on .trio__more { grid-template-rows: 1fr; opacity: 1; transition-delay: .15s; }
+  .trio__tanitim { margin: 18px 0 14px; max-width: 34ch; color: #fff; }
+  .trio__more .btn:first-child { margin-top: 20px; }
+  .trio__alan { list-style: none; margin: 0 0 24px; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 22px; font-weight: 700; }
+  .trio__alan li { display: inline-flex; align-items: center; gap: 10px; }
+  .trio__alan li::before { content: ""; width: 22px; height: 8px; background: var(--accent); clip-path: polygon(30% 0, 100% 0, 70% 100%, 0 100%); }
+  .trio__more .btn { position: relative; z-index: 1; }
+  .trio__kisa, .k-detay { display: none; }
+
+  /* ---------- certificate ---------- */
+  .k-belge {
+    display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 32px calc(var(--margin) * 2); align-items: center;
+    margin: 160px var(--margin); padding: 56px calc(var(--margin) * 2); background: var(--surface);
+    clip-path: polygon(0 0, 100% 0, calc(100% - 48px) 100%, 0 100%);
+  }
+  .k-belge__img { margin: 0; width: clamp(160px, 16vw, 240px); }
+  .k-belge__img img { width: 100%; height: auto; transform: rotate(-4deg); }
+  .k-belge h2 { font-size: clamp(2.75rem, 5vw, 4.5rem); margin-bottom: 18px; }
+  .k-belge p { max-width: 52ch; }
+  .k-belge__link { font-weight: 700; text-underline-offset: 4px; }
+  .k-belge__link:hover { color: var(--accent); }
+
+  /* ---------- closing band ---------- */
+  .k-cta { background: var(--accent); color: #fff; padding: calc(120px + 8vh) var(--margin) 120px; clip-path: polygon(0 8vh, 100% 0, 100% 100%, 0 100%); }
+  .k-cta h2 { font-size: clamp(3.5rem, 8vw, 8.5rem); margin-bottom: 24px; }
+  .k-cta p { max-width: 46ch; margin-bottom: 32px; }
+  .k-cta__actions { display: flex; flex-wrap: wrap; gap: 12px; }
+  .btn--ghost { background: rgba(0, 0, 0, .18); color: #fff; }
+  .btn--ghost:hover { background: rgba(0, 0, 0, .32); }
+
+  /* ---------- entrances (only when script runs) ---------- */
+  :global(.js) .k-hero__title .line > span { transform: translateY(105%); }
+  :global(.js) [data-rise] { opacity: 0; transform: translateY(22px); }
+  :global(.is-in) .k-hero__title .line > span, :global(.is-in) [data-rise] { opacity: 1; transform: none; transition: transform .8s var(--ease-out), opacity .8s; }
+
+  @media (max-width: 860px) {
+    .k-hero { grid-template-columns: 1fr; padding: 6vh var(--margin) 48px; }
+    .k-hero__title { font-size: 26vw; }
+    /* on a phone the same three slanted strips stay side by side: tap or swipe to choose,
+       the chosen one widens into colour and its details appear underneath */
+    .k-ekip { --slant: 9vw; --seam: 6px; }
+    .trio { height: min(60svh, 520px); min-height: 360px; touch-action: pan-y; }
+    .trio__p.is-on { flex-grow: 2.4; }
+    .trio__p:active .trio__img { transform: scale(1.07); transition-duration: .2s; }
+    .trio__p::after { inset: 55% 0 0; }
+    .trio__info, .trio__p:first-child .trio__info { position: absolute; inset: 0; padding: 0; }
+    .trio__ad, .trio__p.is-on .trio__ad { font-size: 0; margin: 0; }
+    .trio__unvan, .trio__more { display: none; }
+    .trio__p:has(.trio__sec:focus-visible) { outline-offset: -5px; }
+    .trio__kisa {
+      display: block; position: absolute; left: 12px; bottom: 16px;
+      writing-mode: vertical-rl; transform: rotate(180deg);
+      font-style: italic; font-weight: 800; font-variation-settings: "wdth" 62; text-transform: uppercase;
+      font-size: 1.625rem; line-height: 1; letter-spacing: -0.01em; color: #fff;
+      transition: opacity .3s;
+    }
+    .trio__p.is-on .trio__kisa { opacity: 0; }
+
+    .k-detay { display: block; padding-top: 28px; min-height: 290px; }
+    .k-detay__item { display: none; }
+    .k-detay__item.is-on { display: block; animation: detay-in .5s cubic-bezier(.22, 1, .36, 1); }
+    .k-detay__ad {
+      margin: 0 0 8px; max-width: none; font-size: 15vw; line-height: .92;
+      font-style: italic; font-weight: 800; font-variation-settings: "wdth" 62; text-transform: uppercase; letter-spacing: -0.02em;
+    }
+    .k-detay__unvan { margin: 0 0 18px; font-size: 1rem; font-weight: 600; color: var(--muted); }
+    .k-detay__tanitim { margin: 0 0 18px; }
+    .k-detay .trio__alan { margin-bottom: 24px; }
+    .k-detay .btn { min-height: 54px; padding: 0 24px; }
+    .k-belge { grid-template-columns: 1fr; margin: 96px var(--margin); padding: 40px 24px 48px; clip-path: polygon(0 0, 100% 0, 100% calc(100% - 28px), 0 100%); }
+    .k-belge__img { width: 150px; }
+    .k-cta { padding: calc(96px + 6vh) var(--margin) 96px; }
+  }
+  @keyframes detay-in { from { opacity: 0; transform: translateY(14px); } }
+  @media (prefers-reduced-motion: reduce) {
+    :global(.js) .k-hero__title .line > span, :global(.js) [data-rise] { opacity: 1; transform: none; }
+    .trio__p, .trio__img, .trio__ad, .trio__more { transition: none; }
+    .k-detay__item.is-on { animation: none; }
+  }
+</style>
+
+<script>
+import { animate, stagger, inView } from 'motion';
+window.__motion = true;
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (reduce) { document.body.classList.add('is-in'); }
+else {
+  const ease = [0.22, 1, 0.36, 1];
+  // one orchestrated entrance: the word rises, then the three panels slide up in turn
+  animate('.k-hero__title .line > span', { y: ['105%', '0%'] }, { type: 'spring', stiffness: 140, damping: 20 });
+  animate('.k-hero [data-rise]', { opacity: [0, 1], y: [22, 0] }, { duration: 0.7, ease, delay: 0.25 });
+  animate('.trio__p', { opacity: [0, 1], y: [60, 0] }, { type: 'spring', stiffness: 120, damping: 20, delay: stagger(0.1, { startDelay: 0.3 }) });
+  document.querySelectorAll('.k-belge, .k-cta').forEach(block => {
+    inView(block, () => {
+      animate(block.querySelectorAll('[data-rise]'), { opacity: [0, 1], y: [22, 0] }, { duration: 0.7, ease, delay: stagger(0.08, { startDelay: 0.1 }) });
+    }, { amount: 0.2 });
+  });
+}
+</script>
+<script is:inline>
+setTimeout(() => { if (!window.__motion) document.body.classList.add('is-in'); }, 1500);
+
+// choosing a coach: pointing at a panel, tabbing to it or tapping it widens it and opens its details
+(() => {
+  const panels = [...document.querySelectorAll('.trio__p')];
+  const details = [...document.querySelectorAll('.k-detay__item')];
+  const choose = p => {
+    if (p.classList.contains('is-on')) return;
+    panels.forEach((x, i) => {
+      const on = x === p;
+      x.classList.toggle('is-on', on);
+      x.querySelector('.trio__sec').setAttribute('aria-expanded', String(on));
+      details[i]?.classList.toggle('is-on', on);
+    });
+  };
+  // a sideways swipe across the strips moves to the next or previous coach
+  const trio = document.querySelector('.trio');
+  let x0 = null, y0 = null;
+  trio.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+  trio.addEventListener('touchend', e => {
+    if (x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0;
+    x0 = null;
+    if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) return;
+    const cur = panels.findIndex(x => x.classList.contains('is-on'));
+    const next = Math.max(0, Math.min(panels.length - 1, cur + (dx < 0 ? 1 : -1)));
+    choose(panels[next]);
+  }, { passive: true });
+  panels.forEach(p => {
+    p.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') choose(p); });
+    p.querySelector('.trio__sec').addEventListener('click', () => choose(p));
+    p.addEventListener('focusin', () => choose(p));
+  });
+})();
+</script>

@@ -2,8 +2,8 @@
 baslik: "EMS ile zayıflama: gerçekçi beklentiler"
 aciklama: "EMS zayıflatır mı? Kilo vermede EMS'in rolü, beslenmenin yeri ve gerçekçi beklentiler. Konya Profit EMS'ten dürüst bir anlatım."
 tarih: 2026-10-19
-kapak: /img/hizmetler/sikilasma.jpg
-kapakAlt: "Dambıllarla omuz press hareketi yapan bir erkek"
+kapak: /img/blog/ems-zayiflama.jpg
+kapakAlt: "EMS kıyafetiyle squat ve lunge hareketi yapan iki kadın"
 ---
 
 EMS'e gelenlerin en sık söylediği hedef zayıflamak. Bu yazıda EMS'in bu hedefte neyi yapıp neyi yapmadığını açıkça anlatıyoruz. Gerçekçi bir beklentiyle başlayan, genelde devam da eder.

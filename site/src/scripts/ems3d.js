@@ -17,8 +17,8 @@ const PADS = [
   ['agri',                'Spine2',        0.085, 1.43,  1, .07, .035],
   ['sikilasma',           'Spine2',       -0.075, 1.33,  1, .085, .06],
   ['sikilasma',           'Spine2',        0.075, 1.33,  1, .085, .06],
-  ['zayiflama incelme',   'Spine1',       -0.05,  1.17,  1, .065, .08],
-  ['zayiflama incelme',   'Spine1',        0.05,  1.17,  1, .065, .08],
+  ['zayiflama incelme',   'Hips',         -0.05,  1.05,  1, .065, .08],   // belly: on the front of the hip shell, below the waist gap
+  ['zayiflama incelme',   'Hips',          0.05,  1.05,  1, .065, .08],
   ['incelme agri',        'Spine',        -0.115, 1.04,  1, .055, .085],
   ['incelme agri',        'Spine',         0.115, 1.04,  1, .055, .085],
   ['sikilasma',           'LeftArm',       0.235, 1.24,  1, .05, .075],
@@ -30,10 +30,10 @@ const PADS = [
   ['agri',                'Spine2',        0.08,  1.36, -1, .08, .07],
   ['sikilasma',           'Spine1',       -0.10,  1.20, -1, .07, .08],
   ['sikilasma',           'Spine1',        0.10,  1.20, -1, .07, .08],
-  ['incelme agri',        'Spine',        -0.06,  1.05, -1, .075, .06],
-  ['incelme agri',        'Spine',         0.06,  1.05, -1, .075, .06],
-  ['sikilasma zayiflama', 'Hips',         -0.08,  0.90, -1, .09, .075],
-  ['sikilasma zayiflama', 'Hips',          0.08,  0.90, -1, .09, .075],
+  ['incelme agri',        'Spine',        -0.06,  1.04, -1, .075, .055],
+  ['incelme agri',        'Spine',         0.06,  1.04, -1, .075, .055],
+  ['sikilasma zayiflama', 'Hips',         -0.08,  0.972, -1, .09, .065],   // on the back of the hip shell (0.94–1.10), not the thigh
+  ['sikilasma zayiflama', 'Hips',          0.08,  0.972, -1, .09, .065],
   ['zayiflama sikilasma', 'LeftUpLeg',     0.10,  0.68, -1, .065, .09],
   ['zayiflama sikilasma', 'RightUpLeg',   -0.10,  0.68, -1, .065, .09],
 ];
@@ -134,7 +134,6 @@ export async function createEms3D(container, { modelUrl }) {
   // and is re-seated on that (skinned) triangle every frame, so it never sinks in or floats off
   model.updateMatrixWorld(true);
   const ray = new THREE.Raycaster();
-  const padGeo = new THREE.BoxGeometry(1, 1, 1);
   const A = new THREE.Vector3(), Bv = new THREE.Vector3(), C = new THREE.Vector3();
   const skinned = (mesh, f, a, b, c) => {
     mesh.getVertexPosition(f.a, a).applyMatrix4(mesh.matrixWorld);
@@ -183,40 +182,107 @@ export async function createEms3D(container, { modelUrl }) {
     const limb = !!CHILD[bone];
     return (!limb && cast(x, y, side, null)) || searchFace(bone, side, x, y);
   };
+  // each pad is a thin patch that follows the body's curve: a 5×5 grid of points, every one cast onto the skin
+  // in the rest pose and re-seated on its own skinned triangle every frame, so the whole pad lies flush
+  const G = 5, TOP = .0085, BOTTOM = .0012;
+  const P = new THREE.Vector3(), N = new THREE.Vector3(), T = new THREE.Vector3(), X = new THREE.Vector3(), M = new THREE.Matrix4();
+  const UP = new THREE.Vector3(0, 1, 0), Q = new THREE.Vector3(), Cn = new THREE.Vector3(), tmp = new THREE.Vector3();
+  const seatOf = (mesh, face, point, outward) => {
+    skinned(mesh, face, A, Bv, C);
+    const bary = new THREE.Triangle(A, Bv, C).getBarycoord(point, new THREE.Vector3());
+    const n = new THREE.Vector3().subVectors(Bv, A).cross(new THREE.Vector3().subVectors(C, A));
+    return { mesh, f: face, bary, flip: n.dot(outward) < 0 ? -1 : 1 };
+  };
+  // where a seat is now, and which way the skin faces there
+  const place = (seat, outP, outN) => {
+    skinned(seat.mesh, seat.f, A, Bv, C);
+    outP.set(0, 0, 0).addScaledVector(A, seat.bary.x).addScaledVector(Bv, seat.bary.y).addScaledVector(C, seat.bary.z);
+    outN.subVectors(Bv, A).cross(tmp.subVectors(C, A)).normalize().multiplyScalar(seat.flip);
+  };
+  // pad stays upright along the body; on a limb "up" is the bone itself (shoulder→elbow, hip→knee), so the pad
+  // runs along the arm or thigh in any pose (the model is built in a T-pose, where world-up crosses the arm)
+  const AX = new THREE.Vector3(), B1 = new THREE.Vector3(), B2 = new THREE.Vector3();
+  const upFor = bone => CHILD[bone]
+    ? AX.subVectors(bones[bone].getWorldPosition(B1), bones[CHILD[bone]].getWorldPosition(B2)).normalize()
+    : UP;
+  const frameAt = (n, outX, outT, up = UP) => {
+    outT.copy(up).addScaledVector(n, -up.dot(n));
+    if (outT.lengthSq() < 1e-4) outT.set(0, 0, 1).addScaledVector(n, -n.z);
+    outT.normalize();
+    outX.crossVectors(outT, n);
+  };
+  // one patch geometry: a top skin, a bottom skin resting on the body, and a thin rim joining them
+  const patchGeometry = () => {
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(G * G * 2 * 3), 3));
+    const ix = [], t = (i, j) => i * G + j, b = (i, j) => G * G + i * G + j;
+    for (let i = 0; i < G - 1; i++) for (let j = 0; j < G - 1; j++) ix.push(t(i, j), t(i + 1, j), t(i, j + 1), t(i, j + 1), t(i + 1, j), t(i + 1, j + 1));
+    const ring = [];
+    for (let j = 0; j < G; j++) ring.push([0, j]);
+    for (let i = 1; i < G; i++) ring.push([i, G - 1]);
+    for (let j = G - 2; j >= 0; j--) ring.push([G - 1, j]);
+    for (let i = G - 2; i > 0; i--) ring.push([i, 0]);
+    ring.forEach(([i, j], k) => { const [i2, j2] = ring[(k + 1) % ring.length]; ix.push(t(i, j), b(i, j), t(i2, j2), t(i2, j2), b(i, j), b(i2, j2)); });
+    geo.setIndex(ix);
+    return geo;
+  };
+
   const pads = PADS.map(([zones, bone, x, y, side, w, h], i) => {
     const hit = findHit(x, y, side, bone);
-    const mat = new THREE.MeshStandardMaterial({ color: RED, emissive: RED, emissiveIntensity: 0, roughness: .35 });
-    const pad = new THREE.Mesh(padGeo, mat);
+    const mat = new THREE.MeshStandardMaterial({ color: RED, emissive: RED, emissiveIntensity: 0, roughness: .35, side: THREE.DoubleSide });
+    const geo = patchGeometry();
+    const pad = new THREE.Mesh(geo, mat);
     pad.castShadow = true;
+    pad.frustumCulled = false;                                  // its vertices move every frame
     scene.add(pad);
-    let seat = null;
+    let seats = null, center = null;
     if (hit) {
-      const mesh = hit.object, f = hit.face;
-      skinned(mesh, f, A, Bv, C);
-      const bary = new THREE.Triangle(A, Bv, C).getBarycoord(hit.point, new THREE.Vector3());
-      const n = new THREE.Vector3().subVectors(Bv, A).cross(new THREE.Vector3().subVectors(C, A));
-      const flip = n.z * side < 0 ? -1 : 1;           // make the normal point out of the body
-      seat = { mesh, f, bary, flip };
+      center = seatOf(hit.object, hit.face, hit.point, new THREE.Vector3(0, 0, side));
+      const home = boneOf(hit.object, hit.face.a);
+      place(center, P, N);
+      frameAt(N, X, T, upFor(bone));
+      seats = [];
+      for (let gi = 0; gi < G; gi++) for (let gj = 0; gj < G; gj++) {
+        const u = gj / (G - 1) - .5, v = .5 - gi / (G - 1);
+        Q.copy(P).addScaledVector(X, u * w).addScaledVector(T, v * h);
+        ray.set(Cn.copy(Q).addScaledVector(N, .05), tmp.copy(N).negate());
+        ray.far = .12;
+        const g = ray.intersectObjects(meshes, false)[0];
+        // a point only sits on the pad's own body part, and only where the skin is near the pad's plane;
+        // over a gap or another part (an arm pad's edge reaching the chest) it stays flat on the pad's plane
+        const ok = g && boneOf(g.object, g.face.a) === home && g.distance > .025 && g.distance < .075;
+        seats.push(ok ? seatOf(g.object, g.face, g.point, N) : { fallback: true, u, v });
+      }
+      ray.far = Infinity;
     }
-    return { pad, mat, seat, w, h, x, y, side, zones: zones.split(' '), back: side < 0, i };
+    return { pad, geo, mat, seats, center, bone, w, h, x, y, side, zones: zones.split(' '), back: side < 0, i };
   });
-  const P = new THREE.Vector3(), N = new THREE.Vector3(), T = new THREE.Vector3(), M = new THREE.Matrix4();
-  const UP = new THREE.Vector3(0, 1, 0);
+
+  const SP = new THREE.Vector3(), SN = new THREE.Vector3(), CP = new THREE.Vector3();
   function seatPad(d, k) {
-    const { pad, seat } = d;
-    if (!seat) { pad.position.set(d.x, d.y, .12 * d.side); pad.scale.set(d.w * k, d.h * k, .012); return; }
-    skinned(seat.mesh, seat.f, A, Bv, C);
-    P.set(0, 0, 0).addScaledVector(A, seat.bary.x).addScaledVector(Bv, seat.bary.y).addScaledVector(C, seat.bary.z);
-    N.subVectors(Bv, A).cross(T.subVectors(C, A)).normalize().multiplyScalar(seat.flip);
-    // keep the pad upright along the body: up = world up flattened onto the skin
-    T.copy(UP).addScaledVector(N, -UP.dot(N));
-    if (T.lengthSq() < 1e-4) T.set(0, 0, 1).addScaledVector(N, -N.z);
-    T.normalize();
-    const X = new THREE.Vector3().crossVectors(T, N);
-    M.makeBasis(X, T, N);
-    pad.quaternion.setFromRotationMatrix(M);
-    pad.position.copy(P).addScaledVector(N, .006);
-    pad.scale.set(d.w * k, d.h * k, .012 * Math.max(k, .001));
+    const pos = d.geo.attributes.position;
+    if (!d.seats) {                                             // no skin found: a small flat card where it was asked for
+      for (let n = 0; n < G * G; n++) {
+        const u = (n % G) / (G - 1) - .5, v = .5 - Math.floor(n / G) / (G - 1);
+        pos.setXYZ(n, d.x + u * d.w * k, d.y + v * d.h * k, (.12 + TOP) * d.side);
+        pos.setXYZ(G * G + n, d.x + u * d.w * k, d.y + v * d.h * k, .12 * d.side);
+      }
+    } else {
+      place(d.center, P, N);
+      frameAt(N, X, T, upFor(d.bone));
+      CP.copy(P).addScaledVector(N, TOP);
+      d.seats.forEach((s, n) => {
+        if (s.fallback) { SP.copy(P).addScaledVector(X, s.u * d.w).addScaledVector(T, s.v * d.h); SN.copy(N); }
+        else place(s, SP, SN);
+        // pop in from the centre: k < 1 draws every point toward the middle of the pad
+        tmp.copy(SP).addScaledVector(SN, TOP).sub(CP).multiplyScalar(k).add(CP);
+        pos.setXYZ(n, tmp.x, tmp.y, tmp.z);
+        tmp.copy(SP).addScaledVector(SN, BOTTOM).sub(CP).multiplyScalar(k).add(CP);
+        pos.setXYZ(G * G + n, tmp.x, tmp.y, tmp.z);
+      });
+    }
+    pos.needsUpdate = true;
+    d.geo.computeVertexNormals();
   }
 
   // the idle clip keeps the body breathing; our pose is layered on top each frame

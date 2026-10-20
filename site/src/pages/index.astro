@@ -2,9 +2,17 @@
 import Base from '../layouts/Base.astro';
 import Nav from '../components/Nav.astro';
 import WhatsAppIcon from '../components/WhatsAppIcon.astro';
-import { isletme, whatsappLinki } from '../data/isletme';
+import BolgeFigur from '../components/BolgeFigur.astro';
+import { isletme, whatsappLinki, tamAdres, yolTarifiLinki } from '../data/isletme';
+import { hizmetler } from '../data/hizmetler';
+import { ekip } from '../data/ekip';
+import { yazilar, tarihYaz } from '../data/blog';
 import '../styles/home.css';
 const { whatsapp } = isletme;
+const { acilis, kapanis } = isletme.saatler;
+const tumYazilar = await yazilar();
+const [sonYazi, ...digerYazilar] = tumYazilar.slice(0, 5);
+const kisaAd = (h: (typeof hizmetler)[number]) => (h as { kisaAd?: string }).kisaAd ?? h.ad;
 ---
 <Base yol="/">
 
@@ -38,6 +46,7 @@ const { whatsapp } = isletme;
   <div class="story__pin">
     <div class="story__text">
       <h2 class="story__title" id="story-title">EMS nasıl çalışır?</h2>
+      <div class="story__bar" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
       <ol class="story__steps">
         <li class="story__step is-active">
           <p class="story__big">Önce kıyafet.</p>
@@ -118,11 +127,210 @@ const { whatsapp } = isletme;
         </g>
       </svg>
     </figure>
+    <!-- decided before the first paint: where 3D will be drawn, the 2D figure never shows (it is only the fallback) -->
+    <script is:inline>(() => { try { if (document.createElement('canvas').getContext('webgl2')) document.currentScript.previousElementSibling.classList.add('is-3d-wait'); } catch {} })();</script>
   </div>
 </section>
 
+<!-- the rest of the home page: one claim per section, each leading to its own page -->
+<div class="hs">
+  <!-- 1 · the four goals as words at poster size; pointing at one opens its photograph on the slant -->
+  <section class="hg" aria-labelledby="hg-baslik">
+    <div class="hg__head">
+      <h2 class="hs-h2" id="hg-baslik" data-rise>Dört hedef, tek kıyafet</h2>
+      <p data-rise>Her hedefte kıyafetteki farklı pedler çalışır. Hangisi sana uygun, hizmetlerde ayrıntısıyla anlattık.</p>
+    </div>
+    <div class="hg__body">
+    <ul class="hg__list">
+      {hizmetler.map((h, i) => (
+        <li data-rise>
+          <a class="hg__row" href={`/hizmetler#${h.id}`} data-i={i}>
+            <span class="hg__name">{kisaAd(h)}</span>
+            <span class="hg__zones">{h.bolgeler}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+    <figure class="hg__peek" aria-hidden="true">
+      {hizmetler.map((h, i) => <img class:list={[{ 'is-on': i === 0 }]} src={h.gorsel} srcset={h.srcset} sizes="34vw" alt="" width={h.boyut[0]} height={h.boyut[1]} loading="lazy" decoding="async" style={`object-position:${h.odak}`}>)}
+    </figure>
+    </div>
+    <!-- on a phone the four goals are tall slanted cards on a rail: swipe sideways, each settles in the centre;
+         the small figure shows which pads that goal works -->
+    <div class="hg-m">
+      <ul class="rail">
+        {hizmetler.map((h, i) => (
+          <li class:list={['rail__c', { 'is-on': i === 0 }]}>
+            <a class="rail__a" href={`/hizmetler#${h.id}`}>
+              <img src={h.gorsel} srcset={h.srcset} sizes="78vw" alt="" width={h.boyut[0]} height={h.boyut[1]} loading="lazy" decoding="async" style={`object-position:${h.odak}`}>
+              <span class="rail__fig" aria-hidden="true"><BolgeFigur zones={h.bolge} /></span>
+              <span class="rail__ad">{kisaAd(h)}</span>
+              <span class="rail__alt">{h.bolgeler}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
 
-<script is:inline define:vars={{ whatsapp }}>
+  <!-- 2 · the coaches, an echo of the Ekibimiz panels -->
+  <section class="ht" aria-labelledby="ht-baslik">
+    <div class="ht__text">
+      <h2 class="hs-h2" id="ht-baslik" data-rise>Seansını hocan yönetir</h2>
+      <p data-rise>{isletme.adres.ilce}'daki stüdyomuzda seanslarını üç hoca yönetir. Onları tanı, hangisiyle çalışacağını seç.</p>
+      <a class="btn btn--light" href="/ekibimiz" data-rise>Ekibimizi tanı</a>
+    </div>
+    <div class="ht__serit" data-serit>
+      <ul class="serit">
+        {ekip.map((h, i) => (
+          <li class:list={['serit__p', { 'is-on': i === 0 }]}>
+            <img src={`/img/ekip/${h.id}-1200.webp`} alt="" width="1200" height="1600" loading="lazy" decoding="async" style={`object-position:${h.odak}`}>
+            <span class="serit__kisa" aria-hidden="true">{h.ad ? h.ad.split(' ')[0] : 'Yakında'}</span>
+            <button class="serit__sec" type="button" aria-pressed={i === 0 ? 'true' : 'false'}>{h.ad || 'Yakında'}</button>
+          </li>
+        ))}
+      </ul>
+      <div class="serit__detay" aria-live="polite">
+        {ekip.map((h, i) => (
+          <div class:list={[{ 'is-on': i === 0 }]}>
+            <p class="serit__ad">{h.ad || 'Yakında'}</p>
+            {h.unvan && <p class="serit__alt">{h.unvan}</p>}
+            {h.tanitim && <p>{h.tanitim}</p>}
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · the newest post at full weight, the next two as plain lines -->
+  {sonYazi && (
+    <section class="hp" aria-labelledby="hp-baslik">
+      <div class="hp__head">
+        <h2 class="hs-h2" id="hp-baslik" data-rise>EMS üzerine yazılar</h2>
+        <a class="hp__all" href="/blog" data-rise>Tüm yazılar ({tumYazilar.length})</a>
+      </div>
+      <div class="hp__grid">
+        <a class="hp__feat" href={`/blog/${sonYazi.id}`} data-rise>
+          <span class="hp__img"><img src={sonYazi.data.kapak} alt={sonYazi.data.kapakAlt} width="2000" height="1500" loading="lazy" decoding="async"></span>
+          <span class="hp__date">{tarihYaz(sonYazi.data.tarih)}</span>
+          <span class="hp__title">{sonYazi.data.baslik}</span>
+          <span class="hp__desc">{sonYazi.data.aciklama}</span>
+        </a>
+        <ul class="hp__more">
+          {digerYazilar.map(y => (
+            <li data-rise>
+              <a href={`/blog/${y.id}`}>
+                <span class="hp__thumb"><img src={y.data.kapak} alt="" width="2000" height="1500" loading="lazy" decoding="async"></span>
+                <span class="hp__row">
+                  <span class="hp__date">{tarihYaz(y.data.tarih)}</span>
+                  <span class="hp__title hp__title--s">{y.data.baslik}</span>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )}
+
+  <!-- 4 · where we are and whether we are open right now -->
+  <section class="hv" aria-labelledby="hv-baslik">
+    <h2 class="hs-h2 hv__title" id="hv-baslik" data-rise>{isletme.adres.ilce}'dayız</h2>
+    <div class="hv__grid">
+      <div data-rise>
+        <p class="hv__label">Adres</p>
+        <p class="hv__big"><a href={yolTarifiLinki} target="_blank" rel="noopener">{isletme.adres.bina}</a></p>
+        <p>{tamAdres}. {isletme.adres.tarif}.</p>
+      </div>
+      <div data-rise>
+        <p class="hv__label">Saatler</p>
+        <p class="hv__big">{isletme.saatler.metin}</p>
+        <p id="hv-durum" aria-live="polite">Her gün açığız.</p>
+      </div>
+      <div class="hv__actions" data-rise>
+        <a class="btn btn--light" href={whatsappLinki('Merhaba, randevu almak istiyorum.')} target="_blank" rel="noopener"><WhatsAppIcon /> WhatsApp'tan yaz</a>
+        <a class="btn btn--ghost" href={yolTarifiLinki} target="_blank" rel="noopener">Yol tarifi al</a>
+        <a class="btn btn--ghost" href={`tel:${isletme.telefonUluslararasi}`}>Ara: {isletme.telefon}</a>
+      </div>
+    </div>
+  </section>
+</div>
+
+
+<script is:inline define:vars={{ whatsapp, acilis, kapanis }}>
+// open right now? (Konya time) for the visit band
+(() => {
+  const el = document.getElementById('hv-durum');
+  if (!el) return;
+  const now = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Istanbul', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date());
+  const toMin = t => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
+  const n = toMin(now), o = toMin(acilis), c = toMin(kapanis);
+  if (n >= o && n < c) {
+    const left = c - n, h = Math.floor(left / 60), m = left % 60;
+    el.textContent = `Şu an açığız. Kapanışa ${[h && `${h} saat`, m && `${m} dakika`].filter(Boolean).join(' ')} var.`;
+  } else el.textContent = n < o ? `Şu an kapalıyız. Bugün ${acilis}'da açılıyoruz.` : `Şu an kapalıyız. Yarın ${acilis}'da açılıyoruz.`;
+})();
+
+// slanted strips (goals on a phone, coaches everywhere): tap, swipe or point to choose
+document.querySelectorAll('[data-serit]').forEach(grup => {
+  const ps = [...grup.querySelectorAll('.serit__p')];
+  const ds = [...grup.querySelectorAll('.serit__detay > *')];
+  let cur = 0;
+  const choose = i => {
+    if (i === cur) return;
+    cur = i;
+    ps.forEach((p, j) => { p.classList.toggle('is-on', j === i); p.querySelector('.serit__sec').setAttribute('aria-pressed', String(j === i)); });
+    ds.forEach((d, j) => d.classList.toggle('is-on', j === i));
+  };
+  ps.forEach((p, i) => {
+    p.querySelector('.serit__sec').addEventListener('click', () => choose(i));
+    p.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') choose(i); });
+  });
+  const ul = grup.querySelector('.serit');
+  let x0 = null, y0 = null;
+  ul.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+  ul.addEventListener('touchend', e => {
+    if (x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0;
+    x0 = null;
+    if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) return;
+    choose(Math.max(0, Math.min(ps.length - 1, cur + (dx < 0 ? 1 : -1))));
+  }, { passive: true });
+});
+
+// goals rail (phone): the card resting in the centre is the lit one
+(() => {
+  const rail = document.querySelector('.rail');
+  if (!rail || !('IntersectionObserver' in window)) return;
+  const cards = [...rail.children];
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) cards.forEach(c => c.classList.toggle('is-on', c === e.target));
+  }), { root: rail, threshold: 0.7 });
+  cards.forEach(c => io.observe(c));
+})();
+
+// goals list: the photograph beside the list follows the row being pointed at
+(() => {
+  const peek = document.querySelector('.hg__peek');
+  if (!peek) return;
+  const imgs = [...peek.querySelectorAll('img')];
+  const list = document.querySelector('.hg__list');
+  document.querySelectorAll('.hg__row').forEach(row => {
+    const show = () => {
+      imgs.forEach((im, i) => im.classList.toggle('is-on', i === Number(row.dataset.i)));
+      // centred on the row, but never above the list or below it (it would cover the words around it)
+      const r = row.getBoundingClientRect(), l = list.getBoundingClientRect(), h = peek.offsetHeight;
+      const y = Math.min(Math.max(r.top - l.top + r.height / 2, h / 2), Math.max(h / 2, l.height - h / 2));
+      peek.style.setProperty('--y', `${y}px`);
+      peek.classList.add('is-open');
+    };
+    row.addEventListener('pointerenter', show);
+    row.addEventListener('focus', show);
+  });
+  list.addEventListener('pointerleave', () => peek.classList.remove('is-open'));
+  list.addEventListener('focusout', e => { if (!list.contains(e.relatedTarget)) peek.classList.remove('is-open'); });
+})();
+
 // background clip: phones get the light portrait cut; skipped for reduced motion / data saver
 (() => {
   const v = document.querySelector('.stage__video');
@@ -172,7 +380,7 @@ document.querySelectorAll('.goal').forEach(btn => {
 });
 </script>
 <script>
-import { animate, stagger, press } from 'motion';
+import { animate, stagger, press, inView } from 'motion';
 
 window.__motion = true;
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -187,6 +395,15 @@ if (reduce || document.body.classList.contains('is-in')) {
   animate('.hero__title .line > span', { y: ['105%', '0%'] }, { ...spring, delay: stagger(0.09) });
   animate('.hero__actions > *', { y: [20, 0], opacity: [0, 1] }, { duration: 0.7, ease, delay: stagger(0.08, { startDelay: 0.35 }) });
 }
+
+// the sections after the story: heading, then text, then the rest, once each comes into view
+if (!reduce) {
+  document.querySelectorAll('.hs > section').forEach(block => {
+    inView(block, () => {
+      animate(block.querySelectorAll('[data-rise]'), { opacity: [0, 1], y: [24, 0] }, { duration: 0.7, ease, delay: stagger(0.07, { startDelay: 0.05 }) });
+    }, { amount: 0.15 });
+  });
+} else document.querySelectorAll('.hs [data-rise]').forEach(el => { el.style.opacity = '1'; el.style.transform = 'none'; });
 
 // choosing a goal sends an impulse through the figure
 document.addEventListener('goal:change', () => {
@@ -290,7 +507,8 @@ function placePad({ def, g }, J, dy, k) {
 
 const steps = [...section.querySelectorAll('.story__step')];
 // where the figure should be while each step is on screen
-const anchors = [.14, .3, .42, .64, .86, 1];
+// each step ends on a finished pose: dressed, pads on, current, back shown, two squats done, flex
+const anchors = [.14, .3, .42, .66, .93, 1];
 let current = -1;
 function render(p) {
   const { J, a, dy } = pose(p);
@@ -358,25 +576,50 @@ if (reduceStory) {
   section.classList.add('story--live');
   let ems3d = null, lastP = 0;
   render(0);
-  // the stage pins; progress comes from how far the section has scrolled, spread evenly over the steps
-  const fromSection = () => {
+  // the stage pins; scrolling only decides WHICH step is on. Each step then plays out on its own,
+  // card by card: the figure dresses itself, the pads go on, it turns, it squats; never left half-way
+  const bar = [...section.querySelectorAll('.story__bar span')];
+  const stepFromScroll = () => {
     const r = section.getBoundingClientRect();
+    if (r.top > innerHeight * .35) return -1;                       // not reached yet: undressed, no card
     const q = clamp(-r.top / Math.max(r.height - innerHeight, 1));
-    const n = steps.length;
-    const s = q * n - .5;
-    if (s < 0) return { p: anchors[0] * clamp(1 + 2 * s), idx: 0 };
-    const i = Math.min(Math.floor(s), n - 1), f = s - i;
-    return { p: i >= n - 1 ? 1 : lerp(anchors[i], anchors[i + 1], f), idx: Math.min(Math.round(s), n - 1) };
+    return Math.min(Math.floor(q * steps.length), steps.length - 1);
+  };
+  // the two squats (progress .78–.93) keep their own tempo, about 1.4 s each; every other move eases in and out as before
+  const SQUAT = [.78, .93], SQUAT_MS = 2900;
+  let tween = 0;
+  const playTo = target => {
+    cancelAnimationFrame(tween);
+    if (Math.abs(target - lastP) < 1e-4) return;
+    const up = target > lastP;
+    const cuts = SQUAT.filter(b => (up ? b > lastP && b < target : b < lastP && b > target));
+    const points = [lastP, ...(up ? cuts : cuts.reverse()), target];
+    const legs = points.slice(1).map((to, i) => {
+      const from = points[i], d = to - from, mid = (from + to) / 2;
+      const squat = mid > SQUAT[0] && mid < SQUAT[1];
+      return { from, d, squat, dur: squat ? Math.abs(d) / (SQUAT[1] - SQUAT[0]) * SQUAT_MS : Math.min(2800, 1500 + Math.abs(d) * 2600) };
+    });
+    let leg = 0, t0 = performance.now();
+    const frame = now => {
+      const L = legs[leg];
+      const k = clamp((now - t0) / L.dur);
+      // the squat itself already slows at the bottom and top, so its leg runs at even speed
+      const e = L.squat ? k : -(Math.cos(Math.PI * k) - 1) / 2;
+      lastP = L.from + L.d * e;
+      render(lastP);
+      if (ems3d) ems3d.setProgress(lastP);
+      if (k >= 1) { leg++; t0 = now; }
+      if (leg < legs.length) tween = requestAnimationFrame(frame);
+    };
+    tween = requestAnimationFrame(frame);
   };
   const update = () => {
-    const { p, idx } = fromSection();
-    lastP = p;
-    render(p);
-    if (ems3d) ems3d.setProgress(p);
-    if (idx !== current) {
-      steps.forEach((el, i) => { el.classList.toggle('is-active', i === idx); el.classList.toggle('is-past', i < idx); });
-      current = idx;
-    }
+    const idx = stepFromScroll();
+    if (idx === current) return;
+    current = idx;
+    steps.forEach((el, i) => { el.classList.toggle('is-active', i === idx); el.classList.toggle('is-past', i < idx); });
+    bar.forEach((b, i) => b.classList.toggle('is-on', i <= idx));
+    playTo(idx < 0 ? 0 : anchors[idx]);
   };
   scroll(update, { target: section, offset: ['start end', 'end start'] });
   section.classList.add('story--stack');
@@ -397,8 +640,13 @@ if (reduceStory) {
         ems3d = await createEms3D(holder, { modelUrl: '/model/ems-manken.glb' });
         ems3d.setProgress(lastP);
         holder.parentElement.classList.add('is-3d');
+        holder.parentElement.classList.remove('is-3d-wait');
         document.addEventListener('goal:change', ev => ems3d.setGoal(ev.detail));
-      } catch (err) { console.warn('3D figür yüklenemedi, çizim kullanılıyor', err); }
+      } catch (err) {
+        // 3D failed: bring the drawn figure back
+        holder.parentElement.classList.remove('is-3d-wait');
+        console.warn('3D figür yüklenemedi, çizim kullanılıyor', err);
+      }
     }, { rootMargin: '600px 0px' }).observe(section);
   }
 }

@@ -19,8 +19,8 @@ Bu plan üzerinde mutabık kalındı (16 Ekim 2026). Sayfalar bu sırayla, **bir
 | 3 | EMS Nedir? (SSS dahil) | `/ems-nedir` | ✅ Onaylandı (`yedek-ems-nedir`) | Sık sorulan 5–10 soru ve cevapları, kimlerin yapmaması gerektiği (kullanıcı onayıyla) |
 | 4 | Ekibimiz | `/ekibimiz` | ✅ Onaylandı (`yedek-ekibimiz`). Hocalar **örnek** veriyle (`site/src/data/ekip.ts`) | 3 hocanın gerçek adı, unvanı, tanıtımı, hedefleri ve 3:4 dikey fotoğrafı; işletme hikâyesi gelirse bölüm olarak eklenir |
 | 5 | Blog | `/blog` | ✅ Onaylandı (`yedek-blog`) | 6 açılış yazısı yayında; yeni yazı = `site/src/content/blog/` içine bir `.md` dosyası |
-| 6 | KVKK, çerez politikası, 404 | `/kvkk`, `/cerez-politikasi` | ⏳ Bekliyor | KVKK taslağı bir avukat/muhasebeci tarafından kontrol edilmeli |
-| 7 | Ana sayfanın kalan bölümleri | `/` | ⏳ Bekliyor | Diğer sayfalar bittikçe her birine giden bölümler eklenir |
+| 6 | KVKK, çerez politikası, 404 | `/kvkk`, `/cerez-politikasi`, 404 | ✅ Onaylandı (`yedek-site-v1`). Metinler taslak uyarısıyla yayında | Avukat/mali müşavir kontrolü; işletmenin yasal unvanı ve KVKK e-postası (`site/src/data/yasal.ts`); kontrol bitince `taslak: false` |
+| 7 | Ana sayfanın kalan bölümleri | `/` | ✅ Onaylandı (`yedek-site-v1`): kart kart EMS hikâyesi, Dört hedef, Seansını hocan yönetir, EMS üzerine yazılar, Selçuklu'dayız | — |
 
 ## Sayfalara göre içerik
 

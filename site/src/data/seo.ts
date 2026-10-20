@@ -26,6 +26,18 @@ export const seo: Record<string, { baslik: string; aciklama: string }> = {
     baslik: 'İletişim ve Konum | Profit EMS Konya Selçuklu',
     aciklama: "Profit EMS'e WhatsApp, telefon veya Instagram'dan ulaş. Kılınçarslan Mah., Avrukon Plaza, Selçuklu/Konya. Her gün 10:00–22:00 açığız.",
   },
+  '/404': {
+    baslik: 'Sayfa bulunamadı | Profit EMS Konya',
+    aciklama: "Aradığın sayfa bulunamadı. Profit EMS'in hizmetlerine, ekibine, blog yazılarına ya da iletişim bilgilerine buradan ulaşabilirsin.",
+  },
+  '/kvkk': {
+    baslik: 'KVKK Aydınlatma Metni | Profit EMS Konya',
+    aciklama: "Profit EMS'in kişisel verilerini nasıl işlediği, hangi amaçla ve kimlerle paylaştığı ve KVKK kapsamındaki hakların. Konya Selçuklu.",
+  },
+  '/cerez-politikasi': {
+    baslik: 'Çerez Politikası | Profit EMS Konya',
+    aciklama: "Profit EMS web sitesinde hangi çerezlerin ve üçüncü taraf hizmetlerin kullanıldığı, bunları nasıl kapatabileceğin. Konya Selçuklu.",
+  },
 };
 
 // Menüde görünen sayfalar. Yeni sayfa bitince buraya eklenir.

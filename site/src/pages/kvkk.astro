@@ -1,0 +1,94 @@
+---
+import YasalSayfa from '../components/YasalSayfa.astro';
+import { isletme, tamAdres } from '../data/isletme';
+import { yasal } from '../data/yasal';
+
+const sorumlu = yasal.veriSorumlusu || isletme.ad;
+const bolumler = [
+  { id: 'sorumlu', baslik: 'Veri sorumlusu' },
+  { id: 'veriler', baslik: 'Hangi verileri işliyoruz?' },
+  { id: 'amac', baslik: 'Neden işliyoruz?' },
+  { id: 'sebep', baslik: 'Hukuki sebepler' },
+  { id: 'aktarim', baslik: 'Kimlerle paylaşıyoruz?' },
+  { id: 'sure', baslik: 'Ne kadar saklıyoruz?' },
+  { id: 'haklar', baslik: 'Hakların' },
+  { id: 'basvuru', baslik: 'Nasıl başvurursun?' },
+];
+---
+<YasalSayfa yol="/kvkk" satirlar={['KVKK aydınlatma', 'metni']} bolumler={bolumler}>
+  <section id="sorumlu">
+    <h2>Veri sorumlusu</h2>
+    <p>Bu metin, 6698 sayılı Kişisel Verilerin Korunması Kanunu (KVKK) kapsamında, kişisel verilerinin nasıl işlendiğini anlatmak için hazırlandı.</p>
+    <p>Veri sorumlusu: <strong>{sorumlu}</strong>, {tamAdres} ({isletme.adres.bina}). Telefon: <a href={`tel:${isletme.telefonUluslararasi}`}>{isletme.telefon}</a>.</p>
+  </section>
+
+  <section id="veriler">
+    <h2>Hangi verileri işliyoruz?</h2>
+    <h3>Bize ulaştığında</h3>
+    <p>WhatsApp, telefon, Instagram ya da yüz yüze iletişimde paylaştıkların:</p>
+    <ul>
+      <li>Adın ve soyadın, telefon numaran, WhatsApp ya da Instagram kullanıcı adın</li>
+      <li>Mesajlarının içeriği, randevu tarih ve saatlerin, hedefin ve seans geçmişin</li>
+    </ul>
+    <h3>Sağlık bilgisi</h3>
+    <p>EMS'e başlamadan önce sana uygun olup olmadığını değerlendirmek için sağlık durumunu sorarız (örneğin kalp pili, hamilelik, epilepsi ya da yakın zamanda geçirilmiş bir ameliyat). Sağlık bilgisi KVKK'ya göre özel nitelikli kişisel veridir; yalnızca açık rızanla ve bu amaçla işlenir.</p>
+    <h3>Siteyi ziyaret ettiğinde</h3>
+    <p>Bu sitede form yoktur ve site kendi çerezini kullanmaz. Siteyi barındıran sunucu, güvenlik amacıyla IP adresi, tarayıcı bilgisi ve ziyaret zamanı gibi teknik kayıtlar tutabilir. Sitedeki asistan tamamen tarayıcında çalışır; yazdıkların bize gönderilmez. Ayrıntılar için <a href="/cerez-politikasi">çerez politikası</a>.</p>
+  </section>
+
+  <section id="amac">
+    <h2>Neden işliyoruz?</h2>
+    <ul>
+      <li>Sorularını cevaplamak ve randevunu planlamak</li>
+      <li>Randevunun günü ve saatini, seans günü de randevundan 4 saat önce hatırlatmayı SMS ile göndermek</li>
+      <li>EMS'in sana uygun olup olmadığını değerlendirmek ve antrenmanı güvenli yürütmek</li>
+      <li>Fatura ve muhasebe gibi yasal yükümlülükleri yerine getirmek</li>
+      <li>Sitenin güvenliğini sağlamak</li>
+    </ul>
+  </section>
+
+  <section id="sebep">
+    <h2>Hukuki sebepler</h2>
+    <p>Kişisel verilerin KVKK'nın 5. maddesindeki şu sebeplere dayanarak işlenir: bir sözleşmenin kurulması ya da ifası için gerekli olması (randevu ve seans hizmeti), hukuki yükümlülüğümüzü yerine getirmek için zorunlu olması (fatura, kayıt) ve temel hak ve özgürlüklerine zarar vermemek kaydıyla meşru menfaatimiz için zorunlu olması (talebini cevaplamak, site güvenliği).</p>
+    <p>Sağlık bilgin, KVKK'nın 6. maddesi uyarınca açık rızana dayanarak işlenir. Açık rızanı istediğin zaman geri alabilirsin.</p>
+  </section>
+
+  <section id="aktarim">
+    <h2>Kimlerle paylaşıyoruz?</h2>
+    <ul>
+      <li>Yasal bir zorunluluk olduğunda, yetkili kamu kurum ve kuruluşlarıyla</li>
+      <li>Fatura ve muhasebe işleri için mali müşavirimizle</li>
+      <li>Randevu ve hatırlatma SMS'leri için SMS gönderim hizmeti sağlayıcısıyla, yalnızca telefon numaran ve randevu bilginle sınırlı olarak</li>
+      <li>Bize WhatsApp ya da Instagram'dan yazdığında mesajların bu hizmetleri sağlayan şirketin (Meta) sunucularında işlenir; bu sunucular yurt dışında olabilir</li>
+      <li>İletişim sayfasındaki haritayı "Haritayı göster" butonuyla açarsan harita Google Haritalar'dan yüklenir ve Google teknik bilgilerini (IP adresi gibi) alabilir; butona dokunmadıkça Google'a bilgi gitmez</li>
+      <li>Siteyi barındıran hizmet sağlayıcıyla, teknik kayıtlarla sınırlı olarak</li>
+    </ul>
+    <p>Kişisel verilerin satılmaz ve reklam amacıyla paylaşılmaz.</p>
+  </section>
+
+  <section id="sure">
+    <h2>Ne kadar saklıyoruz?</h2>
+    <p>Kişisel verilerini, işlenme amacı için gereken süre ve ilgili mevzuatta öngörülen süreler boyunca saklarız. Bu süreler dolduğunda verilerin silinir, yok edilir ya da anonim hale getirilir. Sağlık bilgin, seanslarımız sona erdiğinde ya da açık rızanı geri aldığında silinir.</p>
+  </section>
+
+  <section id="haklar">
+    <h2>Hakların</h2>
+    <p>KVKK'nın 11. maddesine göre şu haklara sahipsin:</p>
+    <ul>
+      <li>Kişisel verilerinin işlenip işlenmediğini öğrenmek, işlendiyse bilgi istemek</li>
+      <li>İşlenme amacını ve amacına uygun kullanılıp kullanılmadığını öğrenmek</li>
+      <li>Yurt içinde ya da yurt dışında aktarıldığı kişileri bilmek</li>
+      <li>Eksik ya da yanlış işlendiyse düzeltilmesini istemek</li>
+      <li>KVKK'nın 7. maddesindeki şartlar çerçevesinde silinmesini ya da yok edilmesini istemek</li>
+      <li>Düzeltme, silme ya da yok etme işlemlerinin, verilerin aktarıldığı kişilere bildirilmesini istemek</li>
+      <li>Yalnızca otomatik sistemlerle analiz edilmesi sonucu aleyhine bir sonuç çıkmasına itiraz etmek</li>
+      <li>Kanuna aykırı işlenmesi nedeniyle zarara uğradıysan zararın giderilmesini istemek</li>
+    </ul>
+  </section>
+
+  <section id="basvuru">
+    <h2>Nasıl başvurursun?</h2>
+    <p>Haklarınla ilgili taleplerini yazılı olarak <strong>{tamAdres}</strong> adresine iletebilirsin{yasal.eposta ? <> ya da <a href={`mailto:${yasal.eposta}`}>{yasal.eposta}</a> adresine e-posta gönderebilirsin</> : null}. Başvurunu en geç 30 gün içinde ücretsiz olarak cevaplarız.</p>
+    <p>Sorun olursa Kişisel Verileri Koruma Kurulu'na şikâyette bulunma hakkın da vardır.</p>
+  </section>
+</YasalSayfa>

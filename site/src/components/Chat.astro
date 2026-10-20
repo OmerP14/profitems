@@ -1,51 +1,166 @@
 ---
-import { isletme, tamAdres, whatsappLinki } from '../data/isletme';
-const cevaplar = {
-  yer: `${tamAdres}. ${isletme.adres.bina}, ${isletme.adres.tarif}.`,
-  saat: `${isletme.saatler.metin} açığız.`,
-  belge: 'Evet, tesisimiz Türkiye Cimnastik Federasyonu yeterlilik belgesine sahip.',
-  randevu: `Randevu için WhatsApp'tan yazabilir ya da ${isletme.telefon} numarasını arayabilirsin. <a href="${whatsappLinki('Merhaba, randevu almak istiyorum.')}" target="_blank" rel="noopener">WhatsApp'ı aç</a>`,
+// The site assistant: a written conversation that runs entirely in the browser.
+// It answers only from src/data/asistan.ts and hands anything else to WhatsApp, question included.
+import { isletme, whatsappLinki } from '../data/isletme';
+import { konular, baslangicOnerileri, bilinmiyor } from '../data/asistan';
+
+const veri = {
+  konular,
+  oneriler: baslangicOnerileri,
+  bilinmiyor,
+  waTaban: whatsappLinki('').replace(/text=$/, 'text='),
+  acilis: isletme.saatler.acilis,
+  kapanis: isletme.saatler.kapanis,
 };
 ---
 <div class="chat">
   <div class="chat__panel" id="chat-panel" role="dialog" aria-labelledby="chat-title" hidden>
-    <h2 id="chat-title">Profit EMS asistanı</h2>
-    <p>Hızlı sorular için. Gerisi WhatsApp'ta.</p>
+    <div class="chat__head">
+      <h2 id="chat-title">Profit EMS asistanı</h2>
+      <p>Sitedeki bilgilerle cevap verir. Yazdıkların hiçbir yere gönderilmez.</p>
+    </div>
     <div class="chat__log" id="chat-log" aria-live="polite">
-      <p class="chat__msg">Merhaba! Ne öğrenmek istersin?</p>
+      <p class="chat__msg">Merhaba! EMS, hizmetlerimiz, saatlerimiz ya da randevu hakkında merak ettiğini yaz.</p>
     </div>
-    <div class="chat__quick">
-      <button type="button" data-q="yer">Neredesiniz?</button>
-      <button type="button" data-q="saat">Saatleriniz?</button>
-      <button type="button" data-q="belge">Belgeniz var mı?</button>
-      <button type="button" data-q="randevu">Randevu almak istiyorum</button>
-    </div>
+    <div class="chat__quick" id="chat-quick"></div>
+    <form class="chat__form" id="chat-form">
+      <label class="sr-only" for="chat-input">Sorunu yaz</label>
+      <input id="chat-input" type="text" autocomplete="off" maxlength="200" placeholder="Sorunu yaz…">
+      <button type="submit" aria-label="Gönder"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3 20 21 12 3 4v6l12 2-12 2v6Z"/></svg></button>
+    </form>
   </div>
   <button class="chat__toggle" type="button" aria-expanded="false" aria-controls="chat-panel" aria-label="Asistanı aç">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 4h16v12H8l-4 4V4Zm2 2v9.2L7.2 14H18V6H6Zm2 3h8v2H8V9Z"/></svg>
   </button>
 </div>
 
-<script is:inline define:vars={{ cevaplar }}>
+<script is:inline define:vars={{ veri }}>
 const toggle = document.querySelector('.chat__toggle');
 const panel = document.getElementById('chat-panel');
 const log = document.getElementById('chat-log');
+const quick = document.getElementById('chat-quick');
+const form = document.getElementById('chat-form');
+const input = document.getElementById('chat-input');
+
 toggle.addEventListener('click', () => {
   const open = panel.hidden;
   panel.hidden = !open;
   toggle.setAttribute('aria-expanded', String(open));
   toggle.setAttribute('aria-label', open ? 'Asistanı kapat' : 'Asistanı aç');
+  if (open && matchMedia('(hover: hover)').matches) setTimeout(() => input.focus(), 150);
 });
-document.querySelectorAll('.chat__quick button').forEach(b => {
-  b.addEventListener('click', () => {
-    const me = document.createElement('p');
-    me.className = 'chat__msg chat__msg--me';
-    me.textContent = b.textContent;
-    const bot = document.createElement('p');
-    bot.className = 'chat__msg';
-    bot.innerHTML = cevaplar[b.dataset.q];
-    log.append(me, bot);
-    log.scrollTop = log.scrollHeight;
-  });
-});
+addEventListener('keydown', e => { if (e.key === 'Escape' && !panel.hidden) toggle.click(); });
+
+// Turkish-aware normalising: lower case, no diacritics, no punctuation
+const harf = { ç: 'c', ğ: 'g', ı: 'i', ö: 'o', ş: 's', ü: 'u', â: 'a', î: 'i', û: 'u' };
+const duz = t => t.toLocaleLowerCase('tr').replace(/[çğıöşüâîû]/g, c => harf[c]).replace(/[^a-z0-9]+/g, ' ').trim();
+const konular = veri.konular.map(k => ({ ...k, anahtar: k.anahtar.map(duz) }));
+
+// score each topic: a longer (more specific) keyword weighs more; short words must match whole
+const puanla = soru => {
+  const metin = ` ${duz(soru)} `;
+  const kelimeler = metin.trim().split(' ');
+  return konular.map((k, sira) => {
+    let puan = 0;
+    k.anahtar.forEach(a => {
+      const tutar = a.includes(' ') ? metin.includes(` ${a}`)
+        : a.length < 4 ? kelimeler.includes(a)
+        : kelimeler.some(w => w.startsWith(a));
+      if (tutar) puan += a.length;
+    });
+    return { k, puan, sira };
+  }).filter(x => x.puan > 0).sort((a, b) => b.puan - a.puan || a.sira - b.sira)
+    // a greeting or a thank-you only answers when nothing else was asked ("merhaba, fiyat?")
+    .filter((x, _, hepsi) => !['selam', 'tesekkur'].includes(x.k.id) || hepsi.every(y => ['selam', 'tesekkur'].includes(y.k.id)));
+};
+
+// open right now? (Konya time)
+const durum = () => {
+  const now = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Istanbul', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date());
+  const dk = t => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
+  const n = dk(now), o = dk(veri.acilis), c = dk(veri.kapanis);
+  if (n >= o && n < c) {
+    const kalan = c - n, h = Math.floor(kalan / 60), m = kalan % 60;
+    return `Şu an açığız, kapanışa ${[h && `${h} saat`, m && `${m} dakika`].filter(Boolean).join(' ')} var.`;
+  }
+  return n < o ? `Şu an kapalıyız; bugün ${veri.acilis}'da açılıyoruz.` : `Şu an kapalıyız; yarın ${veri.acilis}'da açılıyoruz.`;
+};
+
+const mesaj = (html, ben = false) => {
+  const p = document.createElement('p');
+  p.className = ben ? 'chat__msg chat__msg--me' : 'chat__msg';
+  if (ben) p.textContent = html; else p.innerHTML = html;
+  log.append(p);
+  log.scrollTop = log.scrollHeight;
+  return p;
+};
+
+const oneriGoster = liste => {
+  quick.replaceChildren(...(liste || []).map(s => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = s;
+    b.addEventListener('click', () => sor(s));
+    return b;
+  }));
+};
+
+const cevapla = soru => {
+  const sonuc = puanla(soru);
+  if (!sonuc.length) {
+    const link = `<a href="${veri.waTaban}${encodeURIComponent(`Merhaba, sitenizdeki asistana şunu sordum: ${soru}`)}" target="_blank" rel="noopener">Soruyu WhatsApp'tan gönder</a>`;
+    return { html: `${veri.bilinmiyor} ${link}`, oneriler: veri.oneriler.slice(0, 3) };
+  }
+  const [ilk, ikinci] = sonuc;
+  const parcalar = [ilk.k.cevap];
+  // a question about two things gets both answers ("saatleriniz ve fiyatlar?")
+  const ikiKonu = / (ve|bir de|ayrica) /.test(` ${duz(soru)} `);
+  if (ikinci && ikinci.puan >= 4 && (ikiKonu || ikinci.puan >= ilk.puan * 0.8)) parcalar.push(ikinci.k.cevap);
+  return { html: parcalar.join('<br><br>').replace('{durum}', durum()), oneriler: ilk.k.oneriler || veri.oneriler.slice(0, 3) };
+};
+
+let mesgul = false;
+const sor = soru => {
+  soru = soru.trim();
+  if (!soru || mesgul) return;
+  mesgul = true;
+  mesaj(soru, true);
+  quick.replaceChildren();
+  const yaziyor = mesaj('yazıyor…');
+  yaziyor.classList.add('chat__msg--wait');
+  const { html, oneriler } = cevapla(soru);
+  setTimeout(() => {
+    yaziyor.remove();
+    mesaj(html);
+    oneriGoster(oneriler);
+    mesgul = false;
+  }, matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 450);
+};
+
+form.addEventListener('submit', e => { e.preventDefault(); sor(input.value); input.value = ''; });
+oneriGoster(veri.oneriler);
+
+// the button is brand red; over a red band it would vanish, so there it turns black
+(() => {
+  const chat = document.querySelector('.chat');
+  const kirmizi = new Set(['rgb(232, 23, 63)', 'rgb(216, 0, 42)']);
+  let bekliyor = false;
+  const bak = () => {
+    bekliyor = false;
+    const r = toggle.getBoundingClientRect();
+    const alt = document.elementsFromPoint(r.left + r.width / 2, r.top + r.height / 2).find(e => !chat.contains(e));
+    let e = alt, ters = false;
+    while (e && e !== document.documentElement) {
+      const bg = getComputedStyle(e).backgroundColor;
+      if (bg && bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent') { ters = kirmizi.has(bg); break; }
+      e = e.parentElement;
+    }
+    chat.classList.toggle('chat--ters', ters);
+  };
+  const iste = () => { if (!bekliyor) { bekliyor = true; requestAnimationFrame(bak); } };
+  addEventListener('scroll', iste, { passive: true });
+  addEventListener('resize', iste);
+  addEventListener('load', bak);
+  setTimeout(bak, 1200); // after the page's own entrance has settled
+})();
 </script>

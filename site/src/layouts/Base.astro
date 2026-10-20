@@ -6,11 +6,13 @@ import { seo } from '../data/seo';
 import { isletme, haritaLinki } from '../data/isletme';
 
 // blog yazıları başlık/açıklamayı kendi dosyalarından verir; diğer sayfalar seo.ts'ten alır
-interface Props { yol: string; baslik?: string; aciklama?: string; gorsel?: string; tur?: 'website' | 'article' }
-const { yol, baslik, aciklama, gorsel, tur = 'website' } = Astro.props;
+// gizli: Google'da listelenmesin (404 sayfası gibi)
+interface Props { yol: string; baslik?: string; aciklama?: string; gorsel?: string; tur?: 'website' | 'article'; gizli?: boolean }
+const { yol, baslik, aciklama, gorsel, tur = 'website', gizli = false } = Astro.props;
 const sayfa = baslik && aciklama ? { baslik, aciklama } : seo[yol] ?? seo['/'];
-const ogGorsel = gorsel && Astro.site ? new URL(gorsel, Astro.site).href : null;
-const canonical = Astro.site ? new URL(yol, Astro.site).href : null;
+// every page gets a share picture; posts use their cover, the rest the studio card
+const ogGorsel = Astro.site ? new URL(gorsel ?? '/img/paylasim.jpg', Astro.site).href : null;
+const canonical = Astro.site && !gizli ? new URL(yol, Astro.site).href : null;
 
 // Google'a "bu bir yerel işletme" diyen bilgi (schema.org)
 const isletmeVerisi = {
@@ -32,6 +34,8 @@ const isletmeVerisi = {
     opens: isletme.saatler.acilis,
     closes: isletme.saatler.kapanis,
   }],
+  description: seo['/'].aciklama,
+  ...(Astro.site ? { image: new URL('/img/paylasim.jpg', Astro.site).href, logo: new URL('/img/logo.svg', Astro.site).href } : {}),
   hasMap: haritaLinki,
   sameAs: [isletme.instagram],
   ...(Astro.site ? { url: Astro.site.href } : {}),
@@ -44,9 +48,14 @@ const isletmeVerisi = {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{sayfa.baslik}</title>
 <meta name="description" content={sayfa.aciklama}>
+{gizli && <meta name="robots" content="noindex">}
 {canonical && <link rel="canonical" href={canonical}>}
 <meta property="og:type" content={tur}>
 {ogGorsel && <meta property="og:image" content={ogGorsel}>}
+{ogGorsel && !gorsel && <><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"></>}
+<meta property="og:image:alt" content={`${isletme.ad}, Konya EMS stüdyosu`}>
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#e8173f">
 <meta property="og:locale" content="tr_TR">
 <meta property="og:site_name" content={isletme.ad}>
 <meta property="og:title" content={sayfa.baslik}>
@@ -54,9 +63,8 @@ const isletmeVerisi = {
 {canonical && <meta property="og:url" content={canonical}>}
 <script type="application/ld+json" set:html={JSON.stringify(isletmeVerisi)} />
 <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,400..800;1,62..125,800&display=swap" rel="stylesheet">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" href="/fonts/archivo-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
 <script is:inline>document.documentElement.classList.add('js');</script>
 <slot name="head" />
 </head>

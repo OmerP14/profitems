@@ -1,0 +1,41 @@
+---
+import YasalSayfa from '../components/YasalSayfa.astro';
+
+const bolumler = [
+  { id: 'nedir', baslik: 'Çerez nedir?' },
+  { id: 'bu-site', baslik: 'Bu site ne kullanıyor?' },
+  { id: 'ucuncu', baslik: 'Üçüncü taraf hizmetler' },
+  { id: 'kontrol', baslik: 'Nasıl kontrol edersin?' },
+  { id: 'degisiklik', baslik: 'Değişiklikler' },
+];
+---
+<YasalSayfa yol="/cerez-politikasi" satirlar={['Çerez', 'politikası']} bolumler={bolumler}>
+  <section id="nedir">
+    <h2>Çerez nedir?</h2>
+    <p>Çerezler, bir web sitesini ziyaret ettiğinde tarayıcına kaydedilen küçük metin dosyalarıdır. Siteler bunları seni hatırlamak, ziyaretleri ölçmek ya da reklam göstermek için kullanabilir.</p>
+  </section>
+
+  <section id="bu-site">
+    <h2>Bu site ne kullanıyor?</h2>
+    <p>Bu site kendi çerezini kullanmaz. Ziyaretleri ölçen bir araç, reklam ya da takip kodu yoktur ve tarayıcına herhangi bir bilgi kaydedilmez. Bu yüzden sitede bir çerez onay penceresi görmezsin.</p>
+    <p>Yazı tipleri, görseller ve videolar sitenin kendi sunucusundan yüklenir. Sitedeki asistan tamamen tarayıcında çalışır; yazdıkların hiçbir yere gönderilmez.</p>
+  </section>
+
+  <section id="ucuncu">
+    <h2>Üçüncü taraf hizmetler</h2>
+    <h3>Google Haritalar</h3>
+    <p>İletişim sayfasındaki harita, sen "Haritayı göster" butonuna dokunana kadar yüklenmez; o zamana kadar Google'a bir bilgi gitmez. Butona dokunduğunda harita Google Haritalar'dan yüklenir; Google kendi çerezlerini ya da benzer teknolojileri kullanabilir ve IP adresin gibi teknik bilgileri alabilir. Bunlar Google'ın <a href="https://policies.google.com/privacy?hl=tr" target="_blank" rel="noopener">gizlilik politikasına</a> tabidir.</p>
+    <h3>WhatsApp, Instagram ve yol tarifi bağlantıları</h3>
+    <p>Bu bağlantılara tıkladığında ilgili uygulama ya da site açılır ve oradan sonrası o hizmetin kendi politikalarına tabidir. Bağlantıya tıklamadığın sürece bu hizmetlere bir bilgi gitmez.</p>
+  </section>
+
+  <section id="kontrol">
+    <h2>Nasıl kontrol edersin?</h2>
+    <p>Tarayıcının ayarlarından çerezleri görebilir, silebilir ya da tamamen engelleyebilirsin. Google Haritalar'ın çerezlerini engellersen İletişim sayfasındaki harita düzgün çalışmayabilir; adres ve yol tarifi bağlantısı yine de kullanılabilir.</p>
+  </section>
+
+  <section id="degisiklik">
+    <h2>Değişiklikler</h2>
+    <p>İleride siteye ziyaret ölçümü gibi bir araç eklenirse bu sayfa güncellenir ve gerekiyorsa senden onay istenir. Kişisel verilerinin nasıl işlendiği için <a href="/kvkk">KVKK aydınlatma metnine</a> bakabilirsin.</p>
+  </section>
+</YasalSayfa>

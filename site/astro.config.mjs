@@ -1,5 +1,6 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import cspSatirIci from './csp-satir-ici.mjs';
 
 // Domain alınınca .env dosyasına SITE_URL=https://alanadi.com yazılır;
 // canonical linkler ve sitemap.xml o zaman otomatik açılır.
@@ -7,8 +8,38 @@ const site = process.env.SITE_URL;
 
 export default defineConfig({
   site,
-  integrations: site ? [sitemap()] : [],
+  // one address per page, without a trailing slash (/hizmetler), the same in links, canonical tags and the sitemap
+  trailingSlash: 'never',
+  // styles are small, so they ship inside each page: no extra request holds up the first paint
+  build: { format: 'file', inlineStylesheets: 'always' },
+  integrations: [...(site ? [sitemap({ filter: p => !p.includes('/404') })] : []), cspSatirIci()],
   devToolbar: { enabled: false },
+  // Content Security Policy: every page lists the exact scripts and styles it may run (by hash); anything injected is refused.
+  // The 3D figure needs WebAssembly and blob images (mesh decoder, textures); the contact map is the only outside frame.
+  security: {
+    csp: {
+      directives: [
+        "default-src 'self'",
+        "img-src 'self' data: blob:",
+        "media-src 'self'",
+        "font-src 'self'",
+        "connect-src 'self' blob: data:",
+        "worker-src 'self' blob:",
+        'frame-src https://www.google.com',
+        "object-src 'none'",
+        "base-uri 'self'",
+        "form-action 'self'",
+      ],
+      scriptDirective: { resources: ["'self'", "'wasm-unsafe-eval'"] },
+      // small style="" attributes (photo focal points, bar widths) are allowed; <style> blocks stay hash-checked
+      styleDirective: { resources: ["'self'", { resource: "'unsafe-inline'", kind: 'attribute' }] },
+    },
+  },
   // the 3D engine is one lazy chunk (~590 KB, loaded only near the EMS story)
-  vite: { build: { chunkSizeWarningLimit: 700 } },
+  vite: {
+    build: { chunkSizeWarningLimit: 700 },
+    // pre-bundle the libraries up front, so the dev server never re-optimises them mid-session
+    // (that is what causes "504 Outdated Optimize Dep" in the browser)
+    optimizeDeps: { include: ['motion', 'three', 'three/addons/loaders/GLTFLoader.js', 'three/addons/libs/meshopt_decoder.module.js'] },
+  },
 });

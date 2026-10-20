@@ -1,3 +1,41 @@
+/* Archivo, served from the site itself (no request to Google): latin + latin-ext cover Turkish */
+@font-face {
+  font-family: 'Archivo';
+  font-style: italic;
+  font-weight: 800;
+  font-stretch: 62% 125%;
+  font-display: swap;
+  src: url(/fonts/archivo-italic-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Archivo';
+  font-style: italic;
+  font-weight: 800;
+  font-stretch: 62% 125%;
+  font-display: swap;
+  src: url(/fonts/archivo-italic-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 400 800;
+  font-stretch: 62% 125%;
+  font-display: swap;
+  src: url(/fonts/archivo-normal-latin-ext.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 400 800;
+  font-stretch: 62% 125%;
+  font-display: swap;
+  src: url(/fonts/archivo-normal-latin.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 :root {
   --bg: #eceff1;
   --surface: #dde3e7;
@@ -68,26 +106,48 @@ img, svg { display: block; max-width: 100%; }
 }
 .chat__toggle:hover { transform: scale(1.06); background: #c90f33; }
 .chat__toggle:active { transform: scale(.94); }
+.chat--ters .chat__toggle { background: var(--ink); }
+.chat--ters .chat__toggle:hover { background: #2a2d33; }
 .chat__toggle svg { width: 26px; height: 26px; }
 .chat__panel {
-  position: absolute; right: 0; bottom: 76px; width: min(340px, calc(100vw - 32px));
-  background: #fff; padding: 20px;
+  position: absolute; right: 0; bottom: 76px; width: min(380px, calc(100vw - 32px));
+  display: flex; flex-direction: column; max-height: min(620px, calc(100svh - 120px));
+  background: #fff; color: var(--ink);
   box-shadow: 0 18px 50px rgba(14, 15, 18, .18); /* floating dialog */
   transform-origin: bottom right;
   transition: transform .22s var(--ease-out), opacity .22s;
 }
-.chat__panel[hidden] { display: block; transform: scale(.92) translateY(8px); opacity: 0; pointer-events: none; visibility: hidden; }
-.chat__panel h2 { margin: 0 0 4px; font-size: 1.125rem; }
-.chat__panel > p { margin: 0 0 14px; color: var(--muted); font-size: var(--step-small); }
-.chat__log { display: grid; gap: 8px; margin-bottom: 14px; max-height: 220px; overflow-y: auto; }
-.chat__msg { margin: 0; padding: 10px 12px; background: var(--bg); font-size: .9375rem; }
-.chat__msg--me { justify-self: end; background: var(--ink); color: #fff; }
-.chat__quick { display: flex; flex-wrap: wrap; gap: 6px; }
+.chat__panel[hidden] { display: flex; transform: scale(.92) translateY(8px); opacity: 0; pointer-events: none; visibility: hidden; }
+.chat__head { padding: 18px 20px 14px; background: var(--ink); color: #fff; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 8px)); }
+.chat__head h2 { margin: 0 0 4px; font-size: 1.125rem; }
+.chat__head p { margin: 0; color: var(--on-dark-muted); font-size: var(--step-small); line-height: 1.4; }
+.chat__log { flex: 1; min-height: 160px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding: 16px 20px 8px; overscroll-behavior: contain; }
+.chat__msg { margin: 0; max-width: 88%; padding: 10px 12px; background: var(--bg); font-size: .9375rem; line-height: 1.45; align-self: flex-start; }
+.chat__msg a { font-weight: 700; color: var(--accent-deep); text-underline-offset: 2px; }
+.chat__msg--me { align-self: flex-end; background: var(--ink); color: #fff; }
+.chat__msg--wait { color: var(--muted); font-style: italic; }
+.chat__quick { display: flex; flex-wrap: wrap; gap: 6px; padding: 6px 20px 12px; }
+.chat__quick:empty { display: none; }
 .chat__quick button {
-  min-height: 40px; padding: 0 12px; border: 0; cursor: pointer;
+  min-height: 38px; padding: 0 12px; border: 0; cursor: pointer;
   font: inherit; font-size: .875rem; font-weight: 600; background: var(--surface); color: var(--ink);
+  transition: background-color .15s;
 }
 .chat__quick button:hover { background: #cdd5da; }
+.chat__quick button:active, .chat__form button:active { transform: scale(.95); }
+.chat__form { display: flex; gap: 0; padding: 0 20px 20px; }
+.chat__form input {
+  flex: 1; min-width: 0; min-height: 48px; padding: 0 14px; border: 2px solid var(--ink); border-right: 0; border-radius: 0;
+  font: inherit; font-size: 1rem; background: #fff; color: var(--ink);
+}
+.chat__form input:focus { outline: none; border-color: var(--accent); }
+.chat__form button { flex: none; width: 52px; border: 0; background: var(--accent); color: #fff; cursor: pointer; display: grid; place-items: center; transition: background-color .15s; }
+.chat__form button:hover { background: #c90f33; }
+.chat__form button svg { width: 22px; height: 22px; }
+@media (max-width: 520px) {
+  /* on a phone the panel sits along the bottom of the screen */
+  .chat__panel { position: fixed; left: 8px; right: 8px; bottom: 84px; width: auto; max-height: calc(100svh - 160px); }
+}
 
 /* Footer: the name returns, with everything needed to find the studio */
 .footer { background: var(--ink); color: #fff; padding: 96px var(--margin) 32px; }
@@ -97,7 +157,11 @@ img, svg { display: block; max-width: 100%; }
 .footer p, .footer address { margin: 0; font-style: normal; line-height: 1.55; }
 .footer a { text-decoration: none; }
 .footer a:hover { color: var(--accent); }
-.footer__base { margin-top: 80px; color: var(--on-dark-muted); font-size: var(--step-small); }
+.footer__base { margin-top: 80px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 32px; color: var(--on-dark-muted); font-size: var(--step-small); }
+.footer__base p { margin: 0; }
+.footer__legal { display: flex; flex-wrap: wrap; gap: 8px 24px; list-style: none; margin: 0; padding: 0; }
+.footer__legal a { color: var(--on-dark-muted); text-underline-offset: 3px; }
+.footer__legal a:hover { color: #fff; }
 
 /* light navigation for pages without the video stage */
 .nav--light { color: var(--ink); }

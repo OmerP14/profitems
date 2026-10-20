@@ -4,6 +4,7 @@
 
 // Bir seansın genel akışı (işletmeye özel süre ve sayı bilgisi gelince güncellenir)
 export const seansAkisi = [
+  { baslik: 'Randevun SMS ile gelir', metin: "Randevu aldığında seansının günü ve saati telefonuna SMS olarak gelir. Seans günü, randevundan 4 saat önce bir hatırlatma SMS'i daha gönderilir." },
   { baslik: 'Önce konuşuruz', metin: 'Hedefini ve sağlık durumunu sorarız. Bir rahatsızlığın varsa burada söylersin.' },
   { baslik: 'Kıyafeti giyersin', metin: 'Pedleri taşıyan EMS kıyafeti üstüne oturtulur, pedler büyük kas gruplarının üstüne gelir.' },
   { baslik: 'Cihaz ayarlanır', metin: 'Uyarı düşük başlar ve rahat ettiğin seviyeye kadar yavaş yavaş artırılır.' },
@@ -55,6 +56,10 @@ export const sss = [
   {
     soru: 'Bel ya da boyun ağrım var, EMS yapabilir miyim?',
     cevap: 'Sırt, bel ve omuz çevresindeki kasları güçlendirmeye odaklanan çalışmalar yapıyoruz. Ağrın varsa başlamadan önce doktoruna danışmanı öneririz.',
+  },
+  {
+    soru: 'Randevumu nasıl hatırlayacağım?',
+    cevap: "Randevu aldığında seansının günü ve saati telefonuna SMS olarak gelir. Seans günü, randevundan 4 saat önce bir hatırlatma SMS'i daha gönderilir.",
   },
   {
     soru: 'Fiyatlar ne kadar?',

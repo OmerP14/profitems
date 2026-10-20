@@ -32,6 +32,15 @@ const yaziVerisi = {
 ---
 <Base yol={yol} baslik={`${d.baslik} | Profit EMS Konya`} aciklama={d.aciklama} gorsel={d.kapak} tur="article">
 <script slot="head" type="application/ld+json" set:html={JSON.stringify(yaziVerisi)} />
+{Astro.site && <script slot="head" type="application/ld+json" set:html={JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Ana sayfa', item: new URL('/', Astro.site).href },
+    { '@type': 'ListItem', position: 2, name: 'Blog', item: new URL('/blog', Astro.site).href },
+    { '@type': 'ListItem', position: 3, name: d.baslik, item: new URL(yol, Astro.site).href },
+  ],
+})} />}
 <Nav tema="acik" />
 
 <main>

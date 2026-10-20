@@ -1,0 +1,97 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import BolgeFigur from '../components/BolgeFigur.astro';
+import WhatsAppIcon from '../components/WhatsAppIcon.astro';
+import { whatsappLinki } from '../data/isletme';
+import { menu } from '../data/seo';
+---
+<Base yol="/404" gizli>
+<Nav tema="acik" />
+
+<main>
+  <!-- a page that does not exist is a suit with no signal: the pads try once, then stay dark -->
+  <section class="n-hero" aria-labelledby="yok-baslik">
+    <div class="n-hero__band" aria-hidden="true"><span></span></div>
+    <div class="n-hero__fig" aria-hidden="true"><BolgeFigur zones={[]} koyu /></div>
+    <div class="n-hero__text">
+      <h1 class="n-hero__title" id="yok-baslik">
+        <span class="line"><span>Bu sayfa</span></span>{" "}
+        <span class="line"><span>çalışmıyor</span></span>
+      </h1>
+      <p class="n-hero__lead">Aradığın adres taşınmış ya da hiç var olmamış. Buradan devam edebilirsin.</p>
+      <nav aria-label="Sayfalar">
+        <ul class="n-hero__list">
+          {menu.map(m => <li><a href={m.href}>{m.etiket}</a></li>)}
+        </ul>
+      </nav>
+      <a class="btn" href={whatsappLinki('Merhaba, sitenizde bir sayfayı bulamadım.')} target="_blank" rel="noopener"><WhatsAppIcon /> Bulamadığını bize sor</a>
+    </div>
+  </section>
+</main>
+</Base>
+
+<style>
+  .n-hero { position: relative; overflow: hidden; min-height: calc(100svh - 88px); display: flex; align-items: center; padding: 4vh var(--margin) 8vh; }
+  .n-hero__band {
+    position: absolute; top: -10%; bottom: -10%; right: -14vw; width: 62vw;
+    background: var(--accent); clip-path: polygon(36% 0, 100% 0, 64% 100%, 0 100%);
+  }
+  .n-hero__band span { position: absolute; inset: 0; background: var(--accent-deep); clip-path: polygon(30% 0, 34% 0, 2% 100%, -2% 100%); }
+  .n-hero__fig { position: absolute; right: 9vw; top: 50%; width: min(24vw, 46svh); transform: translateY(-50%); }
+  /* the pads flicker as if trying to connect, then give up */
+  .n-hero__fig :global(.bf__pad) { animation: sinyal 1.6s steps(1, end) .6s 1 both; }
+  .n-hero__fig :global(.bf__pad:nth-of-type(odd)) { animation-delay: .75s; }
+  @keyframes sinyal { 0%, 20%, 45% { fill: var(--accent); } 10%, 30%, 100% { fill: #2a2d33; } }
+
+  .n-hero__text { position: relative; z-index: 1; max-width: 760px; }
+  .n-hero__title {
+    margin: 0 0 28px; text-transform: uppercase; font-style: italic; font-weight: 800;
+    font-variation-settings: "wdth" 62; line-height: .92; letter-spacing: -0.02em;
+    font-size: clamp(4rem, min(10vw, 17svh), 10rem);
+  }
+  .n-hero__title .line { display: block; overflow: hidden; padding: .03em .06em .02em 0; }
+  .n-hero__title .line > span { display: inline-block; }
+  .n-hero__lead { max-width: 36ch; margin: 0 0 32px; font-size: clamp(1.125rem, 1rem + .35vw, 1.3125rem); }
+  .n-hero__list { list-style: none; margin: 0 0 36px; padding: 0; display: grid; grid-template-columns: repeat(2, max-content); gap: 2px 48px; }
+  .n-hero__list a {
+    display: inline-flex; align-items: center; gap: 16px; padding: 6px 0;
+    text-decoration: none; font-size: clamp(1.375rem, 1.1rem + 1vw, 2rem); font-weight: 700; letter-spacing: -0.01em;
+    transition: color .2s, transform .25s var(--ease-out);
+  }
+  .n-hero__list a::before {
+    content: ""; width: 30px; height: 10px; flex: none; background: var(--ink);
+    clip-path: polygon(30% 0, 100% 0, 70% 100%, 0 100%); transition: background-color .2s, width .25s var(--ease-out);
+  }
+  .n-hero__list a:hover { color: var(--accent); transform: translateX(6px); }
+  .n-hero__list a:hover::before { background: var(--accent); width: 46px; }
+
+  :global(.js) .n-hero__title .line > span { transform: translateY(105%); }
+  :global(.is-in) .n-hero__title .line > span { transform: none; transition: transform .8s var(--ease-out); }
+
+  @media (max-width: 860px) {
+    .n-hero { min-height: 0; align-items: flex-start; padding: 0 var(--margin) 96px; }
+    .n-hero__band { top: 0; bottom: auto; height: 220px; right: -30vw; width: 100vw; }
+    .n-hero__fig { top: 20px; right: 16vw; width: 92px; transform: none; }
+    .n-hero__text { padding-top: 248px; }
+    .n-hero__title { font-size: 17vw; }
+    .n-hero__list { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .n-hero__fig :global(.bf__pad) { animation: none; }
+    :global(.js) .n-hero__title .line > span { transform: none; }
+  }
+</style>
+
+<script>
+import { animate, stagger } from 'motion';
+window.__motion = true;
+if (matchMedia('(prefers-reduced-motion: reduce)').matches) document.body.classList.add('is-in');
+else {
+  animate('.n-hero__title .line > span', { y: ['105%', '0%'] }, { type: 'spring', stiffness: 140, damping: 20, delay: stagger(0.09) });
+  animate('.n-hero__band', { x: ['40%', '0%'] }, { duration: 1.1, ease: [0.22, 1, 0.36, 1] });
+}
+</script>
+<script is:inline>
+setTimeout(() => { if (!window.__motion) document.body.classList.add('is-in'); }, 1500);
+</script>

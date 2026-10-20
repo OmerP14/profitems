@@ -19,7 +19,10 @@ const ad = (h: typeof zay) => (h as { kisaAd?: string }).kisaAd ?? h.ad;
     <!-- the slash is a window onto the goal being chosen; the same photographs carry their alt text further down -->
     <div class="h-show" aria-hidden="true">
       <div class="h-show__win">
-        {hizmetler.map((h, i) => <img class:list={['h-show__img', { 'is-on': i === 0 }]} data-id={h.id} src={h.gorsel} srcset={h.srcset} sizes="(max-width: 860px) 68vw, 41vw" alt="" style={`object-position:${h.odak}`} width={h.boyut[0]} height={h.boyut[1]} decoding="async" fetchpriority={i === 0 ? 'high' : 'low'}>)}
+        {/* only the first photograph loads with the page; the other three follow once it has finished loading */}
+        {hizmetler.map((h, i) => i === 0
+          ? <img class="h-show__img is-on" data-id={h.id} src={h.gorsel} srcset={h.srcset} sizes="(max-width: 860px) 68vw, 41vw" alt="" style={`object-position:${h.odak}`} width={h.boyut[0]} height={h.boyut[1]} decoding="async" fetchpriority="high">
+          : <img class="h-show__img" data-id={h.id} data-src={h.gorsel} data-srcset={h.srcset} sizes="(max-width: 860px) 68vw, 41vw" alt="" style={`object-position:${h.odak}`} width={h.boyut[0]} height={h.boyut[1]} decoding="async">)}
       </div>
       <p class="h-show__zones"><strong>Çalışan bölgeler</strong><span>{hizmetler[0].bolgeler}</span></p>
     </div>
@@ -39,7 +42,7 @@ const ad = (h: typeof zay) => (h as { kisaAd?: string }).kisaAd ?? h.ad;
 
   <!-- 1 · photograph cut on the slant, words beside it -->
   <section class="s-a" id={zay.id} aria-labelledby="t-zay">
-    <div class="frame frame--r s-a__img"><figure class="cut cut--r"><img src={zay.gorsel} srcset={zay.srcset} sizes="(max-width: 860px) 100vw, 58vw" alt={zay.alt} style={`object-position:${zay.odak}`} width={zay.boyut[0]} height={zay.boyut[1]} decoding="async"></figure></div>
+    <div class="frame frame--r s-a__img"><figure class="cut cut--r"><img src={zay.gorsel} srcset={zay.srcset} sizes="(max-width: 860px) 100vw, 58vw" alt={zay.alt} style={`object-position:${zay.odak}`} width={zay.boyut[0]} height={zay.boyut[1]} loading="lazy" decoding="async"></figure></div>
     <div class="s-a__text">
       <h2 id="t-zay" data-rise>{ad(zay)}</h2>
       <p data-rise>{zay.metin}</p>
@@ -225,13 +228,29 @@ const ad = (h: typeof zay) => (h as { kisaAd?: string }).kisaAd ?? h.ad;
   :global(.is-in) .h-hero__title .line > span, :global(.is-in) [data-rise] { opacity: 1; transform: none; transition: transform .8s var(--ease-out), opacity .8s; }
 
   @media (max-width: 860px) {
-    .h-hero { min-height: 0; padding: 4vh var(--margin) 96px; align-items: flex-start; }
-    .h-hero__band { top: 0; bottom: auto; height: 150px; right: -30vw; width: 100vw; }
-    .h-hero__title { font-size: 24vw; margin-top: 150px; }
+    /* on a phone: the words first, then the chosen goal's photograph as a wide slanted window
+       with the red slab behind it (as on every photograph further down), then the list */
+    .h-hero { min-height: 0; flex-direction: column; align-items: stretch; padding: 5vh var(--margin) 88px; }
+    .h-hero__band { display: none; }
+    .h-hero__text { display: contents; }
+    .h-hero__title { order: 1; font-size: 24vw; margin: 0 0 22px; }
+    .h-hero__lead { order: 2; margin-bottom: 36px; }
+    .h-show {
+      order: 3; position: relative; inset: auto; width: auto; height: auto; margin: 0 calc(-1 * var(--margin)) 44px;
+      aspect-ratio: 4 / 3.5; display: block; isolation: isolate;
+    }
+    .h-show::before {
+      content: ""; position: absolute; inset: 0; z-index: -1; background: var(--accent);
+      clip-path: polygon(14% 0, 100% 0, 86% 100%, 0 100%); transform: translate(18px, 18px);
+    }
+    .h-show__win { position: absolute; inset: 0; clip-path: polygon(14% 0, 100% 0, 86% 100%, 0 100%); }
+    .h-show__zones {
+      position: absolute; z-index: 2; left: 14%; right: 22%; bottom: 18px; margin: 0;
+      font-size: .9375rem; text-shadow: 0 1px 12px rgba(0, 0, 0, .6); /* legibility on a photo */
+    }
+    .h-show__win::after { content: ""; position: absolute; inset: 55% 0 0; z-index: 2; background: linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, .7)); } /* scrim under text */
+    .h-hero nav { order: 4; }
     .h-hero__list { grid-template-columns: 1fr; }
-    .h-show { top: 0; bottom: auto; height: 150px; right: 0; width: 68vw; }
-    .h-show__win { clip-path: polygon(26% 0, 100% 0, 74% 100%, 0 100%); }
-    .h-show__zones { display: none; }
     .s-a, .s-c, .s-d { grid-template-columns: 1fr; padding: 96px var(--margin); }
     .s-a__img, .s-c__img { margin: 0 calc(-1 * var(--margin)); }
     .s-c__img { order: -1; }
@@ -282,11 +301,14 @@ setTimeout(() => { if (!window.__motion) document.body.classList.add('is-in'); }
 (() => {
   const links = [...document.querySelectorAll('.h-hero__list a')];
   const imgs = [...document.querySelectorAll('.h-show__img')];
+  const yukle = () => imgs.forEach(img => { if (img.dataset.src) { img.srcset = img.dataset.srcset; img.src = img.dataset.src; delete img.dataset.src; } });
+  if (document.readyState === 'complete') yukle(); else addEventListener('load', yukle, { once: true });
   const zones = document.querySelector('.h-show__zones span');
   if (!links.length || !imgs.length) return;
   let cur = 0, timer;
   const show = i => {
     if (i === cur) return;
+    yukle();
     imgs.forEach(img => img.classList.remove('is-out'));
     imgs[cur].classList.replace('is-on', 'is-out');
     imgs[i].classList.add('is-on');

@@ -1,0 +1,118 @@
+---
+// Shared frame for the legal pages: the title at poster size, a sticky list of sections, the text at reading width.
+import Base from '../layouts/Base.astro';
+import Nav from './Nav.astro';
+import { yasal } from '../data/yasal';
+
+interface Props { yol: string; satirlar: string[]; bolumler: { id: string; baslik: string }[] }
+const { yol, satirlar, bolumler } = Astro.props;
+---
+<Base yol={yol}>
+<Nav tema="acik" />
+
+<main class="y">
+  <header class="y-head">
+    <h1 class="y-head__title">
+      {satirlar.map(s => <span class="line"><span>{s}</span></span>)}
+    </h1>
+    <p class="y-head__date">Son güncelleme: {yasal.guncelleme}</p>
+    {yasal.taslak && (
+      <p class="y-head__taslak" role="note">Bu metin taslaktır. Yayından önce hukuki kontrolden geçirilecektir.</p>
+    )}
+  </header>
+
+  <div class="y-body">
+    <nav class="y-toc" aria-label="Bu sayfada">
+      <ul>
+        {bolumler.map(b => <li><a href={`#${b.id}`}>{b.baslik}</a></li>)}
+      </ul>
+    </nav>
+    <div class="y-text">
+      <slot />
+    </div>
+  </div>
+</main>
+</Base>
+
+<style>
+  .y-head { position: relative; padding: 4vh var(--margin) 64px; }
+  .y-head__title {
+    margin: 0 0 28px; text-transform: uppercase; font-style: italic; font-weight: 800;
+    font-variation-settings: "wdth" 62; line-height: .92; letter-spacing: -0.02em;
+    font-size: clamp(3.75rem, 9vw, 9rem);
+  }
+  .y-head__title .line { display: block; overflow: hidden; padding: .03em .06em .02em 0; }
+  .y-head__title .line > span { display: inline-block; }
+  .y-head__date { margin: 0; font-weight: 600; color: var(--muted); }
+  .y-head__taslak {
+    display: inline-block; margin: 20px 0 0; padding: 12px 18px 12px 30px; background: var(--ink); color: #fff; font-weight: 600;
+    clip-path: polygon(14px 0, 100% 0, 100% 100%, 0 100%);
+  }
+
+  .y-body {
+    display: grid; grid-template-columns: minmax(200px, 3fr) minmax(0, 7fr); gap: 48px calc(var(--margin) * 2);
+    padding: 64px var(--margin) 160px; background: var(--surface);
+    clip-path: polygon(0 48px, 100% 0, 100% 100%, 0 100%);
+  }
+  .y-toc { padding-top: 48px; }
+  .y-toc ul { position: sticky; top: 32px; list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+  .y-toc a { display: flex; align-items: baseline; gap: 12px; padding: 6px 0; font-weight: 600; text-decoration: none; color: var(--muted); transition: color .2s; }
+  .y-toc a::before { content: ""; flex: none; width: 18px; height: 7px; background: currentColor; clip-path: polygon(30% 0, 100% 0, 70% 100%, 0 100%); transform: translateY(-2px); }
+  .y-toc a:hover, .y-toc a.is-on { color: var(--accent); }
+
+  .y-text { padding-top: 48px; max-width: 70ch; }
+  .y-text :global(section) { scroll-margin-top: 24px; }
+  .y-text :global(section + section) { margin-top: 56px; }
+  .y-text :global(h2) {
+    margin: 0 0 18px; text-transform: uppercase; font-style: italic; font-weight: 800;
+    font-variation-settings: "wdth" 62; line-height: .95; letter-spacing: -0.01em;
+    font-size: clamp(2rem, 3vw, 2.75rem);
+  }
+  .y-text :global(h3) { margin: 28px 0 8px; font-size: 1.125rem; }
+  .y-text :global(p), .y-text :global(li) { font-size: clamp(1.0625rem, 1rem + .2vw, 1.1875rem); line-height: 1.6; }
+  .y-text :global(p) { margin: 0 0 16px; }
+  .y-text :global(ul) { list-style: none; margin: 0 0 16px; padding: 0; display: grid; gap: 8px; }
+  .y-text :global(ul li) { position: relative; padding-left: 30px; }
+  .y-text :global(ul li)::before { content: ""; position: absolute; left: 0; top: .68em; width: 18px; height: 7px; background: var(--accent); clip-path: polygon(30% 0, 100% 0, 70% 100%, 0 100%); }
+  .y-text :global(a) { font-weight: 600; text-underline-offset: 3px; }
+  .y-text :global(a:hover) { color: var(--accent); }
+
+  :global(.js) .y-head__title .line > span { transform: translateY(105%); }
+  :global(.is-in) .y-head__title .line > span { transform: none; transition: transform .8s var(--ease-out); }
+
+  @media (max-width: 860px) {
+    .y-head { padding: 6vh var(--margin) 48px; }
+    .y-head__title { font-size: 15vw; }
+    .y-body { grid-template-columns: 1fr; gap: 0; padding: 48px var(--margin) 96px; clip-path: polygon(0 28px, 100% 0, 100% 100%, 0 100%); }
+    .y-toc { padding-top: 28px; }
+    .y-toc ul { position: static; }
+    .y-text { padding-top: 40px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :global(.js) .y-head__title .line > span { transform: none; }
+  }
+</style>
+
+<script>
+import { animate, stagger } from 'motion';
+window.__motion = true;
+if (matchMedia('(prefers-reduced-motion: reduce)').matches) document.body.classList.add('is-in');
+else animate('.y-head__title .line > span', { y: ['105%', '0%'] }, { type: 'spring', stiffness: 140, damping: 20, delay: stagger(0.09) });
+
+// the contents list follows the reader: the section on screen is marked
+const links = new Map([...document.querySelectorAll('.y-toc a')].map(a => [a.getAttribute('href')!.slice(1), a]));
+const io = new IntersectionObserver(entries => entries.forEach(e => {
+  if (!e.isIntersecting) return;
+  links.forEach(a => a.classList.remove('is-on'));
+  links.get(e.target.id)?.classList.add('is-on');
+}), { rootMargin: '-30% 0px -60% 0px' });
+document.querySelectorAll('.y-text section[id]').forEach(s => io.observe(s));
+// above the first section nothing is marked
+const ilk = document.querySelector('.y-text section[id]');
+addEventListener('scroll', () => {
+  if (ilk && ilk.getBoundingClientRect().top > innerHeight * 0.3) links.forEach(a => a.classList.remove('is-on'));
+}, { passive: true });
+</script>
+<script is:inline>
+setTimeout(() => { if (!window.__motion) document.body.classList.add('is-in'); }, 1500);
+</script>

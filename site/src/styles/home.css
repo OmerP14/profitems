@@ -86,7 +86,9 @@
 .goal:active { transform: scale(.96); }
 .goal[aria-pressed="true"] { background: var(--ink); color: #fff; }
 .goals { margin-top: 20px; }
-.goals__note { margin: 12px 0 0; min-height: 3em; font-size: var(--step-small); color: var(--muted); }
+.goals__note { display: grid; margin: 12px 0 0; min-height: 3em; font-size: var(--step-small); color: var(--muted); }
+.goals__note > * { grid-area: 1 / 1; }
+.goals__ghost { visibility: hidden; }
 
 .cert { display: grid; grid-template-columns: 76px 1fr; gap: 14px; align-items: center; margin: 0 0 20px; }
 .cert img { width: 76px; height: auto; }
@@ -249,17 +251,24 @@
   .story--stack .story__figure { height: 100%; min-height: 0; overflow: hidden; padding-top: 8px; }
   .story--stack .story__figure svg { max-height: 100%; }
   .story--stack .story__text { padding: 8px 0 0; align-self: end; }
-  .story--live.story--stack .goals { margin-top: 14px; }
-  .story--live.story--stack .goal { min-height: 40px; }
-  .story--live.story--stack .goals__note { min-height: 0; margin-top: 8px; }
-  .story--live.story--stack .story__step .btn { margin-top: 14px; }
+  /* the last card is the tallest: goals two by two, a smaller note, so the figure above keeps room */
+  .story--live.story--stack .goals { margin-top: 12px; }
+  .story--live.story--stack .goals__list { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .story--live.story--stack .goal { min-height: 40px; padding: 0 10px; }
+  .story--live.story--stack .goals__note { min-height: 0; margin-top: 8px; font-size: .875rem; line-height: 1.35; }
+  .story--live.story--stack .story__step .btn { margin-top: 12px; }
   .story--stack .story__title { font-size: 1.75rem; margin-bottom: 12px; }
   .story--stack .story__step { padding-top: 0; }
-  .story--live.story--stack .story__step { padding: 22px 22px 26px; max-width: none; }
+  .story--live.story--stack .story__step { padding: 18px 20px 20px; max-width: none; }
   .story--live.story--stack .story__step::before { margin-bottom: 12px; }
   .story--live.story--stack .story__bar { margin-bottom: 14px; }
-  .story__nav { margin-top: 12px; gap: 10px; }
-  .story__arrow { width: 48px; height: 42px; }
+  /* the arrows move up beside the title (the bar already shows which step), so the figure gets that row back */
+  .story--stack .story__text { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; column-gap: 8px; }
+  .story--stack .story__text > * { grid-column: 1 / -1; }
+  .story--stack .story__title { grid-column: 1; }
+  .story--stack .story__nav { grid-row: 1; grid-column: 2; margin: 0 0 12px; gap: 6px; }
+  .story--stack .story__count, .story--stack .story__hint { display: none; }
+  .story__arrow { width: 46px; height: 40px; }
 }
 
 @media (max-width: 860px) {

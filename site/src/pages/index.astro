@@ -95,7 +95,7 @@ const serit = [...hizmetler.map(kisaAd), `Her gün ${acilis}–${kapanis}`, `${i
               <button type="button" class="goal" data-goal="agri" data-label="Bel ve boyun ağrısı" aria-pressed="false">Bel ve boyun</button>
             </div>
           </fieldset>
-          <p class="goals__note" id="goal-note" aria-live="polite"></p>
+          <p class="goals__note"><span id="goal-note" aria-live="polite"></span></p>
           <a class="btn" id="story-wa" href={whatsappLinki('Merhaba, EMS hakkında bilgi almak istiyorum.')} target="_blank" rel="noopener">WhatsApp'tan yaz</a>
         </li>
       </ol>
@@ -378,6 +378,9 @@ const notes = {
   incelme: 'İncelme: karın ve bel çevresi öne çıkar.',
   agri: 'Bel ve boyun: omuz ve bel bölgesi desteklenir.'
 };
+// every note also sits invisibly in the same spot, so the card always keeps the height of the longest one
+// and the figure above it (on a phone it fills whatever height is left) never changes size between goals
+note.before(...Object.values(notes).map(t => Object.assign(document.createElement('span'), { className: 'goals__ghost', textContent: t, ariaHidden: 'true' })));
 document.querySelectorAll('.goal').forEach(btn => {
   btn.addEventListener('click', () => {
     const goal = btn.dataset.goal;

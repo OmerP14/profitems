@@ -38,7 +38,11 @@ const PADS = [
   ['zayiflama sikilasma', 'RightUpLeg',   -0.10,  0.68, -1, .065, .09],
 ];
 
-export async function createEms3D(container, { modelUrl }) {
+// Finding where each pad sits (hundreds of rays against the skinned body) blocks the page for seconds,
+// and the answer only depends on the model and PADS above. So it is worked out once and shipped as JSON
+// (seatsUrl). If PADS or the model change: delete that file, open the page, run
+// copy(JSON.stringify(window.__emsSeats)) in the browser console and save the result as the new file.
+export async function createEms3D(container, { modelUrl, seatsUrl }) {
   const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -71,7 +75,10 @@ export async function createEms3D(container, { modelUrl }) {
   scene.add(ground);
 
   const loader = new GLTFLoader().setMeshoptDecoder(MeshoptDecoder);
-  const gltf = await loader.loadAsync(modelUrl);
+  const [gltf, savedSeats] = await Promise.all([
+    loader.loadAsync(modelUrl),
+    seatsUrl ? fetch(seatsUrl).then(r => (r.ok ? r.json() : null)).catch(() => null) : null,
+  ]);
   const model = gltf.scene;
   scene.add(model);
 
@@ -227,8 +234,14 @@ export async function createEms3D(container, { modelUrl }) {
     return geo;
   };
 
+  // a seat as plain numbers: [mesh, a, b, c, barycentric x, y, z, flip]; a fallback point as [u, v]
+  const packSeat = s => s.fallback ? [s.u, s.v]
+    : [meshes.indexOf(s.mesh), s.f.a, s.f.b, s.f.c, ...s.bary.toArray().map(n => +n.toFixed(6)), s.flip];
+  const unpackSeat = a => a.length === 2 ? { fallback: true, u: a[0], v: a[1] }
+    : { mesh: meshes[a[0]], f: { a: a[1], b: a[2], c: a[3] }, bary: new THREE.Vector3(a[4], a[5], a[6]), flip: a[7] };
+  const useSaved = Array.isArray(savedSeats) && savedSeats.length === PADS.length;
+
   const pads = PADS.map(([zones, bone, x, y, side, w, h], i) => {
-    const hit = findHit(x, y, side, bone);
     const mat = new THREE.MeshStandardMaterial({ color: RED, emissive: RED, emissiveIntensity: 0, roughness: .35, side: THREE.DoubleSide });
     const geo = patchGeometry();
     const pad = new THREE.Mesh(geo, mat);
@@ -236,7 +249,11 @@ export async function createEms3D(container, { modelUrl }) {
     pad.frustumCulled = false;                                  // its vertices move every frame
     scene.add(pad);
     let seats = null, center = null;
-    if (hit) {
+    const hit = useSaved ? null : findHit(x, y, side, bone);
+    if (useSaved) {
+      const saved = savedSeats[i];
+      if (saved) { center = unpackSeat(saved.c); seats = saved.s.map(unpackSeat); }
+    } else if (hit) {
       center = seatOf(hit.object, hit.face, hit.point, new THREE.Vector3(0, 0, side));
       const home = boneOf(hit.object, hit.face.a);
       place(center, P, N);
@@ -257,6 +274,7 @@ export async function createEms3D(container, { modelUrl }) {
     }
     return { pad, geo, mat, seats, center, bone, w, h, x, y, side, zones: zones.split(' '), back: side < 0, i };
   });
+  if (!useSaved) window.__emsSeats = pads.map(d => d.center ? { c: packSeat(d.center), s: d.seats.map(packSeat) } : null);
 
   const SP = new THREE.Vector3(), SN = new THREE.Vector3(), CP = new THREE.Vector3();
   function seatPad(d, k) {

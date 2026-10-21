@@ -13,6 +13,17 @@ const { acilis, kapanis } = isletme.saatler;
 const tumYazilar = await yazilar();
 const [sonYazi, ...digerYazilar] = tumYazilar.slice(0, 5);
 const kisaAd = (h: (typeof hizmetler)[number]) => (h as { kisaAd?: string }).kisaAd ?? h.ad;
+// the hero's current line: flat, then bursts of biphasic square pulses (the shape an EMS device sends)
+const dalga = (() => {
+  let d = 'M0 40', x = 0;
+  for (const n of [3, 3, 3, 3]) {
+    x += 46; d += ` H${x}`;
+    for (let i = 0; i < n; i++) { d += ` V10 H${x + 9} V70 H${x + 18} V40`; x += 18; if (i < n - 1) { x += 8; d += ` H${x}`; } }
+    x += 46; d += ` H${x}`;
+  }
+  return { d, w: x };
+})();
+const serit = [...hizmetler.map(kisaAd), `Her gün ${acilis}–${kapanis}`, `${isletme.adres.ilce} / ${isletme.adres.il}`];
 ---
 <Base yol="/">
 
@@ -27,19 +38,23 @@ const kisaAd = (h: (typeof hizmetler)[number]) => (h as { kisaAd?: string }).kis
   <section class="hero" aria-labelledby="hero-title">
     <div class="hero__main">
       <h1 class="hero__title" id="hero-title">
-        <span class="line"><span>Sıkılaş</span></span>{" "}
-        <span class="line"><span>İncel</span></span>
+        <span class="line"><span>Akım</span></span>{" "}
+        <span class="line"><span>senden</span></span>{" "}
+        <span class="line line--hot"><span>yana<i>.</i></span></span>
       </h1>
-      <div class="hero__actions">
-        <a class="btn" href={whatsappLinki('Merhaba, randevu almak istiyorum.')} target="_blank" rel="noopener">
-          <WhatsAppIcon />
-          Randevu al
-        </a>
-        <a class="btn btn--light" href="#ems-nedir">EMS nasıl çalışır?</a>
-      </div>
+      <svg class="pulse" viewBox={`0 0 ${dalga.w} 80`} preserveAspectRatio="none" aria-hidden="true">
+        <path class="pulse__base" d={dalga.d} pathLength="100" />
+        <path class="pulse__spark" d={dalga.d} pathLength="100" />
+      </svg>
     </div>
   </section>
 </main>
+<!-- the goals and the hours on a slanted running band, in the logo's angle -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker__track">
+    {[0, 1].map(() => <span class="ticker__set">{serit.map(t => <span class="ticker__item">{t}</span>)}</span>)}
+  </div>
+</div>
 </div>
 
 <section class="story" id="ems-nedir" aria-labelledby="story-title">
@@ -84,6 +99,12 @@ const kisaAd = (h: (typeof hizmetler)[number]) => (h as { kisaAd?: string }).kis
           <a class="btn" id="story-wa" href={whatsappLinki('Merhaba, EMS hakkında bilgi almak istiyorum.')} target="_blank" rel="noopener">WhatsApp'tan yaz</a>
         </li>
       </ol>
+      <div class="story__nav" hidden>
+        <button type="button" class="story__arrow" data-dir="-1" aria-label="Önceki adım"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg></button>
+        <p class="story__count" aria-live="polite"><b>1</b> / 6</p>
+        <button type="button" class="story__arrow" data-dir="1" aria-label="Sonraki adım"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg></button>
+        <span class="story__hint" aria-hidden="true">Sağa sola kaydır</span>
+      </div>
     </div>
 
     <figure class="story__figure" aria-hidden="true">
@@ -128,7 +149,7 @@ const kisaAd = (h: (typeof hizmetler)[number]) => (h as { kisaAd?: string }).kis
       </svg>
     </figure>
     <!-- decided before the first paint: where 3D will be drawn, the 2D figure never shows (it is only the fallback) -->
-    <script is:inline>(() => { try { if (document.createElement('canvas').getContext('webgl2')) document.currentScript.previousElementSibling.classList.add('is-3d-wait'); } catch {} })();</script>
+    <script is:inline>if ('WebGL2RenderingContext' in window) document.currentScript.previousElementSibling.classList.add('is-3d-wait');</script>
   </div>
 </section>
 
@@ -385,16 +406,10 @@ import { animate, stagger, press, inView } from 'motion';
 window.__motion = true;
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const ease = [0.22, 1, 0.36, 1];
-const spring = { type: 'spring', stiffness: 140, damping: 20, mass: 1 };
 const tap = { type: 'spring', stiffness: 400, damping: 20 };
 
-// one orchestrated entrance: headline lines, then the two actions
-if (reduce || document.body.classList.contains('is-in')) {
-  document.body.classList.add('is-in');
-} else {
-  animate('.hero__title .line > span', { y: ['105%', '0%'] }, { ...spring, delay: stagger(0.09) });
-  animate('.hero__actions > *', { y: [20, 0], opacity: [0, 1] }, { duration: 0.7, ease, delay: stagger(0.08, { startDelay: 0.35 }) });
-}
+// the first screen animates in plain CSS (home.css); with reduced motion the rest simply shows
+if (reduce) document.body.classList.add('is-in');
 
 // the sections after the story: heading, then text, then the rest, once each comes into view
 if (!reduce) {
@@ -413,8 +428,7 @@ document.addEventListener('goal:change', () => {
 });
 </script>
 <script>
-// EMS story: the figure is rebuilt from joint positions on every scroll frame
-import { scroll } from 'motion';
+// EMS story: the figure is rebuilt from joint positions on every animation frame
 
 const section = document.getElementById('ems-nedir');
 const reduceStory = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -576,35 +590,48 @@ if (reduceStory) {
   section.classList.add('story--live');
   let ems3d = null, lastP = 0;
   render(0);
-  // the stage pins; scrolling only decides WHICH step is on. Each step then plays out on its own,
-  // card by card: the figure dresses itself, the pads go on, it turns, it squats; never left half-way
+  // the steps move sideways (swipe, drag, trackpad, arrow keys or the buttons); each step then plays out
+  // on its own, card by card: the figure dresses itself, the pads go on, it turns, it squats; never left half-way
   const bar = [...section.querySelectorAll('.story__bar span')];
-  const stepFromScroll = () => {
-    const r = section.getBoundingClientRect();
-    if (r.top > innerHeight * .35) return -1;                       // not reached yet: undressed, no card
-    const q = clamp(-r.top / Math.max(r.height - innerHeight, 1));
-    return Math.min(Math.floor(q * steps.length), steps.length - 1);
-  };
-  // the two squats (progress .78–.93) keep their own tempo, about 1.4 s each; every other move eases in and out as before
-  const SQUAT = [.78, .93], SQUAT_MS = 2900;
+  const pin = section.querySelector('.story__pin');
+  const nav = section.querySelector('.story__nav');
+  const count = nav.querySelector('.story__count b');
+  const [prev, next] = nav.querySelectorAll('.story__arrow');
+  // the two squats (progress .78–.93) keep their own tempo, about 1.4 s each, but only on the squat step itself;
+  // passing through it the figure skips them (it stands at both ends), so it never trails behind the cards
+  const SQUAT = [.78, .93], SQUAT_MS = 2900, STAND = [.78, .855, .93];
+  const move = d => Math.min(1500, 650 + Math.abs(d) * 1800);
+  const squatMs = d => Math.abs(d) / (SQUAT[1] - SQUAT[0]) * SQUAT_MS;
   let tween = 0;
   const playTo = target => {
     cancelAnimationFrame(tween);
-    if (Math.abs(target - lastP) < 1e-4) return;
-    const up = target > lastP;
-    const cuts = SQUAT.filter(b => (up ? b > lastP && b < target : b < lastP && b > target));
-    const points = [lastP, ...(up ? cuts : cuts.reverse()), target];
-    const legs = points.slice(1).map((to, i) => {
-      const from = points[i], d = to - from, mid = (from + to) / 2;
-      const squat = mid > SQUAT[0] && mid < SQUAT[1];
-      return { from, d, squat, dur: squat ? Math.abs(d) / (SQUAT[1] - SQUAT[0]) * SQUAT_MS : Math.min(2800, 1500 + Math.abs(d) * 2600) };
-    });
+    const legs = [];
+    let from = lastP;
+    const add = (to, dur, even) => { if (Math.abs(to - from) > 1e-4) legs.push({ from, d: to - from, dur, even }); from = to; };
+    const up = target > from;
+    if (up && target === SQUAT[1]) {
+      if (from < SQUAT[0]) add(SQUAT[0], move(SQUAT[0] - from));
+      add(SQUAT[1], squatMs(SQUAT[1] - from), true);
+    } else {
+      // caught mid-squat by the next step: stand up quickly first
+      if (from > SQUAT[0] + 1e-4 && from < SQUAT[1] - 1e-4) {
+        const stand = up ? STAND.find(v => v > from) : STAND.findLast(v => v < from);
+        add(stand, squatMs(stand - from) * .4, true);
+      }
+      if (up ? from < SQUAT[1] && target > SQUAT[1] : from > SQUAT[0] && target < SQUAT[0]) {
+        const [enter, leave] = up ? SQUAT : [SQUAT[1], SQUAT[0]];
+        if (up ? from < enter : from > enter) add(enter, move(enter - from));
+        from = leave;
+      }
+      add(target, move(target - from));
+    }
+    if (!legs.length) return;
     let leg = 0, t0 = performance.now();
     const frame = now => {
       const L = legs[leg];
       const k = clamp((now - t0) / L.dur);
       // the squat itself already slows at the bottom and top, so its leg runs at even speed
-      const e = L.squat ? k : -(Math.cos(Math.PI * k) - 1) / 2;
+      const e = L.even ? k : -(Math.cos(Math.PI * k) - 1) / 2;
       lastP = L.from + L.d * e;
       render(lastP);
       if (ems3d) ems3d.setProgress(lastP);
@@ -613,22 +640,59 @@ if (reduceStory) {
     };
     tween = requestAnimationFrame(frame);
   };
-  const update = () => {
-    const idx = stepFromScroll();
+  const go = i => {
+    const idx = clamp(i, 0, steps.length - 1);
     if (idx === current) return;
+    if (current >= 0) nav.classList.add('is-used');
     current = idx;
-    steps.forEach((el, i) => { el.classList.toggle('is-active', i === idx); el.classList.toggle('is-past', i < idx); });
-    bar.forEach((b, i) => b.classList.toggle('is-on', i <= idx));
-    playTo(idx < 0 ? 0 : anchors[idx]);
+    steps.forEach((el, j) => { el.classList.toggle('is-active', j === idx); el.classList.toggle('is-past', j < idx); });
+    bar.forEach((b, j) => b.classList.toggle('is-on', j <= idx));
+    count.textContent = idx + 1;
+    prev.disabled = idx === 0;
+    next.disabled = idx === steps.length - 1;
+    playTo(anchors[idx]);
   };
-  scroll(update, { target: section, offset: ['start end', 'end start'] });
   section.classList.add('story--stack');
-  addEventListener('resize', update);
-  update();
+  nav.hidden = false;
+  prev.disabled = true;
+  // the first card comes in once the stage is mostly on screen; until then the figure waits undressed
+  new IntersectionObserver(([e]) => { if (e.isIntersecting && current < 0) go(0); }, { threshold: .5 }).observe(pin);
 
-  // the 3D mannequin loads only when the story is near; the SVG figure stays as the fallback
+  prev.addEventListener('click', () => go(current - 1));
+  next.addEventListener('click', () => go(current + 1));
+  bar.forEach((b, j) => b.addEventListener('click', () => go(j)));
+  section.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); go(current + (e.key === 'ArrowRight' ? 1 : -1)); }
+  });
+  // swipe on phones, drag with the mouse; vertical page scrolling stays untouched (touch-action: pan-y)
+  let sx = null, sy = 0;
+  pin.addEventListener('pointerdown', e => { if (e.button === 0 && !e.target.closest('a, button')) { sx = e.clientX; sy = e.clientY; } });
+  pin.addEventListener('pointerup', e => {
+    if (sx === null) return;
+    const dx = e.clientX - sx, dy = e.clientY - sy;
+    sx = null;
+    if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.2) go(current + (dx < 0 ? 1 : -1));
+  });
+  pin.addEventListener('pointercancel', () => { sx = null; });
+  // two-finger sideways swipe on a trackpad: one step per gesture (the momentum tail is swallowed), no browser back-swipe
+  let acc = 0, lock = 0;
+  pin.addEventListener('wheel', e => {
+    if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+    e.preventDefault();
+    const now = performance.now();
+    if (now < lock) { lock = now + 220; return; }
+    acc += e.deltaX;
+    if (Math.abs(acc) > 40) { go(current + Math.sign(acc)); acc = 0; lock = now + 500; }
+  }, { passive: false });
+
+  // the 3D mannequin loads only when the story is near, and never before the page has finished loading
+  // and gone quiet, so it cannot hold up the first screen; the SVG figure stays as the fallback
   const holder = $('ems-3d');
-  const gl = (() => { try { return !!document.createElement('canvas').getContext('webgl2'); } catch { return false; } })();
+  const settled = new Promise(r => {
+    const idle = () => ('requestIdleCallback' in window ? requestIdleCallback(() => r(), { timeout: 800 }) : setTimeout(r, 200));
+    if (document.readyState === 'complete') idle(); else addEventListener('load', idle, { once: true });
+  });
+  const gl = 'WebGL2RenderingContext' in window;
   if (gl) {
     let started = false;
     new IntersectionObserver(async ([e]) => {
@@ -636,8 +700,9 @@ if (reduceStory) {
       if (!e.isIntersecting || started) return;
       started = true;
       try {
+        await settled;
         const { createEms3D } = await import('../scripts/ems3d.js');
-        ems3d = await createEms3D(holder, { modelUrl: '/model/ems-manken.glb' });
+        ems3d = await createEms3D(holder, { modelUrl: '/model/ems-manken.glb', seatsUrl: '/model/ems-pedler.json' });
         ems3d.setProgress(lastP);
         holder.parentElement.classList.add('is-3d');
         holder.parentElement.classList.remove('is-3d-wait');

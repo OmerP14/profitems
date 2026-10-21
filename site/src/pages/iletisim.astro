@@ -62,13 +62,9 @@ const acikGen = ((saat(kapanis) - saat(acilis)) / 24) * 100;
       </div>
       <address class="sr-only">{isletme.adres.sokak}, {isletme.adres.postaKodu} {isletme.adres.ilce}/{isletme.adres.il}</address>
     </div>
-    <!-- the Google map loads only when asked for: until then nothing is sent to Google and no cookie is set -->
-    <div class="find__map" data-harita={haritaGomme}>
-      <div class="find__gate">
-        <p class="find__gate-big">{isletme.adres.bina}</p>
-        <p>Harita Google Haritalar'dan yüklenir. Butona dokunduğunda Google'a bağlanılır.</p>
-        <button class="btn" type="button" id="harita-ac">Haritayı göster</button>
-      </div>
+    <!-- the Google map is there from the start; it loads once the visitor scrolls near it -->
+    <div class="find__map">
+      <iframe src={haritaGomme} title="Profit EMS konumu, Google Haritalar" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
     </div>
   </section>
 
@@ -159,11 +155,6 @@ const acikGen = ((saat(kapanis) - saat(acilis)) / 24) * 100;
   .find__map { min-height: 560px; background: var(--surface); }
   .find__map :global(iframe) { display: block; width: 100%; height: 100%; min-height: 560px; border: 0; filter: grayscale(.9) contrast(1.05); }
   .find__map { position: relative; overflow: hidden; isolation: isolate; }
-  .find__map::before { content: ""; position: absolute; top: -10%; bottom: -10%; right: -6%; width: 40%; z-index: -1; background: var(--accent); clip-path: polygon(36% 0, 100% 0, 64% 100%, 0 100%); }
-  .find__map:has(:global(iframe))::before { display: none; }
-  .find__gate { position: absolute; inset: 0 34% 0 0; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 4px; padding: 48px clamp(24px, 5vw, 72px); }
-  .find__gate p { margin: 0 0 16px; max-width: 30ch; font-size: 1rem; color: var(--muted); }
-  .find__gate .find__gate-big { margin: 0 0 8px; color: var(--ink); text-transform: uppercase; font-style: italic; font-weight: 800; font-variation-settings: "wdth" 62; line-height: .95; font-size: clamp(2.25rem, 3.6vw, 3.75rem); }
 
   /* ---------- certificate plaque ---------- */
   .plaque { position: relative; isolation: isolate; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 48px var(--margin); align-items: center; background: var(--ink); color: #fff; padding: clamp(72px, 11svh, 160px) var(--margin); min-height: 100svh; overflow: hidden; }
@@ -205,7 +196,6 @@ const acikGen = ((saat(kapanis) - saat(acilis)) / 24) * 100;
     .slip__end { margin: 24px -22px 0; padding: 0 22px; }
     .slip__rows { font-size: 1rem; }
     .find__map, .find__map :global(iframe) { min-height: 60vh; }
-    .find__gate { inset: 0 28% 0 0; padding: 32px var(--margin); }
     .find__map { margin-top: 24px; }
     .plaque { grid-template-columns: 1fr; padding: 104px var(--margin); min-height: 0; }
     .plaque__band { top: auto; height: 62%; right: -30vw; width: 120vw; }
@@ -218,18 +208,6 @@ const acikGen = ((saat(kapanis) - saat(acilis)) / 24) * 100;
   }
 </style>
 
-<script is:inline>
-// map on request: swap the gate for the Google map only after the visitor asks for it
-document.getElementById('harita-ac')?.addEventListener('click', () => {
-  const kutu = document.querySelector('.find__map');
-  const f = document.createElement('iframe');
-  f.src = kutu.dataset.harita;
-  f.title = 'Profit EMS konumu, Google Haritalar';
-  f.referrerPolicy = 'no-referrer-when-downgrade';
-  kutu.replaceChildren(f);
-  f.focus();
-});
-</script>
 <script is:inline define:vars={{ acilis, kapanis }}>
 // today, in Konya time: the status line and the "now" marker on the 24-hour strip
 (() => {

@@ -12,13 +12,15 @@
 @keyframes drift { to { transform: scale(1.12) translateX(-1.5%); } }
 
 /* Hero: full-bleed clip, headline bottom-left, certificate top-left */
+/* the band is part of the first screen's flow: headline + current, a clear gap, then the band, so the two can never overlap */
+.stage { --band: 52px; --band-after: clamp(24px, 4vh, 40px); }
 .hero {
   position: relative;
-  min-height: calc(100svh - 84px);
+  min-height: calc(100svh - 84px - var(--band) - var(--band-after));
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto 1fr;
-  padding: 0 var(--margin) clamp(32px, 7vh, 72px);
+  padding: 0 var(--margin) clamp(48px, 8vh, 88px);
 }
 .hero__cert { grid-row: 1; align-self: start; margin-top: 3vh; max-width: 300px; }
 .hero__cert .cert { margin: 0; }
@@ -33,9 +35,40 @@
   line-height: .96;
   letter-spacing: -0.02em;
 }
-.hero__title .line { display: block; overflow: hidden; padding: .03em .06em .02em 0; }
+.hero__title .line { display: block; overflow: hidden; padding: .03em .06em .16em 0; margin-bottom: -.14em; }
 .hero__title .line > span { display: inline-block; }
-.hero__actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.hero__title i { font-style: inherit; color: var(--accent); }
+.hero__title .line--hot { color: var(--accent); }
+.hero__main { display: block; }
+.hero__title { font-size: min(12.5vw, 16.5svh); margin: 0; }
+
+/* the current under the slogan: a pulse train drawn in once, then a bright charge keeps running along it */
+.pulse { display: block; width: 100%; height: 64px; margin-top: clamp(16px, 3vh, 32px); overflow: visible; }
+.pulse path { fill: none; stroke-width: 2; vector-effect: non-scaling-stroke; stroke-linejoin: miter; }
+.pulse__base { stroke: rgba(255, 255, 255, .3); stroke-dasharray: 100; animation: pulse-draw 1.4s cubic-bezier(.45, 0, .2, 1) .5s both; }
+@keyframes pulse-draw { from { stroke-dashoffset: 100; } }
+.pulse__spark {
+  stroke: var(--accent); stroke-width: 3; stroke-dasharray: 14 86; stroke-dashoffset: 100;
+  filter: drop-shadow(0 0 6px var(--accent));
+  animation: spark-in .3s 1.7s both, charge 2.6s linear 1.7s infinite;   /* sets off once the line is drawn */
+}
+@keyframes charge { to { stroke-dashoffset: 0; } }
+@keyframes spark-in { from { opacity: 0; } }
+
+/* running band across the foot of the stage */
+.ticker {
+  position: relative; z-index: 1; height: var(--band); margin: 0 -4% var(--band-after);
+  background: var(--accent); color: #fff; transform: rotate(-2deg); overflow: hidden;
+}
+.ticker__track { display: flex; width: max-content; animation: ticker 32s linear infinite; }
+.ticker__set { display: flex; }
+.ticker__item {
+  display: flex; align-items: center; gap: 28px; height: var(--band); padding-left: 28px; white-space: nowrap;
+  font-style: italic; font-weight: 800; text-transform: uppercase; font-variation-settings: "wdth" 62;
+  font-size: clamp(1.25rem, 2vw, 1.75rem); line-height: 1;
+}
+.ticker__item::after { content: ""; width: 22px; height: 10px; background: var(--ink); clip-path: polygon(30% 0, 100% 0, 70% 100%, 0 100%); }
+@keyframes ticker { to { transform: translateX(-50%); } }
 
 
 /* Goal picker (the live thing) */
@@ -81,12 +114,16 @@
 @keyframes flicker { 0%, 100% { opacity: 1; } 50% { opacity: .75; } }
 @keyframes current { to { stroke-dashoffset: -24; } }
 
-/* Entrances (CSS fallback; Motion drives them when it loads) */
-.js .hero__title .line > span { transform: translateY(105%); }
-.js .hero__cert > *, .js .hero__actions > * { transform: translateY(20px); opacity: 0; }
-.is-in .hero__title .line > span { transform: none; transition: transform .9s var(--ease-out); }
-.is-in .hero__title .line:nth-child(2) > span { transition-delay: .09s; }
-.is-in .hero__cert > *, .is-in .hero__actions > * { transform: none; opacity: 1; transition: transform .7s var(--ease-out) .4s, opacity .7s .4s; }
+/* First-screen entrance: plain CSS, so it starts with the first paint and runs on the compositor,
+   never waiting for a script download or a busy main thread (a hard reload used to leave it blank) */
+.hero__title .line > span { animation: hero-rise .9s cubic-bezier(.22, 1, .36, 1) both; }
+.hero__title .line:nth-child(2) > span { animation-delay: .09s; }
+/* the last word switches on like a struck current */
+.hero__title .line--hot > span { animation: hero-rise .9s cubic-bezier(.22, 1, .36, 1) .18s both, hero-strike .6s linear .32s both; }
+.ticker { animation: ticker-in .9s cubic-bezier(.22, 1, .36, 1) .6s both; }
+@keyframes hero-rise { from { transform: translateY(105%); } }
+@keyframes hero-strike { 0% { opacity: 0; } 20% { opacity: 1; } 40% { opacity: .25; } 60% { opacity: 1; } 80% { opacity: .5; } 100% { opacity: 1; } }
+@keyframes ticker-in { from { transform: rotate(-2deg) translateX(8%); opacity: 0; } }
 
 /* EMS story: without script the steps are a plain list beside the figure */
 .story { position: relative; background: var(--bg); color: var(--ink); --body-tone: #3c4149; }
@@ -125,8 +162,9 @@
 .story--live .story__step.is-active > :nth-child(5) { transition-delay: .24s; }
 
 /* pinned stage (every screen once the script runs): the figure holds still and each new step takes the old one's place */
-.story--stack { height: 420vh; }
-.story--stack .story__pin { position: sticky; top: 0; height: 100svh; overflow: hidden; align-items: center; }
+.story--stack .story__pin { height: 100svh; overflow: hidden; align-items: center; touch-action: pan-y; overscroll-behavior-x: contain; }
+.story--stack .story__figure { cursor: grab; user-select: none; }
+.story--stack .story__figure:active { cursor: grabbing; }
 .story--stack .story__figure { position: relative; height: 100svh; }
 .story--stack .story__text { padding: 0; align-self: center; }
 .story--stack .story__steps { display: grid; }
@@ -150,9 +188,25 @@
 }
 .story--live.story--stack .story__step .story__big { transform: translateX(24px); opacity: 0; transition: transform .6s cubic-bezier(.22, 1, .36, 1) .25s, opacity .5s .25s; }
 .story--live.story--stack .story__step.is-active .story__big { transform: none; opacity: 1; }
+/* step controls: back, where you are, forward */
+.story__nav { display: flex; align-items: center; gap: 14px; margin-top: 22px; }
+.story__nav[hidden] { display: none; }
+.story__arrow {
+  width: 52px; height: 44px; display: grid; place-items: center; border: 0; cursor: pointer;
+  background: var(--ink); color: #fff; clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+  transition: background .2s, transform .15s;
+}
+.story__arrow svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: square; }
+.story__arrow:hover:not(:disabled) { background: var(--accent); }
+.story__arrow:active:not(:disabled) { transform: scale(.94); }
+.story__arrow:disabled { background: rgba(0, 0, 0, .12); color: rgba(0, 0, 0, .35); cursor: default; }
+.story__count { margin: 0; min-width: 3.5ch; text-align: center; font-variant-numeric: tabular-nums; font-size: .9375rem; }
+.story__count b { font-size: 1.25rem; }
+.story__hint { font-size: .8125rem; letter-spacing: .06em; text-transform: uppercase; color: rgba(0, 0, 0, .5); transition: opacity .4s; }
+.story__nav.is-used .story__hint { opacity: 0; }
 /* where you are among the six steps, in the logo's slant */
 .story--live.story--stack .story__bar { display: flex; gap: 6px; margin: 0 0 22px; max-width: 520px; }
-.story__bar span { flex: 1; height: 8px; background: rgba(0, 0, 0, .12); clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%); position: relative; overflow: hidden; }
+.story__bar span { flex: 1; height: 8px; cursor: pointer; background: rgba(0, 0, 0, .12); clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%); position: relative; overflow: hidden; }
 .story__bar span::after { content: ""; position: absolute; inset: 0; background: var(--accent); transform: translateX(-101%); transition: transform .5s cubic-bezier(.22, 1, .36, 1); }
 .story__bar span.is-on::after { transform: none; }
 @media (prefers-reduced-motion: reduce) {
@@ -190,7 +244,6 @@
   .story__big { font-size: 1.5rem; }
 
   /* phones: figure on top, the step underneath */
-  .story--stack { height: 320vh; }
   /* the card takes the height it needs, the figure fills whatever screen is left, so even the last card fits */
   .story--stack .story__pin { grid-template-rows: minmax(0, 1fr) auto; align-content: stretch; align-items: stretch; padding-bottom: 14px; }
   .story--stack .story__figure { height: 100%; min-height: 0; overflow: hidden; padding-top: 8px; }
@@ -205,12 +258,15 @@
   .story--live.story--stack .story__step { padding: 22px 22px 26px; max-width: none; }
   .story--live.story--stack .story__step::before { margin-bottom: 12px; }
   .story--live.story--stack .story__bar { margin-bottom: 14px; }
+  .story__nav { margin-top: 12px; gap: 10px; }
+  .story__arrow { width: 48px; height: 42px; }
 }
 
 @media (max-width: 860px) {
-  .hero { min-height: calc(100svh - 72px); padding-bottom: 96px; }
-  .hero__title { font-size: 22vw; margin-bottom: 24px; }
-  .hero__actions .btn { flex: 1 1 auto; justify-content: center; }
+  .stage { --band: 44px; --band-after: 20px; }
+  .hero { min-height: calc(100svh - 72px - var(--band) - var(--band-after)); padding-bottom: 44px; }
+  .hero__title { font-size: min(24vw, 15svh); }
+  .pulse { height: 40px; }
   .hero__cert { margin-top: 2vh; }
   .hero__cert .cert { grid-template-columns: 56px 1fr; }
   .hero__cert .cert img { width: 56px; }
@@ -218,7 +274,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .js .hero__title .line > span, .js .hero__cert > *, .js .hero__actions > * { transform: none; opacity: 1; }
+  .hero__title .line > span, .hero__title .line--hot > span, .ticker { animation: none; }
+  .ticker__track, .pulse__spark, .pulse__base { animation: none; }
   .pad .ring { opacity: 0; }
 }
 

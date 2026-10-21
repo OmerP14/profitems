@@ -147,7 +147,8 @@ const ad = (h: typeof zay) => (h as { kisaAd?: string }).kisaAd ?? h.ad;
   .h-hero__text { position: relative; z-index: 1; max-width: 760px; }
   /* sized by height as well as width so the whole first screen fits on a laptop */
   .h-hero__title { font-size: clamp(4.5rem, min(12vw, 19svh), 12rem); margin-bottom: clamp(16px, 3svh, 32px); }
-  .h-hero__title .line { display: block; overflow: hidden; padding: .03em .06em .02em 0; }
+  /* room below the baseline for the cedilla of "seç", taken back with the negative margin so the lines keep their spacing */
+  .h-hero__title .line { display: block; overflow: hidden; padding: .03em .06em .16em 0; margin-bottom: -.14em; }
   .h-hero__title .line > span { display: inline-block; }
   .h-hero__lead { max-width: 36ch; margin-bottom: clamp(20px, 4svh, 40px); }
   .h-hero__list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, max-content); gap: 4px 56px; }

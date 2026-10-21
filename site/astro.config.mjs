@@ -14,6 +14,8 @@ export default defineConfig({
   build: { format: 'file', inlineStylesheets: 'always' },
   integrations: [...(site ? [sitemap({ filter: p => !p.includes('/404') })] : []), cspSatirIci()],
   devToolbar: { enabled: false },
+  // blog posts have no code blocks; Shiki's inline styles would clash with the CSP anyway
+  markdown: { syntaxHighlight: false },
   // Content Security Policy: every page lists the exact scripts and styles it may run (by hash); anything injected is refused.
   // The 3D figure needs WebAssembly and blob images (mesh decoder, textures); the contact map is the only outside frame.
   security: {
@@ -32,7 +34,8 @@ export default defineConfig({
       ],
       scriptDirective: { resources: ["'self'", "'wasm-unsafe-eval'"] },
       // small style="" attributes (photo focal points, bar widths) are allowed; <style> blocks stay hash-checked
-      styleDirective: { resources: ["'self'", { resource: "'unsafe-inline'", kind: 'attribute' }] },
+      // (each kind listed separately: a style-src-elem/-attr line replaces style-src for its scope, browsers do not fall back)
+      styleDirective: { resources: [{ resource: "'self'", kind: 'element' }, { resource: "'unsafe-inline'", kind: 'attribute' }] },
     },
   },
   // the 3D engine is one lazy chunk (~590 KB, loaded only near the EMS story)

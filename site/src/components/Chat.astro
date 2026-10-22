@@ -133,6 +133,8 @@ const sor = soru => {
     yaziyor.remove();
     mesaj(html);
     oneriGoster(oneriler);
+    // the suggestion buttons shrink the log, so scroll again once they are in
+    log.scrollTop = log.scrollHeight;
     mesgul = false;
   }, matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 450);
 };

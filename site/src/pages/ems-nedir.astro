@@ -116,7 +116,7 @@ const waRandevu = whatsappLinki('Merhaba, randevu almak istiyorum.');
   <!-- questions -->
   <section class="faq" id="sorular" aria-labelledby="sorular-baslik">
     <h2 class="faq__title" id="sorular-baslik" data-rise>Sık sorulan sorular</h2>
-    <aside class="faq__side" aria-label="Soru sor">
+    <div class="faq__side">
       <!-- stock photo until the studio's own photographs arrive -->
       <img class="faq__img" src="/img/ems-nedir/ems-antrenor-tablet.webp" alt="Antrenör EMS cihazını tabletten ayarlarken EMS kıyafetli bir kadın dambılla squat yapıyor" width="1200" height="1200" loading="lazy" decoding="async" data-rise>
       <p data-rise>Cevabını bulamadığın soruyu bize yaz.</p>
@@ -124,7 +124,7 @@ const waRandevu = whatsappLinki('Merhaba, randevu almak istiyorum.');
         <a class="btn" href={whatsappLinki('Merhaba, EMS hakkında bir sorum var.')} target="_blank" rel="noopener"><WhatsAppIcon /> WhatsApp'tan sor</a>
         <a class="btn btn--quiet" href={`tel:${isletme.telefonUluslararasi}`}>Ara: {isletme.telefon}</a>
       </div>
-    </aside>
+    </div>
     <div class="faq__list">
       {sss.map(s => (
         <details class="q" data-rise>

@@ -9,5 +9,5 @@ export const yasal = {
   // KVKK başvuruları için e-posta adresi. Boşsa yalnızca posta adresi gösterilir.
   eposta: '',
   // Metinlerin son güncellendiği tarih
-  guncelleme: '20 Ekim 2026',
+  guncelleme: '22 Ekim 2026',
 };

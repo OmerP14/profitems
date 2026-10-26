@@ -42,6 +42,14 @@ export const seo: Record<string, { baslik: string; aciklama: string }> = {
   },
 };
 
+// Google Search Console / Bing Webmaster doğrulama kodları.
+// "HTML etiketi" yöntemini seçince verilen <meta ... content="BURASI"> içindeki kodu tırnakların arasına yapıştır.
+// Boş bırakılırsa sayfaya hiçbir şey eklenmez. (Search Console'da "Alan adı" mülkü DNS ile doğrulanırsa buna gerek kalmaz.)
+export const dogrulama = {
+  google: '',
+  bing: '',
+};
+
 // Menüde görünen sayfalar. Yeni sayfa bitince buraya eklenir.
 export const menu = [
   { href: '/', etiket: 'Ana sayfa' },

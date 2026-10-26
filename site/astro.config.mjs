@@ -1,11 +1,27 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import cspSatirIci from './csp-satir-ici.mjs';
+import { readdirSync, readFileSync } from 'node:fs';
 
 // Sitenin adresi: canonical linkler, sitemap.xml ve paylaşım görselleri bundan üretilir.
 // Geçici olarak başka bir adres denemek için .env dosyasına SITE_URL=https://... yazılabilir.
 // www is the main address on Vercel; profitems.com redirects to it (308)
 const site = process.env.SITE_URL || 'https://www.profitems.com';
+
+// sitemap.xml'de blog yazılarının tarihi (lastmod): yazının "guncelleme" ya da "tarih" satırından okunur
+const blogKlasoru = new URL('./src/content/blog/', import.meta.url);
+const yaziTarihleri = Object.fromEntries(readdirSync(blogKlasoru).filter(f => f.endsWith('.md')).map(f => {
+  const ust = readFileSync(new URL(f, blogKlasoru), 'utf8').split('---')[1] ?? '';
+  const tarih = ust.match(/^guncelleme:\s*["']?([\d-]+)/m)?.[1] ?? ust.match(/^tarih:\s*["']?([\d-]+)/m)?.[1];
+  return [`/blog/${f.replace(/\.md$/, '')}`, tarih];
+}));
+const sonYazi = Object.values(yaziTarihleri).filter(Boolean).sort().at(-1);
+const sitemapTarihi = item => {
+  const yol = new URL(item.url).pathname.replace(/\/$/, '');
+  const tarih = yaziTarihleri[yol] ?? (yol === '/blog' ? sonYazi : undefined);
+  if (tarih) item.lastmod = new Date(tarih).toISOString();
+  return item;
+};
 
 export default defineConfig({
   site,
@@ -13,7 +29,7 @@ export default defineConfig({
   trailingSlash: 'never',
   // styles are small, so they ship inside each page: no extra request holds up the first paint
   build: { format: 'file', inlineStylesheets: 'always' },
-  integrations: [...(site ? [sitemap({ filter: p => !p.includes('/404') })] : []), cspSatirIci()],
+  integrations: [...(site ? [sitemap({ filter: p => !p.includes('/404'), serialize: sitemapTarihi })] : []), cspSatirIci()],
   devToolbar: { enabled: false },
   // blog posts have no code blocks; Shiki's inline styles would clash with the CSP anyway
   markdown: { syntaxHighlight: false },

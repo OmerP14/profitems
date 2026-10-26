@@ -24,9 +24,10 @@ const yaziVerisi = {
   headline: d.baslik,
   description: d.aciklama,
   datePublished: gun,
+  dateModified: (d.guncelleme ?? d.tarih).toISOString().slice(0, 10),
   inLanguage: 'tr-TR',
-  author: { '@type': 'Organization', name: isletme.ad },
-  publisher: { '@type': 'Organization', name: isletme.ad },
+  author: { '@type': 'Organization', name: isletme.ad, ...(Astro.site ? { url: Astro.site.href } : {}) },
+  publisher: { '@type': 'Organization', name: isletme.ad, ...(Astro.site ? { logo: { '@type': 'ImageObject', url: new URL('/img/logo-google.png', Astro.site).href } } : {}) },
   ...(Astro.site ? { image: new URL(d.kapak, Astro.site).href, mainEntityOfPage: new URL(yol, Astro.site).href } : {}),
 };
 ---

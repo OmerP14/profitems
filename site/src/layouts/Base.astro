@@ -2,7 +2,7 @@
 import '../styles/global.css';
 import Chat from '../components/Chat.astro';
 import Footer from '../components/Footer.astro';
-import { seo } from '../data/seo';
+import { seo, dogrulama } from '../data/seo';
 import { isletme, haritaLinki } from '../data/isletme';
 
 // blog yazıları başlık/açıklamayı kendi dosyalarından verir; diğer sayfalar seo.ts'ten alır
@@ -35,11 +35,23 @@ const isletmeVerisi = {
     closes: isletme.saatler.kapanis,
   }],
   description: seo['/'].aciklama,
-  ...(Astro.site ? { image: new URL('/img/paylasim.jpg', Astro.site).href, logo: new URL('/img/logo.svg', Astro.site).href } : {}),
+  ...(Astro.site ? { '@id': new URL('/#isletme', Astro.site).href, image: new URL('/img/paylasim.jpg', Astro.site).href, logo: new URL('/img/logo-google.png', Astro.site).href } : {}),
+  areaServed: { '@type': 'City', name: 'Konya' },
   hasMap: haritaLinki,
   sameAs: [isletme.instagram],
   ...(Astro.site ? { url: Astro.site.href } : {}),
 };
+
+// tells Google the site's name, so results show "Profit EMS" instead of the bare domain
+const siteVerisi = Astro.site ? {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: isletme.ad,
+  alternateName: ['Pro Fit EMS', 'profitems.com'],
+  url: Astro.site.href,
+  inLanguage: 'tr-TR',
+  publisher: { '@id': new URL('/#isletme', Astro.site).href },
+} : null;
 ---
 <!doctype html>
 <html lang="tr">
@@ -61,9 +73,16 @@ const isletmeVerisi = {
 <meta property="og:title" content={sayfa.baslik}>
 <meta property="og:description" content={sayfa.aciklama}>
 {canonical && <meta property="og:url" content={canonical}>}
+<meta name="twitter:title" content={sayfa.baslik}>
+<meta name="twitter:description" content={sayfa.aciklama}>
+{dogrulama.google && <meta name="google-site-verification" content={dogrulama.google}>}
+{dogrulama.bing && <meta name="msvalidate.01" content={dogrulama.bing}>}
 <script type="application/ld+json" set:html={JSON.stringify(isletmeVerisi)} />
-<link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+{yol === '/' && siteVerisi && <script type="application/ld+json" set:html={JSON.stringify(siteVerisi)} />}
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
 <link rel="preload" href="/fonts/archivo-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
 <script is:inline>document.documentElement.classList.add('js');</script>
 <slot name="head" />

@@ -10,6 +10,7 @@ const blog = defineCollection({
     baslik: z.string().max(70),           // sayfada ve Google'da görünen başlık
     aciklama: z.string().max(160),        // Google'daki açıklama ve listedeki kısa metin
     tarih: z.coerce.date(),               // 2026-10-19 gibi
+    guncelleme: z.coerce.date().optional(), // yazıyı sonradan elden geçirdiysen o günün tarihi (Google'a "güncellendi" der)
     kapak: z.string(),                    // public/ altındaki görsel, ör. /img/blog/konya-mevlana.webp
     kapakAlt: z.string(),                 // görselde ne olduğunu anlatan cümle
     kapakKaynak: z.string().optional(),   // arşiv görseli ise kaynak ve lisans satırı

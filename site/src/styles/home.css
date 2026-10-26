@@ -202,7 +202,7 @@
 .story__arrow:disabled { background: rgba(0, 0, 0, .12); color: rgba(0, 0, 0, .35); cursor: default; }
 .story__count { margin: 0; min-width: 3.5ch; text-align: center; font-variant-numeric: tabular-nums; font-size: .9375rem; }
 .story__count b { font-size: 1.25rem; }
-.story__hint { font-size: .8125rem; letter-spacing: .06em; text-transform: uppercase; color: rgba(0, 0, 0, .5); transition: opacity .4s; }
+.story__hint { font-size: .9375rem; color: var(--muted); transition: opacity .4s; }
 .story__nav.is-used .story__hint { opacity: 0; }
 /* where you are among the six steps, in the logo's slant */
 .story--live.story--stack .story__bar { display: flex; gap: 6px; margin: 0 0 22px; max-width: 520px; }

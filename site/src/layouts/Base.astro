@@ -2,7 +2,7 @@
 import '../styles/global.css';
 import Chat from '../components/Chat.astro';
 import Footer from '../components/Footer.astro';
-import { seo, dogrulama } from '../data/seo';
+import { seo, dogrulama, menu } from '../data/seo';
 import { isletme, haritaLinki } from '../data/isletme';
 
 // blog yazıları başlık/açıklamayı kendi dosyalarından verir; diğer sayfalar seo.ts'ten alır
@@ -52,6 +52,17 @@ const siteVerisi = Astro.site ? {
   inLanguage: 'tr-TR',
   publisher: { '@id': new URL('/#isletme', Astro.site).href },
 } : null;
+
+// "Ana sayfa › Hizmetler" trail for Google's result snippet; blog posts build their own three-step trail
+const sayfaAdi = menu.find(m => m.href === yol)?.etiket ?? sayfa.baslik.split('|')[0].trim();
+const izVerisi = Astro.site && yol !== '/' && tur !== 'article' && !gizli ? {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Ana sayfa', item: Astro.site.href },
+    { '@type': 'ListItem', position: 2, name: sayfaAdi, item: new URL(yol, Astro.site).href },
+  ],
+} : null;
 ---
 <!doctype html>
 <html lang="tr">
@@ -79,6 +90,7 @@ const siteVerisi = Astro.site ? {
 {dogrulama.bing && <meta name="msvalidate.01" content={dogrulama.bing}>}
 <script type="application/ld+json" set:html={JSON.stringify(isletmeVerisi)} />
 {yol === '/' && siteVerisi && <script type="application/ld+json" set:html={JSON.stringify(siteVerisi)} />}
+{izVerisi && <script type="application/ld+json" set:html={JSON.stringify(izVerisi)} />}
 <link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">

@@ -15,7 +15,7 @@ Bir squat düşün. Klasik antrenmanda bu hareketi yaparken bacak ve kalça kasl
 
 ## Ağırlık yerine uyarı
 
-Klasik antrenmanda kası zorlamanın yolu çoğunlukla ağırlığı artırmaktır. EMS'te ise zorluğu uyarının şiddeti belirler. Bu yüzden EMS seanslarında ağır ağırlıklar yerine vücut ağırlığıyla yapılan basit hareketler kullanılır. Uyarı düşük başlar ve rahat ettiğin seviyeye kadar yavaş yavaş artırılır.
+Klasik antrenmanda kası zorlamanın yolu çoğunlukla ağırlığı artırmaktır. EMS'te ise zorluğu uyarının şiddeti belirler. Bu yüzden EMS seanslarında ağır ağırlıklar yerine vücut ağırlığıyla yapılan basit hareketler kullanılır. Uyarı düşük başlar ve rahat ettiğin seviyeye kadar yavaş yavaş artırılır. Bir seansın nasıl geçtiğini [EMS nedir?](/ems-nedir#seans) sayfasında adım adım anlattık.
 
 ## Eğitmen yanında
 
@@ -27,7 +27,7 @@ EMS tek başına yapılan bir antrenman değildir. Kıyafetin doğru oturması, 
 
 - Daha önce hiç spor yapmadıysan ve ağırlık çalışmasından çekiniyorsan
 - Hareketleri tek başına doğru yapıp yapmadığından emin olamıyorsan
-- Belirli bölgelere, örneğin karın ve bel çevresine ya da sırt kaslarına odaklanmak istiyorsan
+- Belirli bölgelere, örneğin [karın ve bel çevresine](/hizmetler#incelme) ya da [sırt kaslarına](/hizmetler#bel-boyun) odaklanmak istiyorsan
 
 Klasik antrenmanı sevip düzenli yapıyorsan EMS'i onun yanında da kullanabilirsin. Hangisini seçersen seç, sonucu tek başına antrenman belirlemez: düzenli gelmek ve dengeli beslenmek en az antrenman kadar önemlidir.
 

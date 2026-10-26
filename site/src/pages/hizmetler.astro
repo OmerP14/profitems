@@ -10,8 +10,28 @@ import { hizmetler } from '../data/hizmetler';
 const h = (id: string) => hizmetler.find(x => x.id === id)!;
 const zay = h('zayiflama'), inc = h('incelme'), sik = h('sikilasma'), kas = h('kas-gelistirme'), bel = h('bel-boyun');
 const ad = (h: typeof zay) => (h as { kisaAd?: string }).kisaAd ?? h.ad;
+
+// tells Google which services the studio offers, each one tied to the business described in Base.astro
+const hizmetVerisi = Astro.site ? {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  itemListElement: hizmetler.map((x, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    item: {
+      '@type': 'Service',
+      name: `${x.ad} için EMS`,
+      serviceType: 'EMS antrenmanı',
+      description: x.metin,
+      url: new URL(`/hizmetler#${x.id}`, Astro.site).href,
+      areaServed: { '@type': 'City', name: 'Konya' },
+      provider: { '@id': new URL('/#isletme', Astro.site).href },
+    },
+  })),
+} : null;
 ---
 <Base yol="/hizmetler">
+{hizmetVerisi && <script slot="head" type="application/ld+json" set:html={JSON.stringify(hizmetVerisi)} />}
 <Nav tema="acik" />
 
 <main>

@@ -17,9 +17,9 @@ Bu plan üzerinde mutabık kalındı (16 Ekim 2026). Sayfalar bu sırayla, **bir
 | 1 | İletişim | `/iletisim` | ✅ Onaylandı (`yedek-iletisim-v2`) | — |
 | 2 | Hizmetler | `/hizmetler` | ✅ Onaylandı (`yedek-hizmetler`) | Seans süresi, haftalık seans, fiyat, ilk geliş süreci gelince "Bir seans nasıl geçer?" bölümü eklenecek |
 | 3 | EMS Nedir? (SSS dahil) | `/ems-nedir` | ✅ Onaylandı (`yedek-ems-nedir`) | Sık sorulan 5–10 soru ve cevapları, kimlerin yapmaması gerektiği (kullanıcı onayıyla) |
-| 4 | Ekibimiz | `/ekibimiz` | ✅ Onaylandı (`yedek-ekibimiz`). Hocalar **örnek** veriyle (`site/src/data/ekip.ts`) | 3 hocanın gerçek adı, unvanı, tanıtımı, hedefleri ve 3:4 dikey fotoğrafı; işletme hikâyesi gelirse bölüm olarak eklenir |
+| 4 | Ekibimiz | `/ekibimiz` | ⏸ Gizli (26 Ekim 2026): örnek hocalar yayına çıkmasın diye menüden, ana sayfadan ve sitemap'ten çıkarıldı; açmak için `site/src/data/ekip.ts` başındaki adımlar | 3 hocanın gerçek adı, unvanı, tanıtımı, hedefleri ve 3:4 dikey fotoğrafı; işletme hikâyesi gelirse bölüm olarak eklenir |
 | 5 | Blog | `/blog` | ✅ Onaylandı (`yedek-blog`) | 6 açılış yazısı yayında; yeni yazı = `site/src/content/blog/` içine bir `.md` dosyası |
-| 6 | KVKK, çerez politikası, 404 | `/kvkk`, `/cerez-politikasi`, 404 | ✅ Onaylandı (`yedek-site-v1`). Metinler taslak uyarısıyla yayında | Avukat/mali müşavir kontrolü; işletmenin yasal unvanı ve KVKK e-postası (`site/src/data/yasal.ts`); kontrol bitince `taslak: false` |
+| 6 | KVKK, çerez politikası, 404 | `/kvkk`, `/cerez-politikasi`, 404 | ✅ Yayında, taslak uyarısı kaldırıldı (26 Ekim 2026) | Veri sorumlusunun vergi levhasındaki adı ve KVKK e-postası gelince `site/src/data/yasal.ts`'e yazılır |
 | 7 | Ana sayfanın kalan bölümleri | `/` | ✅ Onaylandı (`yedek-site-v1`): kart kart EMS hikâyesi, Dört hedef, Seansını hocan yönetir, EMS üzerine yazılar, Selçuklu'dayız | — |
 
 ## Sayfalara göre içerik
@@ -34,9 +34,15 @@ Bu plan üzerinde mutabık kalındı (16 Ekim 2026). Sayfalar bu sırayla, **bir
 
 **Blog** — yayından sonra kullanıcının sürekli yazı ekleyeceği SEO bölümü; yeni yazı = tek metin dosyası.
 
+## Fotoğraflar gelince (yayından sonra)
+
+- Hocalar: isim, unvan, tanıtım ve 3:4 dikey fotoğraf → `site/src/data/ekip.ts`, ardından Ekibimiz açılır.
+- Stüdyo: kapı/giriş + en az 3 salon fotoğrafı → `site/src/data/mekan.ts`, `mekanYayinda = true`.
+- Stok görsellerin (giriş videosu, hizmetler, blog, satış bandı) yerine gerçekleri konur.
+
 ## Yayından önce
 
-- Domain alınır, `site/.env` içine `SITE_URL` yazılır (sitemap + canonical açılır).
+- ✅ Domain alındı: profitems.com (ayarlara yazıldı; sitemap + canonical açık). Yayında domain Vercel/Netlify'a bağlanır, `www` adresi `profitems.com`'a yönlendirilir.
 - Gerçek salon fotoğrafları ve videosu stok görsellerin yerine konur.
 - Google İşletme Profili sahiplenilir, saatler düzeltilir ("24 saat açık" yanlış), siteye bağlanır.
 - Vercel veya Netlify'a yüklenir, Google Search Console'a eklenir.

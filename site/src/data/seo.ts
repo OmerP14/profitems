@@ -1,18 +1,20 @@
+import { ekipYayinda } from './ekip';
+
 // Her sayfanın Google'da görünen başlığı ve açıklaması. SEO çalışırken buradan düzenle.
 // Başlık en fazla ~60, açıklama en fazla ~155 karakter olsun; ikisinde de "Konya" ve "EMS" geçsin.
 
 export const seo: Record<string, { baslik: string; aciklama: string }> = {
   '/': {
     baslik: 'Profit EMS | Konya EMS Stüdyosu – Selçuklu',
-    aciklama: "Konya Selçuklu'da EMS stüdyosu. Zayıflama, sıkılaşma, incelme, bel ve boyun ağrıları için EMS. Her gün 10:00–22:00. WhatsApp'tan randevu al.",
+    aciklama: "Konya Selçuklu'da EMS stüdyosu. Zayıflama, incelme, sıkılaşma, kas geliştirme, bel ve boyun ağrıları için EMS. Her gün 10:00–22:00.",
   },
   '/hizmetler': {
     baslik: 'Konya EMS Hizmetleri: Zayıflama, Sıkılaşma | Profit EMS',
-    aciklama: "Profit EMS'te zayıflama, sıkılaşma, incelme ve bel-boyun ağrıları için EMS antrenmanı. Konya Selçuklu, Avrukon Plaza. WhatsApp'tan bilgi al.",
+    aciklama: "Profit EMS'te zayıflama, incelme, sıkılaşma, kas geliştirme ve bel-boyun ağrıları için EMS antrenmanı. Konya Selçuklu, Şefik Can Cd.",
   },
   '/ems-nedir': {
-    baslik: 'EMS Nedir, Nasıl Çalışır? Kimler Yapamaz | Profit EMS Konya',
-    aciklama: "EMS nedir, bir seans nasıl geçer, kimler yapmamalı? Konya Selçuklu'daki Profit EMS'ten EMS antrenmanı hakkında sık sorulan soruların cevapları.",
+    baslik: 'EMS Nedir, Nasıl Çalışır? | Profit EMS Konya Selçuklu',
+    aciklama: "EMS nedir, nasıl çalışır, bir seans nasıl geçer? Konya Selçuklu'daki Profit EMS'ten EMS antrenmanı hakkında merak ettiğin her şey.",
   },
   '/blog': {
     baslik: 'EMS Blog: Antrenman, Seans ve Sağlık | Profit EMS Konya',
@@ -24,11 +26,11 @@ export const seo: Record<string, { baslik: string; aciklama: string }> = {
   },
   '/iletisim': {
     baslik: 'İletişim ve Konum | Profit EMS Konya Selçuklu',
-    aciklama: "Profit EMS'e WhatsApp, telefon veya Instagram'dan ulaş. Kılınçarslan Mah., Avrukon Plaza, Selçuklu/Konya. Her gün 10:00–22:00 açığız.",
+    aciklama: "Profit EMS'e WhatsApp, telefon veya Instagram'dan ulaş. Kılınçarslan Mah., Şefik Can Cd. No:9C, Selçuklu/Konya. Her gün 10:00–22:00 açığız.",
   },
   '/404': {
     baslik: 'Sayfa bulunamadı | Profit EMS Konya',
-    aciklama: "Aradığın sayfa bulunamadı. Profit EMS'in hizmetlerine, ekibine, blog yazılarına ya da iletişim bilgilerine buradan ulaşabilirsin.",
+    aciklama: "Aradığın sayfa bulunamadı. Profit EMS'in hizmetlerine, blog yazılarına ya da iletişim bilgilerine buradan ulaşabilirsin.",
   },
   '/kvkk': {
     baslik: 'KVKK Aydınlatma Metni | Profit EMS Konya',
@@ -45,7 +47,7 @@ export const menu = [
   { href: '/', etiket: 'Ana sayfa' },
   { href: '/hizmetler', etiket: 'Hizmetler' },
   { href: '/ems-nedir', etiket: 'EMS nedir?' },
-  { href: '/ekibimiz', etiket: 'Ekibimiz' },
+  ...(ekipYayinda ? [{ href: '/ekibimiz', etiket: 'Ekibimiz' }] : []),
   { href: '/blog', etiket: 'Blog' },
   { href: '/iletisim', etiket: 'İletişim' },
 ];

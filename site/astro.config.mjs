@@ -2,9 +2,9 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import cspSatirIci from './csp-satir-ici.mjs';
 
-// Domain alınınca .env dosyasına SITE_URL=https://alanadi.com yazılır;
-// canonical linkler ve sitemap.xml o zaman otomatik açılır.
-const site = process.env.SITE_URL;
+// Sitenin adresi: canonical linkler, sitemap.xml ve paylaşım görselleri bundan üretilir.
+// Geçici olarak başka bir adres denemek için .env dosyasına SITE_URL=https://... yazılabilir.
+const site = process.env.SITE_URL || 'https://profitems.com';
 
 export default defineConfig({
   site,

@@ -32,4 +32,4 @@ Klasik antrenmanı sevip düzenli yapıyorsan EMS'i onun yanında da kullanabili
 
 ## Başlamadan önce
 
-EMS herkes için uygun değildir. Kalp pili, hamilelik ya da epilepsi gibi bazı durumlarda doktor onayı olmadan başlanmaz. Listenin tamamına [Kimler yapmamalı?](/ems-nedir#kimler) bölümünden bakabilirsin.
+EMS herkes için uygun değildir. Kalp pili, hamilelik ya da epilepsi gibi bazı durumlarda doktor onayı olmadan başlanmaz. Listenin tamamına [EMS herkese uygun mu?](/ems-nedir#kimler) sorusundan bakabilirsin.

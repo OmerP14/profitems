@@ -4,11 +4,11 @@ interface Props { zones: string[]; koyu?: boolean; etiket?: string }
 const { zones, koyu = false, etiket } = Astro.props;
 const pads = [
   { z: 'agri', x: 158, y: 140, w: 24, h: 12 }, { z: 'agri', x: 218, y: 140, w: 24, h: 12 },
-  { z: 'sikilasma', x: 162, y: 160, w: 32, h: 22 }, { z: 'sikilasma', x: 206, y: 160, w: 32, h: 22 },
-  { z: 'zayiflama incelme', x: 170, y: 198, w: 26, h: 30 }, { z: 'zayiflama incelme', x: 204, y: 198, w: 26, h: 30 },
+  { z: 'sikilasma kas', x: 162, y: 160, w: 32, h: 22 }, { z: 'sikilasma kas', x: 206, y: 160, w: 32, h: 22 },
+  { z: 'zayiflama incelme kas', x: 170, y: 198, w: 26, h: 30 }, { z: 'zayiflama incelme kas', x: 204, y: 198, w: 26, h: 30 },
   { z: 'incelme agri', x: 160, y: 244, w: 22, h: 32 }, { z: 'incelme agri', x: 218, y: 244, w: 22, h: 32 },
-  { z: 'sikilasma', x: 99, y: 125, w: 28, h: 18, r: 'rotate(-6 113 134)' }, { z: 'sikilasma', x: 273, y: 125, w: 28, h: 18, r: 'rotate(6 287 134)' },
-  { z: 'zayiflama sikilasma', x: 142, y: 360, w: 24, h: 36, r: 'rotate(23 154 378)' }, { z: 'zayiflama sikilasma', x: 234, y: 360, w: 24, h: 36, r: 'rotate(-23 246 378)' },
+  { z: 'sikilasma kas', x: 99, y: 125, w: 28, h: 18, r: 'rotate(-6 113 134)' }, { z: 'sikilasma kas', x: 273, y: 125, w: 28, h: 18, r: 'rotate(6 287 134)' },
+  { z: 'zayiflama sikilasma kas', x: 142, y: 360, w: 24, h: 36, r: 'rotate(23 154 378)' }, { z: 'zayiflama sikilasma kas', x: 234, y: 360, w: 24, h: 36, r: 'rotate(-23 246 378)' },
 ];
 ---
 <svg class:list={['bf', { 'bf--koyu': koyu }]} viewBox="60 20 280 560" role="img" aria-label={etiket}>

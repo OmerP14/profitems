@@ -10,7 +10,7 @@ kapakAlt: "Antrenör EMS cihazını tabletten ayarlarken EMS kıyafetli bir kad�
 
 ## Randevu alırken
 
-Randevu alırken hedefini ve varsa sağlık sorununu söyle. Kalp pili, hamilelik, epilepsi ya da yakın zamanda geçirdiğin bir ameliyat gibi durumlarda EMS'e doktor onayı olmadan başlanmaz. Emin olmadığın bir şey varsa önceden sor. Durumların tam listesi [Kimler yapmamalı?](/ems-nedir#kimler) bölümünde.
+Randevu alırken hedefini ve varsa sağlık sorununu söyle. Kalp pili, hamilelik, epilepsi ya da yakın zamanda geçirdiğin bir ameliyat gibi durumlarda EMS'e doktor onayı olmadan başlanmaz. Emin olmadığın bir şey varsa önceden sor. Durumların tam listesi [EMS herkese uygun mu?](/ems-nedir#kimler) sorusunda.
 
 ## Seans gününden önce
 

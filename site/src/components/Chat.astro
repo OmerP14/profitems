@@ -150,19 +150,25 @@ oneriGoster(veri.oneriler);
   const bak = () => {
     bekliyor = false;
     const r = toggle.getBoundingClientRect();
-    const alt = document.elementsFromPoint(r.left + r.width / 2, r.top + r.height / 2).find(e => !chat.contains(e));
-    let e = alt, ters = false;
-    while (e && e !== document.documentElement) {
-      const bg = getComputedStyle(e).backgroundColor;
-      if (bg && bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent') { ters = kirmizi.has(bg); break; }
-      e = e.parentElement;
-    }
+    const x = r.left + r.width / 2, y = r.top + r.height / 2;
+    // the centre and the four edges: half the button over red is already hard to see
+    const ters = [[x, y], [r.left + 2, y], [r.right - 2, y], [x, r.top + 2], [x, r.bottom - 2]].some(([px, py]) => {
+      let e = document.elementsFromPoint(px, py).find(e => !chat.contains(e));
+      while (e && e !== document.documentElement) {
+        const bg = getComputedStyle(e).backgroundColor;
+        if (bg && bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent') return kirmizi.has(bg);
+        e = e.parentElement;
+      }
+      return false;
+    });
     chat.classList.toggle('chat--ters', ters);
   };
   const iste = () => { if (!bekliyor) { bekliyor = true; requestAnimationFrame(bak); } };
   addEventListener('scroll', iste, { passive: true });
   addEventListener('resize', iste);
   addEventListener('load', bak);
+  // a band sliding in under the button (the home ticker lands at 1.5 s) changes what is behind it without a scroll
+  addEventListener('animationend', iste);
   setTimeout(bak, 1200); // after the page's own entrance has settled
 })();
 </script>

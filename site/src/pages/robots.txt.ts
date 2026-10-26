@@ -1,4 +1,4 @@
-// robots.txt: domain .env içinde SITE_URL olarak tanımlanınca site haritası satırı kendiliğinden eklenir.
+// robots.txt: site haritası satırı astro.config.mjs içindeki site adresinden kendiliğinden eklenir.
 import type { APIRoute } from 'astro';
 
 export const GET: APIRoute = ({ site }) => {

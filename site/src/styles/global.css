@@ -178,8 +178,8 @@ img, svg { display: block; max-width: 100%; }
 /* phone menu: a full-screen sheet with big links */
 .mmenu {
   position: fixed; inset: 0; z-index: 20; background: var(--ink); color: #fff;
-  display: flex; flex-direction: column; justify-content: center; gap: 40px;
-  padding: 96px var(--margin) 48px;
+  display: flex; flex-direction: column; justify-content: safe center; gap: 40px;
+  padding: 96px var(--margin) 48px; overflow-y: auto; overscroll-behavior: contain;
 }
 .mmenu[hidden] { display: none; }
 .mmenu ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
@@ -187,12 +187,14 @@ img, svg { display: block; max-width: 100%; }
   text-decoration: none; text-transform: uppercase; font-style: italic; font-weight: 800;
   font-variation-settings: "wdth" 62; font-size: clamp(2.75rem, 13vw, 4rem); line-height: 1.05;
 }
-.mmenu ul a:hover { color: var(--accent); }
+.mmenu ul a:hover, .mmenu ul a[aria-current="page"] { color: var(--accent); }
 .mmenu .btn { align-self: flex-start; }
 .menu-acik .nav { position: relative; z-index: 21; color: #fff; }
 .menu-acik .nav--light .nav__logo img { content: url(/img/logo-light.svg); }
 .menu-acik .nav--light .nav__menu { background: #fff; color: var(--ink); }
 .menu-acik .chat { display: none; }
+/* the page behind the open menu stays put */
+.menu-acik, .menu-acik body { overflow: hidden; }
 
 /* small laptops: six menu items leave no room for the full WhatsApp label, so it shrinks to its icon */
 @media (min-width: 861px) and (max-width: 1200px) {

@@ -30,4 +30,4 @@ Kaslar antrenmandan sonra dinlenirken güçlenir. Her gün yapılan yoğun antre
 
 ## "Herkes yapabilir"
 
-Hayır. Kalp pili, hamilelik ve epilepsi gibi bazı durumlarda EMS'e doktor onayı olmadan başlanmaz. Listenin tamamı [Kimler yapmamalı?](/ems-nedir#kimler) bölümünde.
+Hayır. Kalp pili, hamilelik ve epilepsi gibi bazı durumlarda EMS'e doktor onayı olmadan başlanmaz. Listenin tamamı [EMS herkese uygun mu?](/ems-nedir#kimler) sorusunda.

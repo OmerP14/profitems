@@ -11,7 +11,7 @@ Konya'da EMS antrenmanı yapabileceğin bir yer arıyorsan Profit EMS Selçuklu'
 
 ## Adres
 
-Kılınçarslan Mah., Urfa Sk. No:9C, 42080 Selçuklu/Konya. Stüdyomuz Avrukon Plaza'da, Şefikcan Kafe'nin giriş kapısının tam karşısında.
+Kılınçarslan Mah., Urfa Sk., Şefik Can Cd. No:9C, 42080 Selçuklu/Konya. Stüdyomuz Kafem'in giriş kapısının tam karşısında.
 
 Haritada görmek ve yol tarifi almak için [İletişim sayfasına](/iletisim) bakabilirsin.
 

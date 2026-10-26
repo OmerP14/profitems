@@ -27,7 +27,7 @@ const yol = Astro.url.pathname.replace(/\/$/, '') || '/';
 <div class="mmenu" id="mobil-menu" hidden>
   <nav aria-label="Mobil menü">
     <ul>
-      {menu.map(m => <li><a href={m.href}>{m.etiket}</a></li>)}
+      {menu.map(m => <li><a href={m.href} aria-current={m.href === yol || yol.startsWith(m.href + '/') ? 'page' : undefined}>{m.etiket}</a></li>)}
     </ul>
   </nav>
   <a class="btn" href={whatsappLinki()} target="_blank" rel="noopener"><WhatsAppIcon /> WhatsApp'tan yaz</a>

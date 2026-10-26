@@ -13,29 +13,29 @@ const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
 // pads are found by casting a ray at the body in its bind pose: [zones, bone, x, y, from front (1) or back (-1), w, h]
 const PADS = [
-  ['agri',                'Spine2',       -0.085, 1.43,  1, .07, .035],
-  ['agri',                'Spine2',        0.085, 1.43,  1, .07, .035],
-  ['sikilasma',           'Spine2',       -0.075, 1.33,  1, .085, .06],
-  ['sikilasma',           'Spine2',        0.075, 1.33,  1, .085, .06],
-  ['zayiflama incelme',   'Hips',         -0.05,  1.05,  1, .065, .08],   // belly: on the front of the hip shell, below the waist gap
-  ['zayiflama incelme',   'Hips',          0.05,  1.05,  1, .065, .08],
-  ['incelme agri',        'Spine',        -0.115, 1.04,  1, .055, .085],
-  ['incelme agri',        'Spine',         0.115, 1.04,  1, .055, .085],
-  ['sikilasma',           'LeftArm',       0.235, 1.24,  1, .05, .075],
-  ['sikilasma',           'RightArm',     -0.235, 1.24,  1, .05, .075],
-  ['zayiflama sikilasma', 'LeftUpLeg',     0.10,  0.72,  1, .07, .1],
-  ['zayiflama sikilasma', 'RightUpLeg',   -0.10,  0.72,  1, .07, .1],
+  ['agri',                    'Spine2',     -0.085, 1.43,   1, .07, .035],
+  ['agri',                    'Spine2',      0.085, 1.43,   1, .07, .035],
+  ['sikilasma kas',           'Spine2',     -0.075, 1.33,   1, .085, .06],
+  ['sikilasma kas',           'Spine2',      0.075, 1.33,   1, .085, .06],
+  ['zayiflama incelme kas',   'Hips',        -0.05, 1.05,   1, .065, .08],   // belly: on the front of the hip shell, below the waist gap
+  ['zayiflama incelme kas',   'Hips',         0.05, 1.05,   1, .065, .08],
+  ['incelme agri',            'Spine',      -0.115, 1.04,   1, .055, .085],
+  ['incelme agri',            'Spine',       0.115, 1.04,   1, .055, .085],
+  ['sikilasma kas',           'LeftArm',     0.235, 1.24,   1, .05, .075],
+  ['sikilasma kas',           'RightArm',   -0.235, 1.24,   1, .05, .075],
+  ['zayiflama sikilasma kas', 'LeftUpLeg',    0.10, 0.72,   1, .07, .1],
+  ['zayiflama sikilasma kas', 'RightUpLeg',  -0.10, 0.72,   1, .07, .1],
   // back
-  ['agri',                'Spine2',       -0.08,  1.36, -1, .08, .07],
-  ['agri',                'Spine2',        0.08,  1.36, -1, .08, .07],
-  ['sikilasma',           'Spine1',       -0.10,  1.20, -1, .07, .08],
-  ['sikilasma',           'Spine1',        0.10,  1.20, -1, .07, .08],
-  ['incelme agri',        'Spine',        -0.06,  1.04, -1, .075, .055],
-  ['incelme agri',        'Spine',         0.06,  1.04, -1, .075, .055],
-  ['sikilasma zayiflama', 'Hips',         -0.08,  0.972, -1, .09, .065],   // on the back of the hip shell (0.94–1.10), not the thigh
-  ['sikilasma zayiflama', 'Hips',          0.08,  0.972, -1, .09, .065],
-  ['zayiflama sikilasma', 'LeftUpLeg',     0.10,  0.68, -1, .065, .09],
-  ['zayiflama sikilasma', 'RightUpLeg',   -0.10,  0.68, -1, .065, .09],
+  ['agri',                    'Spine2',      -0.08, 1.36,  -1, .08, .07],
+  ['agri',                    'Spine2',       0.08, 1.36,  -1, .08, .07],
+  ['sikilasma kas',           'Spine1',      -0.10, 1.20,  -1, .07, .08],
+  ['sikilasma kas',           'Spine1',       0.10, 1.20,  -1, .07, .08],
+  ['incelme agri',            'Spine',       -0.06, 1.04,  -1, .075, .055],
+  ['incelme agri',            'Spine',        0.06, 1.04,  -1, .075, .055],
+  ['sikilasma zayiflama kas', 'Hips',        -0.08, 0.972, -1, .09, .065],   // on the back of the hip shell (0.94–1.10), not the thigh
+  ['sikilasma zayiflama kas', 'Hips',         0.08, 0.972, -1, .09, .065],
+  ['zayiflama sikilasma kas', 'LeftUpLeg',    0.10, 0.68,  -1, .065, .09],
+  ['zayiflama sikilasma kas', 'RightUpLeg',  -0.10, 0.68,  -1, .065, .09],
 ];
 
 // Finding where each pad sits (hundreds of rays against the skinned body) blocks the page for seconds,

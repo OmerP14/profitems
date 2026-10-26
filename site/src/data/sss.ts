@@ -5,14 +5,14 @@
 // Bir seansın genel akışı (işletmeye özel süre ve sayı bilgisi gelince güncellenir)
 export const seansAkisi = [
   { baslik: 'Randevun SMS ile gelir', metin: "Randevu aldığında seansının günü ve saati telefonuna SMS olarak gelir. Seans günü, randevundan 4 saat önce bir hatırlatma SMS'i daha gönderilir." },
-  { baslik: 'Önce konuşuruz', metin: 'Hedefini ve sağlık durumunu sorarız. Bir rahatsızlığın varsa burada söylersin.' },
+  { baslik: 'Programını planlarız', metin: 'Hedefini konuşur, sana uygun EMS programını birlikte planlarız. Varsa sağlık durumunu da bu aşamada değerlendiririz.' },
   { baslik: 'Kıyafeti giyersin', metin: 'Pedleri taşıyan EMS kıyafeti üstüne oturtulur, pedler büyük kas gruplarının üstüne gelir.' },
   { baslik: 'Cihaz ayarlanır', metin: 'Uyarı düşük başlar ve rahat ettiğin seviyeye kadar yavaş yavaş artırılır.' },
   { baslik: 'Hareket edersin', metin: 'Squat, lunge gibi basit hareketleri eğitmen eşliğinde yaparsın. Kaslar uyarıyla birlikte çalışır.' },
   { baslik: 'Seans biter', metin: 'Kıyafet çıkarılır. Gün içinde bol su içmeni öneririz.' },
 ];
 
-// "Kimler yapmamalı?" listesi. Bu durumlardan biri varsa doktor onayı olmadan başlanmaz.
+// EMS'e doktor onayı olmadan başlanmayan durumlar. Sayfada ayrı bölüm değil, "EMS herkese uygun mu?" sorusunun cevabında geçer.
 export const engeller = [
   'Kalp pilin ya da vücudunda elektronik bir cihaz var',
   'Hamilesin',
@@ -56,6 +56,11 @@ export const sss = [
   {
     soru: 'Bel ya da boyun ağrım var, EMS yapabilir miyim?',
     cevap: 'Sırt, bel ve omuz çevresindeki kasları güçlendirmeye odaklanan çalışmalar yapıyoruz. Ağrın varsa başlamadan önce doktoruna danışmanı öneririz.',
+  },
+  {
+    id: 'kimler', // eski "Kimler yapmamalı?" bağlantıları (/ems-nedir#kimler) bu soruyu açar
+    soru: 'EMS herkese uygun mu?',
+    cevap: `Çoğu kişi için uygundur. Şu durumlarda doktor onayı olmadan başlanmaz: ${engeller.map(e => e.charAt(0).toLocaleLowerCase('tr') + e.slice(1)).join('; ')}. Emin olmadığın bir durum varsa ilk görüşmede birlikte değerlendiririz.`,
   },
   {
     soru: 'Randevumu nasıl hatırlayacağım?',

@@ -9,12 +9,12 @@ export const isletme = {
   instagram: 'https://www.instagram.com/pro.fit.ems/',
   instagramKullanici: '@pro.fit.ems',
   adres: {
-    sokak: 'Kılınçarslan Mah., Urfa Sk. No:9C',
+    sokak: 'Kılınçarslan Mah., Urfa Sk., Şefik Can Cd. No:9C',
     ilce: 'Selçuklu',
     il: 'Konya',
     postaKodu: '42080',
-    bina: 'Avrukon Plaza',
-    tarif: 'Şefikcan Kafe giriş kapısının karşısı',
+    kisa: 'Şefik Can Cd. No:9C', // ana sayfada büyük yazılan kısa adres
+    tarif: 'Kafem giriş kapısının karşısı',
   },
   saatler: {
     metin: 'Her gün 10:00–22:00',

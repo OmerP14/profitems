@@ -29,4 +29,4 @@ Kas güçlendikçe terazideki sayı beklediğin hızda düşmeyebilir. Bu yüzde
 
 ## Başlamadan önce
 
-Bir sağlık sorunun varsa önce doktoruna danış; EMS'in kimler için uygun olmadığını [Kimler yapmamalı?](/ems-nedir#kimler) bölümünde bulabilirsin. Zayıflama hizmetimizde hangi bölgelerin çalıştığını [Hizmetler](/hizmetler#zayiflama) sayfasında görebilirsin.
+Bir sağlık sorunun varsa önce doktoruna danış; EMS'in kimler için uygun olmadığını [EMS herkese uygun mu?](/ems-nedir#kimler) sorusunda bulabilirsin. Zayıflama hizmetimizde hangi bölgelerin çalıştığını [Hizmetler](/hizmetler#zayiflama) sayfasında görebilirsin.

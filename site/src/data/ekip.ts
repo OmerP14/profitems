@@ -10,6 +10,12 @@
 // Fotoğraf: public/img/ekip/ içine <id>-1200.webp ve <id>-1800.webp (3:4 dikey) olarak konur.
 // Şu anki fotoğraflar geçici: Instituto Alpha Fitness, Pexels (pexels.com/@mralpha, Pexels lisansı).
 
+// Hocalar sitede görünsün mü? Gerçek isimler ve fotoğraflar gelene kadar kapalı (false):
+// menüde Ekibimiz yok, ana sayfada hoca bölümü yok, asistan hocaları WhatsApp'a yönlendirir.
+// Açmak için: aşağıdaki satırı true yap ve src/pages/_ekibimiz.astro dosyasının adını ekibimiz.astro olarak değiştir
+// (baştaki alt çizgi sayfayı yayından çıkarır).
+export const ekipYayinda = false;
+
 export type Hoca = { id: string; ad: string; unvan: string; tanitim: string; alanlar: string[]; odak: string };
 
 export const ekip: Hoca[] = [

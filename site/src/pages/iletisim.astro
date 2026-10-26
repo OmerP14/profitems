@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import Nav from '../components/Nav.astro';
 import WhatsAppIcon from '../components/WhatsAppIcon.astro';
 import { isletme, whatsappLinki, yolTarifiLinki, haritaLinki, haritaGomme } from '../data/isletme';
+import { kapi, mekanYayinda } from '../data/mekan';
 const { acilis, kapanis } = isletme.saatler;
 const saat = (t: string) => Number(t.split(':')[0]) + Number(t.split(':')[1]) / 60;
 const acikBas = (saat(acilis) / 24) * 100;
@@ -50,9 +51,9 @@ const acikGen = ((saat(kapanis) - saat(acilis)) / 24) * 100;
       <div class="slip" data-rise>
         <ol class="slip__rows">
           <li><span>{isletme.adres.il}, {isletme.adres.ilce}</span><i></i><span>Kılınçarslan Mah.</span></li>
-          <li><span>Urfa Sokak</span><i></i><span>No:9C</span></li>
-          <li><span>{isletme.adres.bina}</span><i></i><span>{isletme.adres.postaKodu}</span></li>
-          <li><span>Şefikcan Kafe giriş kapısı</span><i></i><span>karşısı</span></li>
+          <li><span>Urfa Sokak</span><i></i><span>Şefik Can Cd.</span></li>
+          <li><span>No:9C</span><i></i><span>{isletme.adres.postaKodu}</span></li>
+          <li><span>Kafem giriş kapısı</span><i></i><span>karşısı</span></li>
         </ol>
         <p class="slip__end"><span>{isletme.ad}</span><span>{acilis}–{kapanis}</span></p>
       </div>
@@ -60,6 +61,12 @@ const acikGen = ((saat(kapanis) - saat(acilis)) / 24) * 100;
         <a class="btn" href={yolTarifiLinki} target="_blank" rel="noopener">Yol tarifi al</a>
         <a class="btn btn--quiet" href={haritaLinki} target="_blank" rel="noopener">Haritada aç</a>
       </div>
+      {mekanYayinda && (
+        <figure class="door" data-rise>
+          <img src={kapi.src} alt={kapi.alt} width={kapi.genislik} height={kapi.yukseklik} sizes="(max-width: 860px) 100vw, 38vw" loading="lazy" decoding="async" style={`object-position:${kapi.odak}`}>
+          <figcaption>Kapımız: {isletme.adres.tarif}</figcaption>
+        </figure>
+      )}
       <address class="sr-only">{isletme.adres.sokak}, {isletme.adres.postaKodu} {isletme.adres.ilce}/{isletme.adres.il}</address>
     </div>
     <!-- Google sets its own cookies, so the real map loads only when the visitor asks for it; until then a drawn street sketch -->
@@ -167,6 +174,10 @@ const acikGen = ((saat(kapanis) - saat(acilis)) / 24) * 100;
     background: var(--ink); color: #fff; font-weight: 700; font-variant-numeric: tabular-nums;
   }
   .find__actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 32px; }
+  /* the door, so the slip above has a picture to match: shown once the studio's own photograph is in */
+  .door { margin: 48px 0 0; }
+  .door img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 3; object-fit: cover; clip-path: polygon(0 0, 100% 0, 100% 100%, 8% 100%); }
+  .door figcaption { margin-top: 12px; font-weight: 600; }
   .btn--quiet { background: var(--surface); color: var(--ink); }
   .btn--quiet:hover { background: #cdd5da; }
   .find__map { min-height: 560px; background: var(--surface); }

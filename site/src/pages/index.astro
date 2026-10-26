@@ -5,7 +5,8 @@ import WhatsAppIcon from '../components/WhatsAppIcon.astro';
 import BolgeFigur from '../components/BolgeFigur.astro';
 import { isletme, whatsappLinki, tamAdres, yolTarifiLinki } from '../data/isletme';
 import { hizmetler } from '../data/hizmetler';
-import { ekip } from '../data/ekip';
+import { ekip, ekipYayinda } from '../data/ekip';
+import { galeri, mekanYayinda } from '../data/mekan';
 import { yazilar, tarihYaz } from '../data/blog';
 import '../styles/home.css';
 const { whatsapp } = isletme;
@@ -28,9 +29,9 @@ const serit = [...hizmetler.map(kisaAd), `Her gün ${acilis}–${kapanis}`, `${i
 <Base yol="/">
 
 <div class="stage">
-<video class="stage__video" muted loop playsinline preload="none" poster="/video/hero-yatay.jpg" aria-hidden="true"
+<video class="stage__video" muted loop playsinline preload="none" aria-hidden="true"
   data-src-wide="/video/hero-yatay.mp4" data-src-narrow="/video/hero-dikey.mp4"
-  data-poster-wide="/video/hero-yatay.jpg" data-poster-narrow="/video/hero-dikey.jpg"></video>
+  data-poster-wide="/video/hero-yatay.webp" data-poster-narrow="/video/hero-dikey.webp"></video>
 
 <Nav tema="koyu" />
 
@@ -43,7 +44,6 @@ const serit = [...hizmetler.map(kisaAd), `Her gün ${acilis}–${kapanis}`, `${i
         <span class="line line--hot"><span>yana<i>.</i></span></span>
       </h1>
       <svg class="pulse" viewBox={`0 0 ${dalga.w} 80`} preserveAspectRatio="none" aria-hidden="true">
-        <path class="pulse__base" d={dalga.d} pathLength="100" />
         <path class="pulse__spark" d={dalga.d} pathLength="100" />
       </svg>
     </div>
@@ -61,7 +61,7 @@ const serit = [...hizmetler.map(kisaAd), `Her gün ${acilis}–${kapanis}`, `${i
   <div class="story__pin">
     <div class="story__text">
       <h2 class="story__title" id="story-title">EMS nasıl çalışır?</h2>
-      <div class="story__bar" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      <div class="story__bar" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
       <ol class="story__steps">
         <li class="story__step is-active">
           <p class="story__big">Önce kıyafet.</p>
@@ -73,11 +73,7 @@ const serit = [...hizmetler.map(kisaAd), `Her gün ${acilis}–${kapanis}`, `${i
         </li>
         <li class="story__step">
           <p class="story__big">Uyarı kaslara ulaşır.</p>
-          <p>Cihaz, pedler üzerinden kaslara hafif elektrik uyarıları gönderir ve kaslar kasılır.</p>
-        </li>
-        <li class="story__step">
-          <p class="story__big">Sırt ve bel de çalışır.</p>
-          <p>Arkadaki pedler sırt, bel ve kalça kaslarını da devreye sokar.</p>
+          <p>Cihaz, öndeki ve arkadaki pedler üzerinden kaslara hafif elektrik uyarıları gönderir; sırt, bel ve kalça da birlikte çalışır.</p>
         </li>
         <li class="story__step">
           <p class="story__big">Sen hareket ettikçe.</p>
@@ -89,10 +85,7 @@ const serit = [...hizmetler.map(kisaAd), `Her gün ${acilis}–${kapanis}`, `${i
           <fieldset class="goals">
             <legend class="sr-only">Hedefin hangisi?</legend>
             <div class="goals__list">
-              <button type="button" class="goal" data-goal="zayiflama" data-label="Zayıflama" aria-pressed="false">Zayıflama</button>
-              <button type="button" class="goal" data-goal="sikilasma" data-label="Sıkılaşma" aria-pressed="false">Sıkılaşma</button>
-              <button type="button" class="goal" data-goal="incelme" data-label="İncelme" aria-pressed="false">İncelme</button>
-              <button type="button" class="goal" data-goal="agri" data-label="Bel ve boyun ağrısı" aria-pressed="false">Bel ve boyun</button>
+              {hizmetler.map(h => <button type="button" class="goal" data-goal={h.bolge[0]} data-label={h.ad} aria-pressed="false">{h.ad}</button>)}
             </div>
           </fieldset>
           <p class="goals__note"><span id="goal-note" aria-live="polite"></span></p>
@@ -101,7 +94,7 @@ const serit = [...hizmetler.map(kisaAd), `Her gün ${acilis}–${kapanis}`, `${i
       </ol>
       <div class="story__nav" hidden>
         <button type="button" class="story__arrow" data-dir="-1" aria-label="Önceki adım"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg></button>
-        <p class="story__count" aria-live="polite"><b>1</b> / 6</p>
+        <p class="story__count" aria-live="polite"><b>1</b> / 5</p>
         <button type="button" class="story__arrow" data-dir="1" aria-label="Sonraki adım"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg></button>
         <span class="story__hint" aria-hidden="true">Sağa sola kaydır</span>
       </div>
@@ -155,28 +148,28 @@ const serit = [...hizmetler.map(kisaAd), `Her gün ${acilis}–${kapanis}`, `${i
 
 <!-- the rest of the home page: one claim per section, each leading to its own page -->
 <div class="hs">
-  <!-- 1 · the four goals as words at poster size; pointing at one opens its photograph on the slant -->
+  <!-- 1 · the goals as words at poster size; pointing at one opens its photograph on the slant -->
   <section class="hg" aria-labelledby="hg-baslik">
     <div class="hg__head">
-      <h2 class="hs-h2" id="hg-baslik" data-rise>Dört hedef, tek kıyafet</h2>
+      <h2 class="hs-h2" id="hg-baslik" data-rise>Beş hedef, tek kıyafet</h2>
       <p data-rise>Her hedefte kıyafetteki farklı pedler çalışır. Hangisi sana uygun, hizmetlerde ayrıntısıyla anlattık.</p>
     </div>
     <div class="hg__body">
     <ul class="hg__list">
       {hizmetler.map((h, i) => (
         <li data-rise>
-          <a class="hg__row" href={`/hizmetler#${h.id}`} data-i={i}>
+          <a class:list={['hg__row', { 'is-on': i === 0 }]} href={`/hizmetler#${h.id}`} data-i={i}>
             <span class="hg__name">{kisaAd(h)}</span>
             <span class="hg__zones">{h.bolgeler}</span>
           </a>
         </li>
       ))}
     </ul>
-    <figure class="hg__peek" aria-hidden="true">
-      {hizmetler.map((h, i) => <img class:list={[{ 'is-on': i === 0 }]} src={h.gorsel} srcset={h.srcset} sizes="34vw" alt="" width={h.boyut[0]} height={h.boyut[1]} loading="lazy" decoding="async" style={`object-position:${h.odak}`}>)}
+    <figure class="hg__peek" aria-hidden="true" data-rise>
+      {hizmetler.map((h, i) => <img class:list={[{ 'is-on': i === 0 }]} src={h.gorsel} srcset={h.srcset} sizes="56vw" alt="" width={h.boyut[0]} height={h.boyut[1]} loading="lazy" decoding="async" style={`object-position:${h.odak}`}>)}
     </figure>
     </div>
-    <!-- on a phone the four goals are tall slanted cards on a rail: swipe sideways, each settles in the centre;
+    <!-- on a phone the goals are tall slanted cards on a rail: swipe sideways, each settles in the centre;
          the small figure shows which pads that goal works -->
     <div class="hg-m">
       <ul class="rail">
@@ -194,7 +187,26 @@ const serit = [...hizmetler.map(kisaAd), `Her gün ${acilis}–${kapanis}`, `${i
     </div>
   </section>
 
-  <!-- 2 · the coaches, an echo of the Ekibimiz panels -->
+  <!-- 1b · the studio itself: one large photograph, two beside it (hidden until the studio's own photographs are in) -->
+  {mekanYayinda && (
+  <section class="hm" aria-labelledby="hm-baslik">
+    <div class="hm__text">
+      <h2 class="hs-h2" id="hm-baslik" data-rise>Stüdyomuz</h2>
+      <p data-rise>{isletme.adres.ilce}, {isletme.adres.kisa}. {isletme.adres.tarif}. Gelmeden önce içeriyi tanı.</p>
+      <a class="btn" href={yolTarifiLinki} target="_blank" rel="noopener" data-rise>Yol tarifi al</a>
+    </div>
+    <div class="hm__grid">
+      {galeri.slice(0, 3).map((f, i) => (
+        <figure class:list={['hm__f', { 'hm__f--big': i === 0 }]} data-rise>
+          <img src={f.src} alt={f.alt} width={f.genislik} height={f.yukseklik} sizes={i === 0 ? '(max-width: 860px) 100vw, 46vw' : '(max-width: 860px) 50vw, 22vw'} loading="lazy" decoding="async" style={`object-position:${f.odak}`}>
+        </figure>
+      ))}
+    </div>
+  </section>
+  )}
+
+  <!-- 2 · the coaches, an echo of the Ekibimiz panels (hidden until their real names and photographs are in) -->
+  {ekipYayinda && (
   <section class="ht" aria-labelledby="ht-baslik">
     <div class="ht__text">
       <h2 class="hs-h2" id="ht-baslik" data-rise>Seansını hocan yönetir</h2>
@@ -222,6 +234,7 @@ const serit = [...hizmetler.map(kisaAd), `Her gün ${acilis}–${kapanis}`, `${i
       </div>
     </div>
   </section>
+  )}
 
   <!-- 3 · the newest post at full weight, the next two as plain lines -->
   {sonYazi && (
@@ -254,13 +267,24 @@ const serit = [...hizmetler.map(kisaAd), `Her gün ${acilis}–${kapanis}`, `${i
     </section>
   )}
 
-  <!-- 4 · where we are and whether we are open right now -->
+  <!-- 4 · the first session, offered on a full photograph -->
+  <section class="hb" aria-labelledby="hb-baslik">
+    <!-- stock photo until the studio's own photographs arrive -->
+    <img class="hb__img" src="/img/plan-2000.webp" srcset="/img/plan-1200.webp 1200w, /img/plan-2000.webp 2000w, /img/plan-3600.webp 3600w" sizes="100vw" alt="Antrenör, EMS kıyafetli bir kadının seansını tabletten yönetiyor" width="2000" height="1500" loading="lazy" decoding="async">
+    <div class="hb__text">
+      <h2 class="hs-h2" id="hb-baslik" data-rise>İlk seansını planlayalım</h2>
+      <p data-rise>Hedefini yaz, sana uygun EMS programını birlikte çıkaralım. Seans boyunca hocan yanında olur, uyarıyı sana göre ayarlar.</p>
+      <a class="btn" href={whatsappLinki('Merhaba, ilk EMS seansımı planlamak istiyorum.')} target="_blank" rel="noopener" data-rise><WhatsAppIcon /> Seansını planla</a>
+    </div>
+  </section>
+
+  <!-- 5 · where we are and whether we are open right now -->
   <section class="hv" aria-labelledby="hv-baslik">
     <h2 class="hs-h2 hv__title" id="hv-baslik" data-rise>{isletme.adres.ilce}'dayız</h2>
     <div class="hv__grid">
       <div data-rise>
         <p class="hv__label">Adres</p>
-        <p class="hv__big"><a href={yolTarifiLinki} target="_blank" rel="noopener">{isletme.adres.bina}</a></p>
+        <p class="hv__big"><a href={yolTarifiLinki} target="_blank" rel="noopener">{isletme.adres.kisa}</a></p>
         <p>{tamAdres}. {isletme.adres.tarif}.</p>
       </div>
       <div data-rise>
@@ -330,29 +354,24 @@ document.querySelectorAll('[data-serit]').forEach(grup => {
   cards.forEach(c => io.observe(c));
 })();
 
-// goals list: the photograph beside the list follows the row being pointed at
+// goals list: the large photograph beside the list shows the row being pointed at (and stays on it)
 (() => {
   const peek = document.querySelector('.hg__peek');
   if (!peek) return;
   const imgs = [...peek.querySelectorAll('img')];
-  const list = document.querySelector('.hg__list');
-  document.querySelectorAll('.hg__row').forEach(row => {
+  const rows = [...document.querySelectorAll('.hg__row')];
+  rows.forEach((row, i) => {
     const show = () => {
-      imgs.forEach((im, i) => im.classList.toggle('is-on', i === Number(row.dataset.i)));
-      // centred on the row, but never above the list or below it (it would cover the words around it)
-      const r = row.getBoundingClientRect(), l = list.getBoundingClientRect(), h = peek.offsetHeight;
-      const y = Math.min(Math.max(r.top - l.top + r.height / 2, h / 2), Math.max(h / 2, l.height - h / 2));
-      peek.style.setProperty('--y', `${y}px`);
-      peek.classList.add('is-open');
+      imgs.forEach((im, j) => im.classList.toggle('is-on', j === i));
+      rows.forEach(r => r.classList.toggle('is-on', r === row));
     };
     row.addEventListener('pointerenter', show);
     row.addEventListener('focus', show);
   });
-  list.addEventListener('pointerleave', () => peek.classList.remove('is-open'));
-  list.addEventListener('focusout', e => { if (!list.contains(e.relatedTarget)) peek.classList.remove('is-open'); });
 })();
 
 // background clip: phones get the light portrait cut; skipped for reduced motion / data saver
+// (the poster is chosen here, not in the markup, so a phone never downloads the wide one too)
 (() => {
   const v = document.querySelector('.stage__video');
   const narrow = matchMedia('(max-width: 860px)').matches;
@@ -374,9 +393,10 @@ const storyWa = document.getElementById('story-wa');
 const waBase = `https://wa.me/${whatsapp}?text=`;
 const notes = {
   zayiflama: 'Zayıflama: karın ve bacak bölgeleri birlikte çalışır.',
-  sikilasma: 'Sıkılaşma: göğüs, kol ve bacak kasları çalışır.',
   incelme: 'İncelme: karın ve bel çevresi öne çıkar.',
-  agri: 'Bel ve boyun: omuz ve bel bölgesi desteklenir.'
+  sikilasma: 'Sıkılaşma: göğüs, kol ve bacak kasları çalışır.',
+  kas: 'Kas geliştirme: göğüs, sırt, kol, karın ve bacaklar birlikte çalışır.',
+  agri: 'Bel ve boyun ağrıları: omuz ve bel bölgesi desteklenir.'
 };
 // every note also sits invisibly in the same spot, so the card always keeps the height of the longest one
 // and the figure above it (on a phone it fills whatever height is left) never changes size between goals
@@ -398,7 +418,7 @@ document.querySelectorAll('.goal').forEach(btn => {
     rigEl.classList.add('figure--focus');
     pads.forEach(p => p.classList.toggle('is-on', (p.dataset.zones || '').split(' ').includes(goal)));
     note.textContent = notes[goal];
-    storyWa.href = waBase + encodeURIComponent(`Merhaba, ${btn.dataset.label} hedefim için bilgi almak istiyorum.`);
+    storyWa.href = waBase + encodeURIComponent(`Merhaba, ${btn.dataset.label.toLocaleLowerCase('tr')} hedefim için bilgi almak istiyorum.`);
     document.dispatchEvent(new CustomEvent('goal:change', { detail: goal }));
   });
 });
@@ -457,11 +477,11 @@ const perp = (A, B, t, len) => {
 // pads: [zone, anchor] where anchor is a fixed torso point or a spot along a limb
 const FRONT = [
   { z: 'agri', at: [170, 146], w: 24, h: 12 }, { z: 'agri', at: [230, 146], w: 24, h: 12 },
-  { z: 'sikilasma', at: [178, 171], w: 32, h: 22 }, { z: 'sikilasma', at: [222, 171], w: 32, h: 22 },
-  { z: 'zayiflama incelme', at: [183, 213], w: 26, h: 30 }, { z: 'zayiflama incelme', at: [217, 213], w: 26, h: 30 },
+  { z: 'sikilasma kas', at: [178, 171], w: 32, h: 22 }, { z: 'sikilasma kas', at: [222, 171], w: 32, h: 22 },
+  { z: 'zayiflama incelme kas', at: [183, 213], w: 26, h: 30 }, { z: 'zayiflama incelme kas', at: [217, 213], w: 26, h: 30 },
   { z: 'incelme agri', at: [171, 260], w: 22, h: 32 }, { z: 'incelme agri', at: [229, 260], w: 22, h: 32 },
-  { z: 'sikilasma', limb: 'uarmL', t: .45, w: 28, h: 18 }, { z: 'sikilasma', limb: 'uarmR', t: .45, w: 28, h: 18 },
-  { z: 'zayiflama sikilasma', limb: 'thighL', t: .42, w: 36, h: 24 }, { z: 'zayiflama sikilasma', limb: 'thighR', t: .42, w: 36, h: 24 },
+  { z: 'sikilasma kas', limb: 'uarmL', t: .45, w: 28, h: 18 }, { z: 'sikilasma kas', limb: 'uarmR', t: .45, w: 28, h: 18 },
+  { z: 'zayiflama sikilasma kas', limb: 'thighL', t: .42, w: 36, h: 24 }, { z: 'zayiflama sikilasma kas', limb: 'thighR', t: .42, w: 36, h: 24 },
 ];
 const BACK = [
   { at: [172, 172], w: 30, h: 24 }, { at: [228, 172], w: 30, h: 24 },
@@ -524,8 +544,8 @@ function placePad({ def, g }, J, dy, k) {
 
 const steps = [...section.querySelectorAll('.story__step')];
 // where the figure should be while each step is on screen
-// each step ends on a finished pose: dressed, pads on, current, back shown, two squats done, flex
-const anchors = [.14, .3, .42, .66, .93, 1];
+// each step ends on a finished pose: dressed, pads on, current on and the back shown, two squats done, flex
+const anchors = [.14, .3, .66, .93, 1];
 let current = -1;
 function render(p) {
   const { J, a, dy } = pose(p);
@@ -603,6 +623,7 @@ if (reduceStory) {
   // the two squats (progress .78–.93) keep their own tempo, about 1.4 s each, but only on the squat step itself;
   // passing through it the figure skips them (it stands at both ends), so it never trails behind the cards
   const SQUAT = [.78, .93], SQUAT_MS = 2900, STAND = [.78, .855, .93];
+  const LIVE = .42;   // current on, still facing front
   const move = d => Math.min(1500, 650 + Math.abs(d) * 1800);
   const squatMs = d => Math.abs(d) / (SQUAT[1] - SQUAT[0]) * SQUAT_MS;
   let tween = 0;
@@ -626,6 +647,8 @@ if (reduceStory) {
         if (up ? from < enter : from > enter) add(enter, move(enter - from));
         from = leave;
       }
+      // the current and the turn share one card: the front pads pulse a moment before the figure turns
+      if (up && target === anchors[2] && from < LIVE) { add(LIVE, move(LIVE - from)); legs.push({ from, d: 0, dur: 700 }); }
       add(target, move(target - from));
     }
     if (!legs.length) return;
@@ -653,6 +676,15 @@ if (reduceStory) {
     count.textContent = idx + 1;
     prev.disabled = idx === 0;
     next.disabled = idx === steps.length - 1;
+    // each card plays only its own move: the figure jumps to where the card before it ends,
+    // so moves that were skipped (fast taps) or are being left (going back) are never replayed at speed
+    const start = idx ? anchors[idx - 1] : 0;
+    if (Math.abs(lastP - start) > 1e-4) {
+      cancelAnimationFrame(tween);
+      lastP = start;
+      render(start);
+      if (ems3d) ems3d.setProgress(start);
+    }
     playTo(anchors[idx]);
   };
   section.classList.add('story--stack');

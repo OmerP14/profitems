@@ -6,7 +6,9 @@ import BolgeFigur from '../components/BolgeFigur.astro';
 import { isletme, whatsappLinki } from '../data/isletme';
 import { hizmetler } from '../data/hizmetler';
 
-const [zay, sik, inc, bel] = hizmetler;
+// each goal has its own section layout below, so they are picked by id (the order on the page follows the list)
+const h = (id: string) => hizmetler.find(x => x.id === id)!;
+const zay = h('zayiflama'), inc = h('incelme'), sik = h('sikilasma'), kas = h('kas-gelistirme'), bel = h('bel-boyun');
 const ad = (h: typeof zay) => (h as { kisaAd?: string }).kisaAd ?? h.ad;
 ---
 <Base yol="/hizmetler">
@@ -31,7 +33,7 @@ const ad = (h: typeof zay) => (h as { kisaAd?: string }).kisaAd ?? h.ad;
         <span class="line"><span>Hedefini</span></span>{" "}
         <span class="line"><span>seç</span></span>
       </h1>
-      <p class="h-hero__lead" data-rise>{isletme.adres.ilce}'daki stüdyomuzda dört hedef için EMS antrenmanı. Her hedefte kıyafetteki farklı pedler çalışır.</p>
+      <p class="h-hero__lead" data-rise>{isletme.adres.ilce}'daki stüdyomuzda beş hedef için EMS antrenmanı. Her hedefte kıyafetteki farklı pedler çalışır.</p>
       <nav aria-label="Hizmetler">
         <ul class="h-hero__list">
           {hizmetler.map((h, i) => <li data-rise><a class:list={{ 'is-on': i === 0 }} href={`#${h.id}`} data-id={h.id} data-bolgeler={h.bolgeler}>{ad(h)}</a></li>)}
@@ -53,20 +55,7 @@ const ad = (h: typeof zay) => (h as { kisaAd?: string }).kisaAd ?? h.ad;
     </div>
   </section>
 
-  <!-- 2 · full-bleed photograph on a slanted band, words on it -->
-  <section class="s-b" id={sik.id} aria-labelledby="t-sik">
-    <img class="s-b__img" src={sik.gorsel} srcset={sik.srcset} sizes="100vw" alt={sik.alt} style={`object-position:${sik.odak}`} width={sik.boyut[0]} height={sik.boyut[1]} loading="lazy" decoding="async">
-    <div class="s-b__text">
-      <h2 id="t-sik" data-rise>{ad(sik)}</h2>
-      <p data-rise>{sik.metin}</p>
-    </div>
-    <div class="s-b__zones" data-rise>
-      <div class="zones__fig"><BolgeFigur zones={sik.bolge} koyu etiket={`${sik.ad} için çalışan bölgeler`} /></div>
-      <p><strong>Çalışan bölgeler</strong>{sik.bolgeler}</p>
-    </div>
-  </section>
-
-  <!-- 3 · words lead, the photograph cuts the other way -->
+  <!-- 2 · words lead, the photograph cuts the other way -->
   <section class="s-c" id={inc.id} aria-labelledby="t-inc">
     <div class="s-c__text">
       <h2 id="t-inc" data-rise>{ad(inc)}</h2>
@@ -79,7 +68,33 @@ const ad = (h: typeof zay) => (h as { kisaAd?: string }).kisaAd ?? h.ad;
     <div class="frame frame--l s-c__img"><figure class="cut cut--l"><img src={inc.gorsel} srcset={inc.srcset} sizes="(max-width: 860px) 100vw, 58vw" alt={inc.alt} style={`object-position:${inc.odak}`} width={inc.boyut[0]} height={inc.boyut[1]} loading="lazy" decoding="async"></figure></div>
   </section>
 
-  <!-- 4 · the black chapter -->
+  <!-- 3 · full-bleed photograph on a slanted band, words on it -->
+  <section class="s-b" id={sik.id} aria-labelledby="t-sik">
+    <img class="s-b__img" src={sik.gorsel} srcset={sik.srcset} sizes="100vw" alt={sik.alt} style={`object-position:${sik.odak}`} width={sik.boyut[0]} height={sik.boyut[1]} loading="lazy" decoding="async">
+    <div class="s-b__text">
+      <h2 id="t-sik" data-rise>{ad(sik)}</h2>
+      <p data-rise>{sik.metin}</p>
+    </div>
+    <div class="s-b__zones" data-rise>
+      <div class="zones__fig"><BolgeFigur zones={sik.bolge} koyu etiket={`${sik.ad} için çalışan bölgeler`} /></div>
+      <p><strong>Çalışan bölgeler</strong>{sik.bolgeler}</p>
+    </div>
+  </section>
+
+  <!-- 4 · the first layout again after the dark band: photograph on the slant, words beside it -->
+  <section class="s-a" id={kas.id} aria-labelledby="t-kas">
+    <div class="frame frame--r s-a__img"><figure class="cut cut--r"><img src={kas.gorsel} srcset={kas.srcset} sizes="(max-width: 860px) 100vw, 58vw" alt={kas.alt} style={`object-position:${kas.odak}`} width={kas.boyut[0]} height={kas.boyut[1]} loading="lazy" decoding="async"></figure></div>
+    <div class="s-a__text">
+      <h2 id="t-kas" data-rise>{ad(kas)}</h2>
+      <p data-rise>{kas.metin}</p>
+      <div class="zones" data-rise>
+        <div class="zones__fig"><BolgeFigur zones={kas.bolge} etiket={`${kas.ad} için çalışan bölgeler`} /></div>
+        <p><strong>Çalışan bölgeler</strong>{kas.bolgeler}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 · the black chapter -->
   <section class="s-d" id={bel.id} aria-labelledby="t-bel">
     <div class="frame frame--r s-d__img"><figure class="cut cut--r"><img src={bel.gorsel} srcset={bel.srcset} sizes="(max-width: 860px) 100vw, 50vw" alt={bel.alt} style={`object-position:${bel.odak}`} width={bel.boyut[0]} height={bel.boyut[1]} loading="lazy" decoding="async"></figure></div>
     <div class="s-d__text">
@@ -298,7 +313,7 @@ setTimeout(() => { if (!window.__motion) document.body.classList.add('is-in'); }
 })();
 
 // hero: pointing at (or tabbing to) a goal opens its photograph in the red slash.
-// Left alone, the four goals take turns until the visitor chooses one.
+// Left alone, the goals take turns until the visitor chooses one.
 (() => {
   const links = [...document.querySelectorAll('.h-hero__list a')];
   const imgs = [...document.querySelectorAll('.h-show__img')];

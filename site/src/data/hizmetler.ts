@@ -16,18 +16,6 @@ export const hizmetler = [
     alt: 'EMS kıyafetiyle lunge ve squat hareketi yapan iki kadın',
   },
   {
-    id: 'sikilasma',
-    bolge: ['sikilasma'],
-    ad: 'Sıkılaşma',
-    metin: 'Göğüs, kol, kalça ve bacak kasları antrenman boyunca birlikte çalışır. Amaç kasları güçlendirip vücudu daha sıkı ve diri bir görünüme taşımak.',
-    bolgeler: 'Göğüs, kollar, kalça ve bacaklar',
-    gorsel: '/img/hizmetler/ems-sikilasma-1600.webp',
-    odak: '50% 35%', // fotoğrafın kırpılırken ortada kalacak noktası
-    srcset: '/img/hizmetler/ems-sikilasma-640.webp 640w, /img/hizmetler/ems-sikilasma-960.webp 960w, /img/hizmetler/ems-sikilasma-1600.webp 1600w, /img/hizmetler/ems-sikilasma-2400.webp 2400w, /img/hizmetler/ems-sikilasma-3600.webp 3600w',
-    boyut: [3686, 2912],
-    alt: 'EMS kıyafetli bir kadın bench üzerinde çalışırken antrenörü cihazı tabletten ayarlıyor',
-  },
-  {
     id: 'incelme',
     bolge: ['incelme'],
     ad: 'İncelme',
@@ -40,10 +28,33 @@ export const hizmetler = [
     alt: 'Gövdesinde EMS yeleği, elinde halterle duran bir kadın',
   },
   {
+    id: 'sikilasma',
+    bolge: ['sikilasma'],
+    ad: 'Sıkılaşma',
+    metin: 'Göğüs, kol, kalça ve bacak kasları antrenman boyunca birlikte çalışır. Amaç kasları güçlendirip vücudu daha sıkı ve diri bir görünüme taşımak.',
+    bolgeler: 'Göğüs, kollar, kalça ve bacaklar',
+    gorsel: '/img/hizmetler/ems-sikilasma-1600.webp',
+    odak: '50% 35%', // fotoğrafın kırpılırken ortada kalacak noktası
+    srcset: '/img/hizmetler/ems-sikilasma-640.webp 640w, /img/hizmetler/ems-sikilasma-960.webp 960w, /img/hizmetler/ems-sikilasma-1600.webp 1600w, /img/hizmetler/ems-sikilasma-2400.webp 2400w, /img/hizmetler/ems-sikilasma-3600.webp 3600w',
+    boyut: [3686, 2912],
+    alt: 'EMS kıyafetli bir kadın bench üzerinde çalışırken antrenörü cihazı tabletten ayarlıyor',
+  },
+  {
+    id: 'kas-gelistirme',
+    bolge: ['kas'],
+    ad: 'Kas geliştirme',
+    metin: 'Göğüs, sırt, kol, karın ve bacaklardaki büyük kas grupları aynı anda çalışır. Uyarının şiddeti seanslar ilerledikçe artırılır; düzenli antrenman ve yeterli beslenmeyle birlikte kas kütleni artırma hedefini destekler.',
+    bolgeler: 'Göğüs, sırt, kollar, karın ve bacaklar',
+    gorsel: '/img/hizmetler/ems-kas-gelistirme-1600.webp',
+    odak: '50% 20%', // fotoğrafın kırpılırken ortada kalacak noktası
+    srcset: '/img/hizmetler/ems-kas-gelistirme-640.webp 640w, /img/hizmetler/ems-kas-gelistirme-960.webp 960w, /img/hizmetler/ems-kas-gelistirme-1600.webp 1600w, /img/hizmetler/ems-kas-gelistirme-1800.webp 1800w',
+    boyut: [1800, 2400],
+    alt: 'Spor salonunda kolunu kasarak pazı kasını gösteren bir kadın',
+  },
+  {
     id: 'bel-boyun',
     bolge: ['agri'],
     ad: 'Bel ve boyun ağrıları',
-    kisaAd: 'Bel ve boyun',
     metin: 'Sırt, bel ve omuz çevresindeki kasları güçlendirmeye odaklanan çalışma. Ağrın varsa başlamadan önce doktoruna danışmanı öneririz.',
     bolgeler: 'Sırt, bel, omuz ve boyun çevresi',
     gorsel: '/img/hizmetler/ems-bel-boyun-1600.webp',

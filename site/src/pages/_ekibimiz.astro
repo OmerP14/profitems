@@ -170,7 +170,8 @@ const randevu = (ad: string) => ad
   .k-belge__img img { width: 100%; height: auto; aspect-ratio: 856 / 1000; transform: rotate(-4deg); }
   .k-belge h2 { font-size: clamp(2.75rem, 5vw, 4.5rem); margin-bottom: 18px; }
   .k-belge p { max-width: 52ch; }
-  .k-belge__link { font-weight: 700; text-underline-offset: 4px; }
+  /* taller tap area without moving anything: padding taken back by the margin */
+  .k-belge__link { display: inline-block; padding: 12px 0; margin: -12px 0; font-weight: 700; text-underline-offset: 4px; }
   .k-belge__link:hover { color: var(--accent); }
 
   /* ---------- closing band ---------- */

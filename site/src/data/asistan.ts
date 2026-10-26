@@ -9,6 +9,7 @@
 import { isletme, tamAdres, whatsappLinki, yolTarifiLinki } from './isletme';
 import { sss, engeller, seansAkisi } from './sss';
 import { hizmetler } from './hizmetler';
+import { ekipYayinda } from './ekip';
 
 // an FAQ answer carries its question, so a reply like "Hayır." still reads on its own
 const sssCevap = (baslangic: string) => {
@@ -34,7 +35,7 @@ export const konular: Konu[] = [
   {
     id: 'yer',
     anahtar: ['nerede', 'nerde', 'neresi', 'adres', 'konum', 'yol tarif', 'harita', 'nasil gel', 'nasil gid', 'semt', 'avrukon', 'sefikcan', 'selcuklu'],
-    cevap: `${tamAdres}. ${isletme.adres.bina}, ${isletme.adres.tarif}. <a href="${yolTarifiLinki}" target="_blank" rel="noopener">Yol tarifi al</a>`,
+    cevap: `${tamAdres}. ${isletme.adres.tarif}. <a href="${yolTarifiLinki}" target="_blank" rel="noopener">Yol tarifi al</a>`,
     oneriler: ['Saatleriniz?', 'Randevu almak istiyorum'],
   },
   {
@@ -88,7 +89,7 @@ export const konular: Konu[] = [
   {
     id: 'engel',
     anahtar: ['kimler', 'yapamaz', 'yapmamali', 'hamile', 'gebe', 'kalp', 'pil', 'epilepsi', 'sara', 'ameliyat', 'kanser', 'tromboz', 'damar', 'ates', 'hastalik', 'saglik sorun', 'ilac', 'tansiyon', 'seker', 'diyabet', 'emzir'],
-    cevap: `Şu durumlardan biri varsa doktor onayı olmadan EMS'e başlanmaz: ${engeller.map(e => e.charAt(0).toLocaleLowerCase('tr') + e.slice(1)).join('; ')}. Listede olmayan bir sağlık durumun varsa randevu almadan önce bize ve doktoruna danış. <a href="/ems-nedir#kimler">Kimler yapmamalı?</a>`,
+    cevap: `Şu durumlardan biri varsa doktor onayı olmadan EMS'e başlanmaz: ${engeller.map(e => e.charAt(0).toLocaleLowerCase('tr') + e.slice(1)).join('; ')}. Listede olmayan bir sağlık durumun varsa randevu almadan önce bize ve doktoruna danış. <a href="/ems-nedir#kimler">EMS herkese uygun mu?</a>`,
     oneriler: ['Randevu almak istiyorum', 'EMS acıtır mı?'],
   },
   {
@@ -105,8 +106,14 @@ export const konular: Konu[] = [
   },
   {
     id: 'sikilasma',
-    anahtar: ['sikilas', 'sikilastir', 'kas yap', 'kas kazan', 'toparla', 'diri', 'guclen', 'kalca', 'gogus', 'kol'],
+    anahtar: ['sikilas', 'sikilastir', 'toparla', 'diri', 'sarkma', 'kalca', 'gogus'],
     cevap: hizmetCevap('sikilasma'),
+    oneriler: ['Sonuç ne zaman görülür?', 'Randevu almak istiyorum'],
+  },
+  {
+    id: 'kas',
+    anahtar: ['kas gelis', 'kas yap', 'kas kazan', 'kas kutle', 'kaslan', 'hacim', 'guclen', 'kuvvet', 'kol', 'biceps', 'pazi'],
+    cevap: hizmetCevap('kas-gelistirme'),
     oneriler: ['Sonuç ne zaman görülür?', 'Randevu almak istiyorum'],
   },
   {
@@ -154,13 +161,13 @@ export const konular: Konu[] = [
   {
     id: 'hoca',
     anahtar: ['hoca', 'egitmen', 'antrenor', 'ekip', 'kimler var', 'personel', 'kadin hoca', 'erkek hoca', 'trainer'],
-    cevap: 'Seanslarını hocalarımız yönetir; cihazı senin için ayarlar ve hareketleri yanında durarak yaptırırlar. <a href="/ekibimiz">Ekibimizi tanı</a>',
+    cevap: `Seanslarını hocalarımız yönetir; cihazı senin için ayarlar ve hareketleri yanında durarak yaptırırlar.${ekipYayinda ? ' <a href="/ekibimiz">Ekibimizi tanı</a>' : ` ${wa('Merhaba, hocalarınız hakkında bilgi almak istiyorum.', 'Hocalarımızı sor')}`}`,
     oneriler: ['Randevu almak istiyorum', 'İlk seansta ne olur?'],
   },
   {
     id: 'hizmetler',
     anahtar: ['hizmet', 'neler var', 'ne yapiyorsunuz', 'program', 'hedef'],
-    cevap: `Dört hedef için EMS antrenmanı yapıyoruz: ${hizmetler.map(h => `<a href="/hizmetler#${h.id}">${h.ad}</a>`).join(', ')}.`,
+    cevap: `Beş hedef için EMS antrenmanı yapıyoruz: ${hizmetler.map(h => `<a href="/hizmetler#${h.id}">${h.ad}</a>`).join(', ')}.`,
     oneriler: ['Zayıflama', 'Bel ve boyun ağrısı', 'Fiyatlar ne kadar?'],
   },
   {

@@ -104,14 +104,22 @@ press('.goal, .btn, .chat__toggle, .chat__quick button', el => {
 const EASE = [0.22, 1, 0.36, 1] as const;
 if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
   // the first screen leaves as you scroll on: its words drift up and fade, like a page turning over
-  const words = document.querySelector<HTMLElement>('.hero__main, .h-hero__text, .e-hero__title, .b-hero__head, .k-hero__title, .p-head');
+  // (the moving element must sit inside the measured box: moving the box itself shifts its own measurement)
+  const words = document.querySelector<HTMLElement>('.hero__main, .h-hero__text, .e-hero__title, .b-hero__head, .k-hero__title, .p-title');
   let stage = words?.closest<HTMLElement>('section, header');
   // the scroll is measured on the outermost box that does not clip (a clipping box counts as its own scroller)
   for (let p = stage?.parentElement; stage && p && p !== document.body; p = p.parentElement) {
     if (getComputedStyle(p).overflow !== 'visible') stage = p;
   }
+  // scroll-linked styles are set from the progress directly: a scroll-linked animate() of y/scale ignores `offset`
+  // and runs over the default range, so the words started the page already lifted
+  const tie = (target: HTMLElement, offset: [string, string], frame: (p: number) => void) =>
+    scroll((p: number) => frame(Math.min(1, Math.max(0, p))), { target, offset: offset as any });
   if (words && stage) {
-    scroll(animate(words, { y: [0, -96], opacity: [1, 0.1] }, { ease: 'linear' }), { target: stage, offset: ['start start', 'end start'] });
+    tie(stage, ['start start', 'end start'], p => {
+      words.style.transform = p ? `translateY(${-96 * p}px)` : '';
+      words.style.opacity = p ? String(1 - 0.9 * p) : '';
+    });
   }
 
   // large photographs settle into their frame as they come up the screen: a slow zoom-out tied to the scroll
@@ -125,7 +133,7 @@ if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
       if (cs.clipPath === 'none') return;
       box.style.overflow = 'clip';   // a clip-path hides the zoomed edges but would still widen the page
     }
-    scroll(animate(img, { scale: [1.14, 1] }, { ease: 'linear' }), { target: img, offset: ['start end', 'center center'] });
+    tie(img, ['start end', 'center center'], p => { img.style.transform = `scale(${1.14 - 0.14 * p})`; });
   });
 
   // section headings rise from behind a mask as they arrive (the italic overhang is left room in the final state).

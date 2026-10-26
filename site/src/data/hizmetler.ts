@@ -43,6 +43,7 @@ export const hizmetler = [
     id: 'kas-gelistirme',
     bolge: ['kas'],
     ad: 'Kas geliştirme',
+    kisaAd: 'Kas gelişimi', // ana sayfadaki kayan şeritte ve hedef butonunda görünen ad
     metin: 'Göğüs, sırt, kol, karın ve bacaklardaki büyük kas grupları aynı anda çalışır. Uyarının şiddeti seanslar ilerledikçe artırılır; düzenli antrenman ve yeterli beslenmeyle birlikte kas kütleni artırma hedefini destekler.',
     bolgeler: 'Göğüs, sırt, kollar, karın ve bacaklar',
     gorsel: '/img/hizmetler/ems-kas-gelistirme-1600.webp',
@@ -65,7 +66,7 @@ export const hizmetler = [
   },
 ];
 
-// EMS kıyafetindeki elektrotların çalıştırdığı 10 bölge (ana sayfada "Elektrotlar yerine oturur" adımında görünür)
+// EMS kıyafetindeki elektrotların çalıştırdığı 10 bölge (ana sayfada "Elektrotlar yerine yerleştirilir" adımında görünür)
 export const calismaBolgeleri = [
   'Karın', 'Bel', 'Göğüs', 'Kolların ön kısmı', 'Kolların arka kısmı',
   'Bacak ön kısmı', 'Bacak arka kısmı', 'Kalça', 'Sırtın orta kısmı', 'Sırtın üst kısmı',

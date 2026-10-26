@@ -2,6 +2,7 @@
 baslik: "EMS mi, klasik antrenman mı?"
 aciklama: "EMS ile klasik antrenman arasındaki fark ne? Kaslar nasıl çalışır, hangisi kime uygun? Konya Profit EMS'ten sade bir karşılaştırma."
 tarih: 2026-10-19
+guncelleme: 2026-10-26
 kapak: /img/blog/ems-antrenor.jpg
 kapakAlt: "EMS kıyafetli bir kadın bench üzerinde çalışırken antrenörü cihazı tabletten ayarlıyor"
 ---
@@ -32,4 +33,4 @@ Klasik antrenmanı sevip düzenli yapıyorsan EMS'i onun yanında da kullanabili
 
 ## Başlamadan önce
 
-EMS herkes için uygun değildir. Kalp pili, hamilelik ya da epilepsi gibi bazı durumlarda doktor onayı olmadan başlanmaz. Listenin tamamına [EMS herkese uygun mu?](/ems-nedir#kimler) sorusundan bakabilirsin.
+EMS'yi kalp pili olan kişiler hariç, spor geçmişi olmayanlar da dahil herkes yapabilir.

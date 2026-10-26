@@ -7,7 +7,7 @@
 //   oneriler: cevabın altında gösterilecek hazır sorular
 
 import { isletme, tamAdres, whatsappLinki, yolTarifiLinki } from './isletme';
-import { sss, engeller, seansAkisi } from './sss';
+import { sss, kimlerYapabilir, seansAkisi } from './sss';
 import { hizmetler } from './hizmetler';
 import { ekipYayinda } from './ekip';
 
@@ -89,7 +89,7 @@ export const konular: Konu[] = [
   {
     id: 'engel',
     anahtar: ['kimler', 'yapamaz', 'yapmamali', 'hamile', 'gebe', 'kalp', 'pil', 'epilepsi', 'sara', 'ameliyat', 'kanser', 'tromboz', 'damar', 'ates', 'hastalik', 'saglik sorun', 'ilac', 'tansiyon', 'seker', 'diyabet', 'emzir'],
-    cevap: `Şu durumlardan biri varsa doktor onayı olmadan EMS'e başlanmaz: ${engeller.map(e => e.charAt(0).toLocaleLowerCase('tr') + e.slice(1)).join('; ')}. Listede olmayan bir sağlık durumun varsa randevu almadan önce bize ve doktoruna danış. <a href="/ems-nedir#kimler">EMS herkese uygun mu?</a>`,
+    cevap: `${kimlerYapabilir} <a href="/ems-nedir#kimler">EMS herkese uygun mu?</a>`,
     oneriler: ['Randevu almak istiyorum', 'EMS acıtır mı?'],
   },
   {

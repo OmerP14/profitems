@@ -12,17 +12,8 @@ export const seansAkisi = [
   { baslik: 'Seans biter', metin: 'Kıyafet çıkarılır. Gün içinde bol su içmeni öneririz.' },
 ];
 
-// EMS'e doktor onayı olmadan başlanmayan durumlar. Sayfada ayrı bölüm değil, "EMS herkese uygun mu?" sorusunun cevabında geçer.
-export const engeller = [
-  'Kalp pilin ya da vücudunda elektronik bir cihaz var',
-  'Hamilesin',
-  'Epilepsi hastalığın var',
-  'Ciddi bir kalp ya da damar rahatsızlığın var',
-  'Yakın zamanda ameliyat oldun',
-  'Kanser tedavisi görüyorsun',
-  'Damar tıkanıklığı (tromboz) geçirdin',
-  'Ateşli bir hastalık geçiriyorsun',
-];
+// EMS'yi kimler yapabilir: işletmenin cümlesi. Değişirse sadece burayı düzenle; SSS, asistan buradan beslenir.
+export const kimlerYapabilir = "EMS'yi kalp pili olan kişiler hariç, spor geçmişi olmayanlar da dahil herkes yapabilir.";
 
 export const sss = [
   {
@@ -60,7 +51,7 @@ export const sss = [
   {
     id: 'kimler', // eski "Kimler yapmamalı?" bağlantıları (/ems-nedir#kimler) bu soruyu açar
     soru: 'EMS herkese uygun mu?',
-    cevap: `Çoğu kişi için uygundur. Şu durumlarda doktor onayı olmadan başlanmaz: ${engeller.map(e => e.charAt(0).toLocaleLowerCase('tr') + e.slice(1)).join('; ')}. Emin olmadığın bir durum varsa ilk görüşmede birlikte değerlendiririz.`,
+    cevap: kimlerYapabilir,
   },
   {
     soru: 'Randevumu nasıl hatırlayacağım?',

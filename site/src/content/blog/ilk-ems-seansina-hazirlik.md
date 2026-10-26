@@ -2,6 +2,7 @@
 baslik: "İlk EMS seansına hazırlık"
 aciklama: "İlk EMS seansından önce ne yapmalı, ne giyilir, seansta ne hissedilir? Konya'da EMS'e başlayacaklar için Profit EMS'ten kısa bir rehber."
 tarih: 2026-10-19
+guncelleme: 2026-10-26
 kapak: /img/blog/ems-ilk-seans.jpg
 kapakAlt: "Antrenör EMS cihazını tabletten ayarlarken EMS kıyafetli bir kadın dambılla squat yapıyor"
 ---
@@ -10,7 +11,7 @@ kapakAlt: "Antrenör EMS cihazını tabletten ayarlarken EMS kıyafetli bir kad�
 
 ## Randevu alırken
 
-Randevu alırken hedefini ve varsa sağlık sorununu söyle. Kalp pili, hamilelik, epilepsi ya da yakın zamanda geçirdiğin bir ameliyat gibi durumlarda EMS'e doktor onayı olmadan başlanmaz. Emin olmadığın bir şey varsa önceden sor. Durumların tam listesi [EMS herkese uygun mu?](/ems-nedir#kimler) sorusunda.
+Randevu alırken hedefini söyle. EMS'yi kalp pili olan kişiler hariç, spor geçmişi olmayanlar da dahil herkes yapabilir. Emin olmadığın bir şey varsa önceden sor.
 
 ## Seans gününden önce
 

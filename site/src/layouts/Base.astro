@@ -73,13 +73,53 @@ const isletmeVerisi = {
 <Footer />
 <Chat />
 <script>
-import { animate, press } from 'motion';
+import { animate, press, scroll, inView } from 'motion';
 const tap = { type: 'spring', stiffness: 400, damping: 20 };
 // press feedback on every control
 press('.goal, .btn, .chat__toggle, .chat__quick button', el => {
   animate(el, { scale: 0.95 }, tap);
   return () => animate(el, { scale: 1 }, tap);
 });
+
+// one motion language for every page: the same curve everywhere, movement tied to the scroll so it follows the finger
+const EASE = [0.22, 1, 0.36, 1] as const;
+if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  // the first screen leaves as you scroll on: its words drift up and fade, like a page turning over
+  const words = document.querySelector<HTMLElement>('.hero__main, .h-hero__text, .e-hero__title, .b-hero__head, .k-hero__title, .p-head');
+  let stage = words?.closest<HTMLElement>('section, header');
+  // the scroll is measured on the outermost box that does not clip (a clipping box counts as its own scroller)
+  for (let p = stage?.parentElement; stage && p && p !== document.body; p = p.parentElement) {
+    if (getComputedStyle(p).overflow !== 'visible') stage = p;
+  }
+  if (words && stage) {
+    scroll(animate(words, { y: [0, -96], opacity: [1, 0.1] }, { ease: 'linear' }), { target: stage, offset: ['start start', 'end start'] });
+  }
+
+  // large photographs settle into their frame as they come up the screen: a slow zoom-out tied to the scroll
+  document.querySelectorAll<HTMLImageElement>('main img, .hs img').forEach(img => {
+    const box = img.parentElement;
+    if (!box || img.closest('.stage, .rail, .serit, .hg__peek, .h-show') || img.getBoundingClientRect().width < 320) return;
+    const cs = getComputedStyle(box);
+    // only a picture in a frame: zooming a picture that carries its own cut would zoom the cut too
+    if (getComputedStyle(img).clipPath !== 'none') return;
+    if (cs.overflow === 'visible') {
+      if (cs.clipPath === 'none') return;
+      box.style.overflow = 'clip';   // a clip-path hides the zoomed edges but would still widen the page
+    }
+    scroll(animate(img, { scale: [1.14, 1] }, { ease: 'linear' }), { target: img, offset: ['start end', 'center center'] });
+  });
+
+  // section headings rise from behind a mask as they arrive (the italic overhang is left room in the final state).
+  // The block around the heading is watched, not the heading: browsers count a fully masked element as never visible.
+  document.querySelectorAll<HTMLElement>('main h2, .hs h2').forEach(h => {
+    if (h.closest('.chat, .q, .y-body')) return;
+    h.style.clipPath = 'inset(0 -12% 100% -12%)';
+    inView(h.parentElement ?? h, () => {
+      // ends on a mask larger than the heading on every side, so nothing (accents, the italic lean) is cut afterwards
+      animate(h, { clipPath: ['inset(0 -12% 100% -12%)', 'inset(-20% -12% -30% -12%)'] }, { duration: 0.9, ease: EASE });
+    }, { margin: '0px 0px -15% 0px' });
+  });
+}
 </script>
 </body>
 </html>

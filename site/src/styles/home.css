@@ -305,30 +305,25 @@
 .hg { position: relative; padding: 128px var(--margin) 150px; background: var(--ink); color: #fff; }
 .hg__head { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: end; gap: 24px var(--margin); margin-bottom: 48px; }
 .hg__head p { margin: 0 0 .6vw; color: #fff; }
-.hg__body { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 0 calc(var(--margin) * 2); align-items: stretch; }
-.hg__list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; justify-content: space-between; }
-.hg__row { display: block; padding: 10px 0; text-decoration: none; color: #fff; }
-.hg__name {
-  display: block; position: relative; text-transform: uppercase; font-style: italic; font-weight: 800; font-variation-settings: "wdth" 62;
-  line-height: .95; letter-spacing: -0.02em; font-size: clamp(2.5rem, 4vw, 4.5rem);
-  color: rgba(255, 255, 255, .42); transition: color .25s, transform .35s var(--ease-out);
+.gcs { display: flex; gap: 10px; height: min(62vh, 600px); min-height: 460px; }
+.gc { position: relative; flex: 1 1 0; min-width: 0; overflow: hidden; isolation: isolate; color: #fff; text-decoration: none; transition: flex-grow .7s cubic-bezier(.22, 1, .36, 1); }
+.gc.is-on { flex-grow: 3; }
+.gc img { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; filter: grayscale(.55) brightness(.7); transition: filter .6s, transform 1.2s cubic-bezier(.22, 1, .36, 1); }
+.gc.is-on img { filter: none; }
+.gc::after { content: ""; position: absolute; inset: 45% 0 0; z-index: -1; background: linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, .85)); } /* neutral scrim under text on a photo */
+.gc__t { position: absolute; left: 24px; right: 24px; bottom: 24px; }
+.gc__t b {
+  display: block; text-transform: uppercase; font-style: italic; font-weight: 800; font-variation-settings: "wdth" 62;
+  line-height: .92; letter-spacing: -0.02em; font-size: clamp(1.375rem, 1.8vw, 2rem); transition: font-size .5s cubic-bezier(.22, 1, .36, 1);
 }
-.hg__zones {
-  display: block; max-height: 0; overflow: hidden; margin-top: 0; opacity: 0;
-  font-size: 1.0625rem; line-height: 1.35; font-weight: 600; color: var(--on-dark-muted);
-  transition: max-height .4s var(--ease-out), margin-top .4s var(--ease-out), opacity .3s;
-}
-/* the chosen row: full white with the brand's red slash before it, its zones open underneath */
-.hg__row.is-on .hg__name { color: #fff; transform: translateX(28px); }
-.hg__row.is-on .hg__name::before {
-  content: ""; position: absolute; width: 18px; height: .62em; margin: .17em 0 0 -32px;
-  background: var(--accent); clip-path: polygon(40% 0, 100% 0, 60% 100%, 0 100%);
-}
-.hg__row.is-on .hg__zones { max-height: 3em; margin-top: 8px; opacity: 1; transform: translateX(28px); }
-.hg__row:hover .hg__name, .hg__row:focus-visible .hg__name { color: #fff; }
-.hg__peek { position: relative; min-height: min(38vw, 620px); margin: 0; clip-path: polygon(14% 0, 100% 0, 86% 100%, 0 100%); background: #111; }
-.hg__peek img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.04); transition: opacity .45s, transform 1.2s var(--ease-out); }
-.hg__peek img.is-on { opacity: 1; transform: none; }
+.gc.is-on .gc__t b { font-size: clamp(1.75rem, 2.8vw, 3.25rem); }
+/* the chosen card gets the logo's red slash before its name and its zones underneath */
+.gc.is-on .gc__t b::before { content: ""; display: inline-block; width: .5em; height: .62em; margin-right: .22em; background: var(--accent); clip-path: polygon(40% 0, 100% 0, 60% 100%, 0 100%); }
+.gc__t span { display: block; max-height: 0; opacity: 0; overflow: hidden; margin-top: 0; font-size: 1.0625rem; font-weight: 600; color: #fff; transition: max-height .5s, opacity .4s .1s, margin-top .5s; white-space: nowrap; }
+.gc.is-on .gc__t span { max-height: 2em; opacity: 1; margin-top: 10px; }
+.gc__fig { position: absolute; top: 22px; right: 22px; width: 54px; opacity: 0; transform: translateY(-8px); transition: opacity .4s, transform .5s cubic-bezier(.22, 1, .36, 1); }
+.gc.is-on .gc__fig { opacity: 1; transform: none; }
+.gc:focus-visible { outline: 3px solid #fff; outline-offset: -6px; }
 
 /* 1b · the studio: a tone step darker than the sections around it, one large photograph cut on the slant, two beside it */
 .hm { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 48px calc(var(--margin) * 2); align-items: end; padding: 150px var(--margin); background: var(--surface); }
@@ -464,10 +459,8 @@
   .hb__img { object-position: 38% 40%; }
   .hb::before { background: linear-gradient(0deg, rgba(0, 0, 0, .85) 0%, rgba(0, 0, 0, .55) 55%, rgba(0, 0, 0, .25) 100%); } /* neutral scrim under text on a photo */
   .hg__head { grid-template-columns: 1fr; margin-bottom: 36px; }
-  .hg__list { max-width: none; }
-  .hg__peek { display: none; }
-  /* on a phone the word list gives way to the slanted strips */
-  .hg__body { display: none; }
+  /* on a phone the opening cards give way to the swipeable rail */
+  .gcs { display: none; }
   .hg-m { display: block; }
   .serit { --slant: 8vw; --seam: 6px; --buyu: 2; height: min(58svh, 500px); min-height: 360px; }
   .serit__p.is-on .serit__kisa { opacity: 0; }
@@ -487,6 +480,6 @@
   .hv__actions .btn { width: 100%; justify-content: center; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .hg__peek, .hg__peek img, .hg__name, .serit__p, .serit__p img, .rail__c { transition: none; }
+  .gc, .gc img, .gc__t span, .gc__fig, .serit__p, .serit__p img, .rail__c { transition: none; }
   .serit__detay > .is-on { animation: none; }
 }

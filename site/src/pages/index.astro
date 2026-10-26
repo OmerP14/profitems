@@ -154,23 +154,16 @@ const serit = [...hizmetler.map(kisaAd), `Her gün ${acilis}–${kapanis}`, `${i
       <h2 class="hs-h2" id="hg-baslik" data-rise>Beş hedef, tek kıyafet</h2>
       <p data-rise>Her hedefte kıyafetteki farklı pedler çalışır. Hangisi sana uygun, hizmetlerde ayrıntısıyla anlattık.</p>
     </div>
-    <div class="hg__body">
-    <ul class="hg__list">
+    <!-- tall photographs side by side; the one pointed at opens wide, the others make room -->
+    <div class="gcs">
       {hizmetler.map((h, i) => (
-        <li data-rise>
-          <a class:list={['hg__row', { 'is-on': i === 0 }]} href={`/hizmetler#${h.id}`} data-i={i}>
-            <span class="hg__name">{kisaAd(h)}</span>
-            <span class="hg__zones">{h.bolgeler}</span>
-          </a>
-        </li>
+        <a class:list={['gc', { 'is-on': i === 0 }]} href={`/hizmetler#${h.id}`} data-rise>
+          <img src={h.gorsel} srcset={h.srcset} sizes="44vw" alt="" width={h.boyut[0]} height={h.boyut[1]} loading="lazy" decoding="async" style={`object-position:${h.odak}`}>
+          <span class="gc__fig" aria-hidden="true"><BolgeFigur zones={h.bolge} /></span>
+          <span class="gc__t"><b>{h.ad}</b><span>{h.bolgeler}</span></span>
+        </a>
       ))}
-    </ul>
-    <figure class="hg__peek" aria-hidden="true" data-rise>
-      {hizmetler.map((h, i) => <img class:list={[{ 'is-on': i === 0 }]} src={h.gorsel} srcset={h.srcset} sizes="56vw" alt="" width={h.boyut[0]} height={h.boyut[1]} loading="lazy" decoding="async" style={`object-position:${h.odak}`}>)}
-    </figure>
     </div>
-    <!-- on a phone the goals are tall slanted cards on a rail: swipe sideways, each settles in the centre;
-         the small figure shows which pads that goal works -->
     <div class="hg-m">
       <ul class="rail">
         {hizmetler.map((h, i) => (
@@ -354,19 +347,13 @@ document.querySelectorAll('[data-serit]').forEach(grup => {
   cards.forEach(c => io.observe(c));
 })();
 
-// goals list: the large photograph beside the list shows the row being pointed at (and stays on it)
+// goals: the card pointed at (or tabbed to) opens wide and stays open until another one is chosen
 (() => {
-  const peek = document.querySelector('.hg__peek');
-  if (!peek) return;
-  const imgs = [...peek.querySelectorAll('img')];
-  const rows = [...document.querySelectorAll('.hg__row')];
-  rows.forEach((row, i) => {
-    const show = () => {
-      imgs.forEach((im, j) => im.classList.toggle('is-on', j === i));
-      rows.forEach(r => r.classList.toggle('is-on', r === row));
-    };
-    row.addEventListener('pointerenter', show);
-    row.addEventListener('focus', show);
+  const cards = [...document.querySelectorAll('.gc')];
+  cards.forEach(c => {
+    const open = () => cards.forEach(x => x.classList.toggle('is-on', x === c));
+    c.addEventListener('pointerenter', open);
+    c.addEventListener('focus', open);
   });
 })();
 

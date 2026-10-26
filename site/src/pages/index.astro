@@ -4,7 +4,7 @@ import Nav from '../components/Nav.astro';
 import WhatsAppIcon from '../components/WhatsAppIcon.astro';
 import BolgeFigur from '../components/BolgeFigur.astro';
 import { isletme, whatsappLinki, tamAdres, yolTarifiLinki } from '../data/isletme';
-import { hizmetler } from '../data/hizmetler';
+import { hizmetler, calismaBolgeleri as bolgeler } from '../data/hizmetler';
 import { ekip, ekipYayinda } from '../data/ekip';
 import { galeri, mekanYayinda } from '../data/mekan';
 import { yazilar, tarihYaz } from '../data/blog';
@@ -61,27 +61,34 @@ const serit = [...hizmetler.map(kisaAd), `Her gün ${acilis}–${kapanis}`, `${i
   <div class="story__pin">
     <div class="story__text">
       <h2 class="story__title" id="story-title">EMS nasıl çalışır?</h2>
-      <div class="story__bar" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+      <div class="story__bar" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span></div>
       <ol class="story__steps">
         <li class="story__step is-active">
           <p class="story__big">Önce kıyafet.</p>
-          <p>Elektrotları taşıyan özel EMS kıyafetini giyersin.</p>
+          <p>Kas uyarımı sağlayan elektrotlara sahip özel EMS kıyafeti size giydirilir.</p>
         </li>
         <li class="story__step">
           <p class="story__big">Elektrotlar yerine oturur.</p>
-          <p>Göğüs, karın, kol, bel ve bacaklardaki pedler büyük kas gruplarının üstüne gelir.</p>
+          <p>Elektrotlar 10 ayrı bölgede 20 kasın üzerine yerleştirilir.</p>
+          <ul class="story__zones" aria-label="Çalışma yaptığımız bölgeler">
+            {bolgeler.map(b => <li>{b}</li>)}
+          </ul>
         </li>
         <li class="story__step">
           <p class="story__big">Uyarı kaslara ulaşır.</p>
-          <p>Cihaz, öndeki ve arkadaki pedler üzerinden kaslara hafif elektrik uyarıları gönderir; sırt, bel ve kalça da birlikte çalışır.</p>
+          <p>Cihaz, elektrotlar üzerinden kaslara titreşim vererek kasların kasılıp gevşemesini sağlar.</p>
+        </li>
+        <li class="story__step">
+          <p class="story__big">Sırt ve bel de çalışır.</p>
+          <p>Vücudun arka kısmına yerleştirilen elektrotlar sayesinde sırt, bel, kalça, bacağın arka kısmı ve kolların arka kısmına da aktif olarak kas uyarımı sağlanır.</p>
         </li>
         <li class="story__step">
           <p class="story__big">Sen hareket ettikçe.</p>
-          <p>Squat gibi basit hareketler sırasında kaslar uyarıyla birlikte çalışır.</p>
+          <p>Kas uyarımı sağlandıkça full body tarzında tüm kas grupları için hareketler yapılır. Örneğin squat, lunge, lateral raise, leg raise ve plank.</p>
         </li>
         <li class="story__step">
           <p class="story__big">Sıra sende.</p>
-          <p>Hedefini seç, figürde çalışan bölgeleri gör ve bize yaz.</p>
+          <p>Hedefini seç, bölgeleri belirle, en kısa zamanda bizimle iletişime geç.</p>
           <fieldset class="goals">
             <legend class="sr-only">Hedefin hangisi?</legend>
             <div class="goals__list">
@@ -94,7 +101,7 @@ const serit = [...hizmetler.map(kisaAd), `Her gün ${acilis}–${kapanis}`, `${i
       </ol>
       <div class="story__nav" hidden>
         <button type="button" class="story__arrow" data-dir="-1" aria-label="Önceki adım"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg></button>
-        <p class="story__count" aria-live="polite"><b>1</b> / 5</p>
+        <p class="story__count" aria-live="polite"><b>1</b> / 6</p>
         <button type="button" class="story__arrow" data-dir="1" aria-label="Sonraki adım"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg></button>
         <span class="story__hint" aria-hidden="true">Sağa sola kaydır</span>
       </div>
@@ -531,8 +538,8 @@ function placePad({ def, g }, J, dy, k) {
 
 const steps = [...section.querySelectorAll('.story__step')];
 // where the figure should be while each step is on screen
-// each step ends on a finished pose: dressed, pads on, current on and the back shown, two squats done, flex
-const anchors = [.14, .3, .66, .93, 1];
+// each step ends on a finished pose: dressed, pads on, current, back shown, two squats done, flex
+const anchors = [.14, .3, .42, .66, .93, 1];
 let current = -1;
 function render(p) {
   const { J, a, dy } = pose(p);
@@ -610,7 +617,6 @@ if (reduceStory) {
   // the two squats (progress .78–.93) keep their own tempo, about 1.4 s each, but only on the squat step itself;
   // passing through it the figure skips them (it stands at both ends), so it never trails behind the cards
   const SQUAT = [.78, .93], SQUAT_MS = 2900, STAND = [.78, .855, .93];
-  const LIVE = .42;   // current on, still facing front
   const move = d => Math.min(1500, 650 + Math.abs(d) * 1800);
   const squatMs = d => Math.abs(d) / (SQUAT[1] - SQUAT[0]) * SQUAT_MS;
   let tween = 0;
@@ -634,8 +640,6 @@ if (reduceStory) {
         if (up ? from < enter : from > enter) add(enter, move(enter - from));
         from = leave;
       }
-      // the current and the turn share one card: the front pads pulse a moment before the figure turns
-      if (up && target === anchors[2] && from < LIVE) { add(LIVE, move(LIVE - from)); legs.push({ from, d: 0, dur: 700 }); }
       add(target, move(target - from));
     }
     if (!legs.length) return;

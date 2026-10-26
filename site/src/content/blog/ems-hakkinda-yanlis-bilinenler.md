@@ -2,6 +2,7 @@
 baslik: "EMS hakkında yanlış bilinenler"
 aciklama: "EMS acıtır mı, tek başına zayıflatır mı, sadece sporculara mı göre? EMS hakkında sık duyulan yanlışlar ve doğruları. Konya Profit EMS."
 tarih: 2026-10-19
+guncelleme: 2026-10-26
 kapak: /img/blog/ems-yelek.jpg
 kapakAlt: "Gövdesinde EMS yeleği, elinde halterle duran bir kadın"
 ---
@@ -22,12 +23,12 @@ Tam tersi. Seanstaki hareketler squat, lunge gibi basit hareketlerdir ve uyarın
 
 ## "Yatıp beklersin, cihaz çalıştırır"
 
-EMS'te hareketsiz durulmaz. Uyarı, sen hareket ederken kaslarının daha yoğun çalışmasını sağlar. Hareketleri eğitmenle birlikte yaparsın.
+EMS'te hareketsiz kalarak kas uyarımı yapılmaz. Kas uyarımı yapıldıktan sonra egzersizler yaparak ve kardiyo aletleri kullanılarak kalori yakımı ve sıkılaşma artırılır.
 
 ## "Ne kadar sık gidersen o kadar iyi"
 
-Kaslar antrenmandan sonra dinlenirken güçlenir. Her gün yapılan yoğun antrenman, kaslara toparlanma fırsatı bırakmaz. Ne sıklıkla gelmen gerektiği hedefine göre belirlenir; bunu randevu alırken birlikte planlarız.
+Kaslar, antrenman sonrasında yeterli protein alımı ile birlikte kendini yenileyerek gelişir. Her gün yapılan yoğun antrenmanlar sonrasında ise kas yıkımı meydana gelir. Hangi sıklıkla antrenmanlara geleceğiniz, aldığımız yağ, kas ve kemik ölçümü sonucuna göre belirlenir.
 
 ## "Herkes yapabilir"
 
-Hayır. Kalp pili, hamilelik ve epilepsi gibi bazı durumlarda EMS'e doktor onayı olmadan başlanmaz. Listenin tamamı [EMS herkese uygun mu?](/ems-nedir#kimler) sorusunda.
+EMS'yi kalp pili olan kişiler hariç, spor geçmişi olmayanlar da dahil herkes yapabilir.

@@ -40,7 +40,7 @@
 .hero__title i { font-style: inherit; color: var(--accent); }
 .hero__title .line--hot { color: var(--accent); }
 .hero__main { display: block; }
-.hero__title { font-size: min(12.5vw, 16.5svh); margin: 0; }
+.hero__title { font-size: min(9.5vw, 13svh); margin: 0; }
 
 /* the current under the slogan: only the bright charge, running along the pulse train like a monitor trace */
 .pulse { display: block; width: 100%; height: 64px; margin-top: clamp(16px, 3vh, 32px); overflow: visible; }
@@ -144,6 +144,9 @@
 .story__big { margin: 0 0 10px; font-size: clamp(1.625rem, 2.4vw, 2.25rem); font-weight: 700; line-height: 1.12; letter-spacing: -0.01em; }
 .story__step p:not(.story__big) { margin: 0; max-width: 36ch; }
 .story__step .btn { margin-top: 24px; align-self: flex-start; }
+/* the ten electrode zones: short slanted tags, so the list stays two or three lines instead of a long sentence */
+.story__zones { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; margin: 16px 0 0; padding: 0; max-width: 44ch; }
+.story__zones li { padding: 5px 14px; background: #e3e7ea; font-size: .875rem; font-weight: 600; line-height: 1.3; clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%); }
 .story__figure {
   margin: 0; position: sticky; top: 0; align-self: start;
   height: 100svh; display: grid; place-items: center;
@@ -274,7 +277,7 @@
 @media (max-width: 860px) {
   .stage { --band: 44px; --band-after: 20px; }
   .hero { min-height: calc(100svh - 72px - var(--band) - var(--band-after)); padding-bottom: 44px; }
-  .hero__title { font-size: min(24vw, 15svh); }
+  .hero__title { font-size: min(16vw, 10.5svh); }
   .pulse { height: 40px; }
   .hero__cert { margin-top: 2vh; }
   .hero__cert .cert { grid-template-columns: 56px 1fr; }

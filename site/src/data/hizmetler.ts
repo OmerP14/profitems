@@ -64,3 +64,9 @@ export const hizmetler = [
     alt: 'EMS kıyafetiyle kablo makinesinde sırt çalışan bir kadın',
   },
 ];
+
+// EMS kıyafetindeki elektrotların çalıştırdığı 10 bölge (ana sayfada "Elektrotlar yerine oturur" adımında görünür)
+export const calismaBolgeleri = [
+  'Karın', 'Bel', 'Göğüs', 'Kolların ön kısmı', 'Kolların arka kısmı',
+  'Bacak ön kısmı', 'Bacak arka kısmı', 'Kalça', 'Sırtın orta kısmı', 'Sırtın üst kısmı',
+];

@@ -4,7 +4,8 @@ import cspSatirIci from './csp-satir-ici.mjs';
 
 // Sitenin adresi: canonical linkler, sitemap.xml ve paylaşım görselleri bundan üretilir.
 // Geçici olarak başka bir adres denemek için .env dosyasına SITE_URL=https://... yazılabilir.
-const site = process.env.SITE_URL || 'https://profitems.com';
+// www is the main address on Vercel; profitems.com redirects to it (308)
+const site = process.env.SITE_URL || 'https://www.profitems.com';
 
 export default defineConfig({
   site,

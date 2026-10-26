@@ -40,6 +40,12 @@ Bu plan üzerinde mutabık kalındı (16 Ekim 2026). Sayfalar bu sırayla, **bir
 - Stüdyo: kapı/giriş + en az 3 salon fotoğrafı → `site/src/data/mekan.ts`, `mekanYayinda = true`.
 - Stok görsellerin (giriş videosu, hizmetler, blog, satış bandı) yerine gerçekleri konur.
 
+## Yayın
+
+- ✅ 26 Ekim 2026: Vercel'de yayında (https://profitems.vercel.app), `yedek-yayin-v2`.
+- ⏳ profitems.com Vercel projesine eklendi; Squarespace DNS'inde A kaydı Vercel'e çevrilince açılır. `www.profitems.com` da eklenip profitems.com'a yönlendirilecek.
+- GitHub bağlantısı (her push'ta otomatik yayın) Vercel panelinden kurulacak: Root Directory = `site`.
+
 ## Yayından önce
 
 - ✅ Domain alındı: profitems.com (ayarlara yazıldı; sitemap + canonical açık). Yayında domain Vercel/Netlify'a bağlanır, `www` adresi `profitems.com`'a yönlendirilir.

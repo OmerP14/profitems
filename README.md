@@ -73,8 +73,8 @@ The site is static (Astro), fast on mobile, and set up so the business can keep 
 ## Running locally
 
 ```bash
-git clone https://github.com/OmerP14/porfitems.git
-cd porfitems/site
+git clone https://github.com/OmerP14/profitems.git
+cd profitems/site
 npm install
 npm run dev       # http://localhost:4321
 npm run build     # static output in site/dist

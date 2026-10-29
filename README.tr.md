@@ -73,8 +73,8 @@ Site statik (Astro), mobilde hızlı ve işletmenin kodla uğraşmadan SEO çal�
 ## Bilgisayarda çalıştırma
 
 ```bash
-git clone https://github.com/OmerP14/porfitems.git
-cd porfitems/site
+git clone https://github.com/OmerP14/profitems.git
+cd profitems/site
 npm install
 npm run dev       # http://localhost:4321
 npm run build     # statik çıktı: site/dist

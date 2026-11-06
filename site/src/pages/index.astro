@@ -71,10 +71,7 @@ const serit = [...seritSirasi.map(id => kisaAd(hizmetler.find(h => h.id === id)!
         </li>
         <li class="story__step">
           <p class="story__big">Elektrotlar bölgelerine yerleştirilir.</p>
-          <p>Elektrotlar 10 ayrı bölgede, 20 ayrı kasın üzerine yerleştirilir.</p>
-          <ul class="story__zones" aria-label="Çalışma yaptığımız bölgeler">
-            {bolgeler.map(b => <li>{b}</li>)}
-          </ul>
+          <p>Elektrotlar 10 ayrı bölgede<button type="button" class="info" popovertarget="bolge-listesi" aria-label="10 bölgenin listesini aç"><span aria-hidden="true">i</span></button>, 20 ayrı kasın üzerine yerleştirilir.</p>
         </li>
         <li class="story__step">
           <p class="story__big">Uyarı kaslara ulaşır.</p>
@@ -152,6 +149,19 @@ const serit = [...seritSirasi.map(id => kisaAd(hizmetler.find(h => h.id === id)!
     </figure>
     <!-- decided before the first paint: where 3D will be drawn, the 2D figure never shows (it is only the fallback) -->
     <script is:inline>if ('WebGL2RenderingContext' in window) document.currentScript.previousElementSibling.classList.add('is-3d-wait');</script>
+  </div>
+  <!-- the ten zones, opened from the "i" on the electrode card; a native popover: no script, Esc or a tap outside closes it -->
+  <div class="bolge-pop" id="bolge-listesi" popover aria-labelledby="bolge-pop-title">
+    <div class="bolge-pop__head">
+      <p class="bolge-pop__title" id="bolge-pop-title">10 çalışma bölgesi</p>
+      <button type="button" class="bolge-pop__close" popovertarget="bolge-listesi" popovertargetaction="hide" aria-label="Kapat">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+      </button>
+    </div>
+    <ol class="bolge-pop__list">
+      {bolgeler.map((b, i) => <li><span>{String(i + 1).padStart(2, '0')}</span>{b}</li>)}
+    </ol>
+    <p class="bolge-pop__note">Elektrotlar bu bölgelerdeki 20 kasın üzerine yerleştirilir.</p>
   </div>
 </section>
 
@@ -694,7 +704,7 @@ if (reduceStory) {
   });
   // swipe on phones, drag with the mouse; vertical page scrolling stays untouched (touch-action: pan-y)
   let sx = null, sy = 0;
-  pin.addEventListener('pointerdown', e => { if (e.button === 0 && !e.target.closest('a, button')) { sx = e.clientX; sy = e.clientY; } });
+  pin.addEventListener('pointerdown', e => { if (e.button === 0 && !e.target.closest('a, button, [popover]')) { sx = e.clientX; sy = e.clientY; } });
   pin.addEventListener('pointerup', e => {
     if (sx === null) return;
     const dx = e.clientX - sx, dy = e.clientY - sy;

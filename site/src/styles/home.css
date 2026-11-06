@@ -144,9 +144,64 @@
 .story__big { margin: 0 0 10px; font-size: clamp(1.625rem, 2.4vw, 2.25rem); font-weight: 700; line-height: 1.12; letter-spacing: -0.01em; }
 .story__step p:not(.story__big) { margin: 0; max-width: 36ch; }
 .story__step .btn { margin-top: 24px; align-self: flex-start; }
-/* the ten electrode zones: short slanted tags, so the list stays two or three lines instead of a long sentence */
-.story__zones { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; margin: 16px 0 0; padding: 0; max-width: 44ch; }
-.story__zones li { padding: 5px 14px; background: #e3e7ea; font-size: .875rem; font-weight: 600; line-height: 1.3; clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%); }
+/* the ten electrode zones: an "i" in the sentence opens them in a popover, so the card stays short */
+.info {
+  position: relative; display: inline-grid; place-items: center; vertical-align: .12em;
+  width: 1.25em; height: 1.25em; margin: 0 .1em 0 .35em; padding: 0; border: 0; border-radius: 50%;
+  background: var(--accent); color: #fff; cursor: pointer;
+  font: italic 800 .8em/1 Georgia, 'Times New Roman', serif;
+  box-shadow: 0 0 0 0 rgba(232, 23, 63, .45);
+  transition: background-color .2s, transform .15s;
+}
+.info::after { content: ""; position: absolute; inset: -10px; }   /* a finger-sized target around the small dot */
+.info:hover { background: var(--ink); }
+.info:active { transform: scale(.9); }
+.info:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.story__step.is-active .info { animation: info-ping 1.8s var(--ease-out) .9s 2; }
+@keyframes info-ping { 70%, 100% { box-shadow: 0 0 0 9px rgba(232, 23, 63, 0); } }
+
+.bolge-pop {
+  width: min(420px, calc(100vw - 32px)); max-height: calc(100svh - 48px); overflow: auto;
+  margin: auto; padding: 26px 28px 26px; border: 0;
+  background: #fff; color: var(--ink);
+  clip-path: polygon(0 0, 100% 0, calc(100% - 22px) 100%, 0 100%);
+  opacity: 1; transform: none;
+  transition: opacity .3s, transform .45s cubic-bezier(.22, 1, .36, 1), overlay .45s allow-discrete, display .45s allow-discrete;
+}
+.bolge-pop:not(:popover-open) { opacity: 0; transform: translateY(18px) scale(.97); }
+@starting-style { .bolge-pop:popover-open { opacity: 0; transform: translateY(18px) scale(.97); } }
+.bolge-pop::backdrop { background: rgba(10, 11, 13, .5); backdrop-filter: blur(3px); transition: background-color .3s, overlay .45s allow-discrete, display .45s allow-discrete; }
+@starting-style { .bolge-pop:popover-open::backdrop { background: rgba(10, 11, 13, 0); } }
+.bolge-pop::before {
+  content: ""; display: block; width: 34px; height: 10px; margin-bottom: 14px; background: var(--accent);
+  clip-path: polygon(30% 0, 100% 0, 70% 100%, 0 100%);
+}
+.bolge-pop__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
+.bolge-pop__title {
+  margin: 0; text-transform: uppercase; font-style: italic; font-weight: 800;
+  font-variation-settings: "wdth" 62; font-size: 2rem; line-height: .95; letter-spacing: -0.01em;
+}
+.bolge-pop__close {
+  flex: none; width: 44px; height: 38px; display: grid; place-items: center; border: 0; cursor: pointer; margin-top: -4px;
+  background: var(--ink); color: #fff; clip-path: polygon(9px 0, 100% 0, calc(100% - 9px) 100%, 0 100%);
+  transition: background-color .2s;
+}
+.bolge-pop__close:hover { background: var(--accent); }
+.bolge-pop__close svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.6; }
+.bolge-pop__list { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.bolge-pop__list li {
+  display: flex; align-items: center; gap: 10px; min-height: 42px; padding: 6px 12px 6px 10px;
+  background: var(--bg); font-size: .9375rem; font-weight: 600; line-height: 1.2;
+  clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
+}
+.bolge-pop__list span { flex: none; color: var(--accent); font-weight: 800; font-style: italic; font-variant-numeric: tabular-nums; }
+.bolge-pop__note { margin: 16px 0 0; font-size: var(--step-small); color: var(--muted); }
+@media (prefers-reduced-motion: reduce) {
+  .bolge-pop, .bolge-pop::backdrop { transition: none; }
+  .story__step.is-active .info { animation: none; }
+}
+/* a browser without popovers would show the box in the page: leave the sentence on its own there */
+@supports not selector(:popover-open) { .info, .bolge-pop { display: none; } }
 .story__figure {
   margin: 0; position: sticky; top: 0; align-self: start;
   height: 100svh; display: grid; place-items: center;
@@ -253,9 +308,7 @@
   .story--stack .story__figure svg { max-height: 100%; }
   .story--stack .story__text { padding: 8px 0 0; align-self: end; }
   /* the card area keeps the height of the tallest card, so the figure never changes size between steps;
-     the two tallest cards (zone tags, goals) are packed tighter so that area stays small and the figure big */
-  .story--live.story--stack .story__zones { gap: 5px; margin-top: 12px; }
-  .story--live.story--stack .story__zones li { padding: 4px 10px; font-size: .8125rem; }
+     the tallest card (goals) is packed tighter so that area stays small and the figure big */
   /* the last card is the tallest: goals three to a row, a smaller note, so the figure above keeps room */
   .story--live.story--stack .goals { margin-top: 12px; }
   .story--live.story--stack .goals__list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }

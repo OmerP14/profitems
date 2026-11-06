@@ -319,6 +319,7 @@ export async function createEms3D(container, { modelUrl, seatsUrl }) {
     renderer.setSize(r.width, r.height, false);
     camera.aspect = r.width / Math.max(r.height, 1);
     camera.updateProjectionMatrix();
+    renderer.render(scene, camera);   // resizing clears the canvas; draw again at once so it never flashes empty
   }
   new ResizeObserver(size).observe(container);
   size();
@@ -412,7 +413,7 @@ export async function createEms3D(container, { modelUrl, seatsUrl }) {
     const live = p > .31;
     impulse = Math.max(0, impulse - dt * 2.5);
     const frontT = seg(p, .16, .3) * 12;
-    const backT = seg(p, .56, .66) * 10;
+    const backT = seg(p, .56, .66) * 14;   // one per back pad (14), so the last ones are on by the end of the turn
     for (const d of pads) {
       const k = d.back ? ease(clamp(backT - (d.i - 12))) : ease(clamp(frontT - d.i));
       d.pad.visible = k > .001;

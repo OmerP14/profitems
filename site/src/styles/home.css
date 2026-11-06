@@ -213,7 +213,7 @@
 .story__bar span::after { content: ""; position: absolute; inset: 0; background: var(--accent); transform: translateX(-101%); transition: transform .5s cubic-bezier(.22, 1, .36, 1); }
 .story__bar span.is-on::after { transform: none; }
 @media (prefers-reduced-motion: reduce) {
-  .story--live.story--stack .story__step, .story--live.story--stack .story__step .story__big, .story__bar span::after { transition: none; }
+  .story--live.story--stack .story__step, .story--live.story--stack .story__step .story__big, .story__bar span::after, .story--live.story--stack .story__steps { transition: none; }
 }
 
 #rig .fig-band { fill: var(--accent); }
@@ -252,6 +252,10 @@
   .story--stack .story__figure { height: 100%; min-height: 0; overflow: hidden; padding-top: 8px; }
   .story--stack .story__figure svg { max-height: 100%; }
   .story--stack .story__text { padding: 8px 0 0; align-self: end; }
+  /* its height is set to the card on screen (script); taller cards waiting off to the side may hang below, unseen */
+  .story--live.story--stack .story__steps { transition: height .55s cubic-bezier(.22, 1, .36, 1); }
+  /* the card now reaches the bottom of the screen: its last lines leave room on the right for the chat button */
+  .story--live.story--stack .story__step > p:last-child { padding-right: 56px; }
   /* the last card is the tallest: goals two by two, a smaller note, so the figure above keeps room */
   .story--live.story--stack .goals { margin-top: 12px; }
   .story--live.story--stack .goals__list { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }

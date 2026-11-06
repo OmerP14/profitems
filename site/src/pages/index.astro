@@ -87,14 +87,17 @@ const serit = [...seritSirasi.map(id => kisaAd(hizmetler.find(h => h.id === id)!
         </li>
         <li class="story__step">
           <p class="story__big">Sıra sende.</p>
-          <p>Hedefini seç, bölgeleri belirle, en kısa zamanda bizimle iletişime geç.</p>
+          <!-- the chosen goal's note takes the place of this sentence, so the card needs no extra room for it -->
+          <div class="goals__lead">
+            <p class="goals__intro">Hedefini seç, bölgeleri belirle, en kısa zamanda bizimle iletişime geç.</p>
+            <p class="goals__note"><span id="goal-note" aria-live="polite"></span></p>
+          </div>
           <fieldset class="goals">
             <legend class="sr-only">Hedefin hangisi?</legend>
             <div class="goals__list">
               {hizmetler.map(h => <button type="button" class="goal" data-goal={h.bolge[0]} data-label={kisaAd(h)} aria-pressed="false">{kisaAd(h)}</button>)}
             </div>
           </fieldset>
-          <p class="goals__note"><span id="goal-note" aria-live="polite"></span></p>
           <a class="btn" id="story-wa" href={whatsappLinki('Merhaba, EMS hakkında bilgi almak istiyorum.')} target="_blank" rel="noopener">WhatsApp'tan yaz</a>
         </li>
       </ol>
@@ -405,7 +408,9 @@ const notes = {
   agri: 'Bel ve boyun ağrıları: omuz ve bel bölgesi desteklenir.'
 };
 // every note also sits invisibly in the same spot, so the card always keeps the height of the longest one
-// and the figure above it (on a phone it fills whatever height is left) never changes size between goals
+// and the figure above it (on a phone it fills whatever height is left) never changes size between goals;
+// the notes share that spot with the opening sentence, which steps aside while a goal is chosen
+const lead = note.closest('.goals__lead');
 note.before(...Object.values(notes).map(t => Object.assign(document.createElement('span'), { className: 'goals__ghost', textContent: t, ariaHidden: 'true' })));
 document.querySelectorAll('.goal').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -416,6 +421,7 @@ document.querySelectorAll('.goal').forEach(btn => {
     if (was) {
       rigEl.classList.remove('figure--focus');
       note.textContent = '';
+      lead.classList.remove('has-note');
       storyWa.href = waBase + encodeURIComponent('Merhaba, EMS hakkında bilgi almak istiyorum.');
       document.dispatchEvent(new CustomEvent('goal:change', { detail: null }));
       return;
@@ -424,6 +430,7 @@ document.querySelectorAll('.goal').forEach(btn => {
     rigEl.classList.add('figure--focus');
     pads.forEach(p => p.classList.toggle('is-on', (p.dataset.zones || '').split(' ').includes(goal)));
     note.textContent = notes[goal];
+    lead.classList.add('has-note');
     storyWa.href = waBase + encodeURIComponent(`Merhaba, ${btn.dataset.label.toLocaleLowerCase('tr')} hedefim için bilgi almak istiyorum.`);
     document.dispatchEvent(new CustomEvent('goal:change', { detail: goal }));
   });

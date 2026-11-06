@@ -84,8 +84,14 @@
 .goal:active { transform: scale(.96); }
 .goal[aria-pressed="true"] { background: var(--ink); color: #fff; }
 .goals { margin-top: 20px; }
-.goals__note { display: grid; margin: 12px 0 0; min-height: 3em; font-size: var(--step-small); color: var(--muted); }
-.goals__note > * { grid-area: 1 / 1; }
+/* the opening sentence and the chosen goal's note share one spot, as tall as the longest of them */
+.goals__lead { display: grid; }
+.goals__lead > *, .goals__note > * { grid-area: 1 / 1; }
+.goals__intro, .goals__note { transition: opacity .3s, transform .3s var(--ease-out); }
+.goals__note { display: grid; margin: 0; color: var(--ink); font-weight: 600; opacity: 0; transform: translateY(6px); }
+.goals__lead.has-note .goals__intro { opacity: 0; transform: translateY(-6px); }
+.goals__lead.has-note .goals__note { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { .goals__intro, .goals__note { transition: none; } }
 .goals__ghost { visibility: hidden; }
 
 .cert { display: grid; grid-template-columns: 76px 1fr; gap: 14px; align-items: center; margin: 0 0 20px; }
@@ -316,7 +322,6 @@
   /* five goals: the last one (the longest name) takes the rest of the second row */
   .story--live.story--stack .goal:last-child:nth-child(3n + 2) { grid-column: span 2; }
   .story--live.story--stack .goal:last-child:nth-child(3n + 1) { grid-column: 1 / -1; }
-  .story--live.story--stack .goals__note { min-height: 0; margin-top: 8px; font-size: .875rem; line-height: 1.35; }
   .story--live.story--stack .story__step .btn { margin-top: 12px; }
   .story--stack .story__title { font-size: 1.75rem; margin-bottom: 12px; }
   .story--stack .story__step { padding-top: 0; }

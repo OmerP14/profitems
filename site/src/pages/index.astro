@@ -667,7 +667,6 @@ if (reduceStory) {
     steps.forEach((el, j) => { el.classList.toggle('is-active', j === idx); el.classList.toggle('is-past', j < idx); });
     bar.forEach((b, j) => b.classList.toggle('is-on', j <= idx));
     count.textContent = idx + 1;
-    fitSteps();
     prev.disabled = idx === 0;
     next.disabled = idx === steps.length - 1;
     // each card plays only its own move: the figure jumps to where the card before it ends,
@@ -681,14 +680,6 @@ if (reduceStory) {
     }
     playTo(anchors[idx]);
   };
-  // phones: the card area is only as tall as the card on screen (not the tallest one), so the figure above
-  // gets every pixel the short cards leave free; the height glides between cards (home.css)
-  const stepsEl = section.querySelector('.story__steps');
-  const phone = matchMedia('(max-width: 860px)');
-  const fitSteps = () => { stepsEl.style.height = phone.matches ? steps[Math.max(current, 0)].offsetHeight + 'px' : ''; };
-  new ResizeObserver(fitSteps).observe(stepsEl);
-  steps.forEach(el => new ResizeObserver(fitSteps).observe(el));
-  phone.addEventListener('change', fitSteps);
   section.classList.add('story--stack');
   nav.hidden = false;
   prev.disabled = true;

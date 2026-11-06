@@ -314,9 +314,16 @@ export async function createEms3D(container, { modelUrl, seatsUrl }) {
 
   let progress = 0, goal = null, impulse = 0, active = true, looping = false;
 
+  // phones: the figure sits in a short, wide box, so the camera frames the body closely (feet to a raised fist)
+  // instead of leaving room for the shadow below; one framing for every step, so the figure never changes size
+  const phone = matchMedia('(max-width: 860px)');
   function size() {
     const r = container.getBoundingClientRect();
     renderer.setSize(r.width, r.height, false);
+    const tight = phone.matches;
+    camera.fov = tight ? 21.5 : 26;
+    camera.position.set(0, tight ? 1.1 : 1.05, 5.4);
+    camera.lookAt(0, tight ? .98 : .92, 0);
     camera.aspect = r.width / Math.max(r.height, 1);
     camera.updateProjectionMatrix();
     renderer.render(scene, camera);   // resizing clears the canvas; draw again at once so it never flashes empty

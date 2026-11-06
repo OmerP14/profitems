@@ -213,7 +213,7 @@
 .story__bar span::after { content: ""; position: absolute; inset: 0; background: var(--accent); transform: translateX(-101%); transition: transform .5s cubic-bezier(.22, 1, .36, 1); }
 .story__bar span.is-on::after { transform: none; }
 @media (prefers-reduced-motion: reduce) {
-  .story--live.story--stack .story__step, .story--live.story--stack .story__step .story__big, .story__bar span::after, .story--live.story--stack .story__steps { transition: none; }
+  .story--live.story--stack .story__step, .story--live.story--stack .story__step .story__big, .story__bar span::after { transition: none; }
 }
 
 #rig .fig-band { fill: var(--accent); }
@@ -252,16 +252,17 @@
   .story--stack .story__figure { height: 100%; min-height: 0; overflow: hidden; padding-top: 8px; }
   .story--stack .story__figure svg { max-height: 100%; }
   .story--stack .story__text { padding: 8px 0 0; align-self: end; }
-  /* its height is set to the card on screen (script); taller cards waiting off to the side may hang below, unseen */
-  .story--live.story--stack .story__steps { transition: height .55s cubic-bezier(.22, 1, .36, 1); }
-  /* the card now reaches the bottom of the screen: its last lines leave room on the right for the chat button */
-  .story--live.story--stack .story__step > p:last-child { padding-right: 56px; }
-  /* the last card is the tallest: goals two by two, a smaller note, so the figure above keeps room */
+  /* the card area keeps the height of the tallest card, so the figure never changes size between steps;
+     the two tallest cards (zone tags, goals) are packed tighter so that area stays small and the figure big */
+  .story--live.story--stack .story__zones { gap: 5px; margin-top: 12px; }
+  .story--live.story--stack .story__zones li { padding: 4px 10px; font-size: .8125rem; }
+  /* the last card is the tallest: goals three to a row, a smaller note, so the figure above keeps room */
   .story--live.story--stack .goals { margin-top: 12px; }
-  .story--live.story--stack .goals__list { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-  .story--live.story--stack .goal { min-height: 40px; padding: 0 10px; }
-  /* an odd one out (five goals) takes the whole last row */
-  .story--live.story--stack .goal:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  .story--live.story--stack .goals__list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .story--live.story--stack .goal { min-height: 40px; padding: 0 6px; }
+  /* five goals: the last one (the longest name) takes the rest of the second row */
+  .story--live.story--stack .goal:last-child:nth-child(3n + 2) { grid-column: span 2; }
+  .story--live.story--stack .goal:last-child:nth-child(3n + 1) { grid-column: 1 / -1; }
   .story--live.story--stack .goals__note { min-height: 0; margin-top: 8px; font-size: .875rem; line-height: 1.35; }
   .story--live.story--stack .story__step .btn { margin-top: 12px; }
   .story--stack .story__title { font-size: 1.75rem; margin-bottom: 12px; }

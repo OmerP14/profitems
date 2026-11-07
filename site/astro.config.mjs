@@ -34,22 +34,23 @@ export default defineConfig({
   // blog posts have no code blocks; Shiki's inline styles would clash with the CSP anyway
   markdown: { syntaxHighlight: false },
   // Content Security Policy: every page lists the exact scripts and styles it may run (by hash); anything injected is refused.
+  // Meta Pixel: its script comes from connect.facebook.net and reports to www.facebook.com.
   // The 3D figure needs WebAssembly and blob images (mesh decoder, textures); the contact map is the only outside frame.
   security: {
     csp: {
       directives: [
         "default-src 'self'",
-        "img-src 'self' data: blob:",
+        "img-src 'self' data: blob: https://www.facebook.com",
         "media-src 'self'",
         "font-src 'self'",
-        "connect-src 'self' blob: data:",
+        "connect-src 'self' blob: data: https://www.facebook.com https://connect.facebook.net",
         "worker-src 'self' blob:",
         'frame-src https://www.google.com',
         "object-src 'none'",
         "base-uri 'self'",
         "form-action 'self'",
       ],
-      scriptDirective: { resources: ["'self'", "'wasm-unsafe-eval'"] },
+      scriptDirective: { resources: ["'self'", "'wasm-unsafe-eval'", 'https://connect.facebook.net'] },
       // small style="" attributes (photo focal points, bar widths) are allowed; <style> blocks stay hash-checked
       // (each kind listed separately: a style-src-elem/-attr line replaces style-src for its scope, browsers do not fall back)
       styleDirective: { resources: [{ resource: "'self'", kind: 'element' }, { resource: "'unsafe-inline'", kind: 'attribute' }] },

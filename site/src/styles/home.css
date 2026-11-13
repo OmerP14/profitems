@@ -416,7 +416,7 @@
 .serit__detay { display: none; }
 .serit__detay > * { display: none; }
 .serit__detay > .is-on { display: block; animation: serit-in .5s cubic-bezier(.22, 1, .36, 1); }
-.serit__ad { margin: 0 0 6px !important; max-width: none !important; text-transform: uppercase; font-style: italic; font-weight: 800; font-variation-settings: "wdth" 62; line-height: .92; letter-spacing: -0.02em; font-size: 14vw !important; }
+.serit__ad { margin: 0 0 6px !important; max-width: none !important; text-transform: uppercase; font-style: italic; font-weight: 800; font-variation-settings: "wdth" 62; line-height: .92; letter-spacing: -0.02em; word-spacing: .18em; font-size: 14vw !important; }
 .serit__alt { margin: 0 0 16px !important; font-size: 1rem !important; font-weight: 700; color: var(--muted); }
 .serit__detay .btn { margin-top: 6px; }
 @keyframes serit-in { from { opacity: 0; transform: translateY(14px); } }

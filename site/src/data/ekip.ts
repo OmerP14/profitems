@@ -74,7 +74,7 @@ export const ekip: Hoca[] = [
   },
   {
     id: 'nisa',
-    ad: 'Nisanur İnce',
+    ad: 'Nisa Nur İnce',
     kisaAd: 'Nisa',
     unvan: 'EMS antrenörü',
     bilgiler: [

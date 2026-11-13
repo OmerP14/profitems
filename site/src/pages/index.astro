@@ -27,6 +27,7 @@ const dalga = (() => {
 // the band's own order, as the business asked: zayıflama, sıkılaşma, incelme, kas gelişimi, bel ve boyun
 const seritSirasi = ['zayiflama', 'sikilasma', 'incelme', 'kas-gelistirme', 'bel-boyun'];
 const serit = [...seritSirasi.map(id => kisaAd(hizmetler.find(h => h.id === id)!)), `Her gün ${acilis}–${kapanis}`, `${isletme.adres.ilce} / ${isletme.adres.il}`];
+const hedefler = seritSirasi.map(id => hizmetler.find(h => h.id === id)!); // Yüksek efor bölümü: sıkılaşma incelmeden önce
 ---
 <Base yol="/">
 
@@ -178,7 +179,7 @@ const serit = [...seritSirasi.map(id => kisaAd(hizmetler.find(h => h.id === id)!
     </div>
     <!-- tall photographs side by side; the one pointed at opens wide, the others make room -->
     <div class="gcs">
-      {hizmetler.map((h, i) => (
+      {hedefler.map((h, i) => (
         <a class:list={['gc', { 'is-on': i === 0 }]} href={`/hizmetler#${h.id}`} data-rise>
           <img src={h.gorsel} srcset={h.srcset} sizes="44vw" alt="" width={h.boyut[0]} height={h.boyut[1]} loading="lazy" decoding="async" style={`object-position:${h.odak}`}>
           <span class="gc__fig" aria-hidden="true"><BolgeFigur zones={h.bolge} /></span>
@@ -188,7 +189,7 @@ const serit = [...seritSirasi.map(id => kisaAd(hizmetler.find(h => h.id === id)!
     </div>
     <div class="hg-m">
       <ul class="rail">
-        {hizmetler.map((h, i) => (
+        {hedefler.map((h, i) => (
           <li class:list={['rail__c', { 'is-on': i === 0 }]}>
             <a class="rail__a" href={`/hizmetler#${h.id}`}>
               <img src={h.gorsel} srcset={h.srcset} sizes="78vw" alt="" width={h.boyut[0]} height={h.boyut[1]} loading="lazy" decoding="async" style={`object-position:${h.odak}`}>
@@ -224,8 +225,8 @@ const serit = [...seritSirasi.map(id => kisaAd(hizmetler.find(h => h.id === id)!
   {ekipYayinda && (
   <section class="ht" aria-labelledby="ht-baslik">
     <div class="ht__text">
-      <h2 class="hs-h2" id="ht-baslik" data-rise>Seansını hocan yönetir</h2>
-      <p data-rise>{isletme.adres.ilce}'daki stüdyomuzda seanslarını {hocaSayisiYazi} hoca yönetir. Onları tanı, hangisiyle çalışacağını seç.</p>
+      <h2 class="hs-h2" id="ht-baslik" data-rise>Seansınızı hocanız yönetir</h2>
+      <p data-rise>{isletme.adres.ilce}'daki stüdyomuzda seanslarımızı {hocaSayisiYazi} hocamız yönetir. Onları tanı, hangisiyle çalışacağını sen seç.</p>
       <a class="btn btn--light" href="/ekibimiz" data-rise>Ekibimizi tanı</a>
     </div>
     <div class="ht__serit" data-serit>

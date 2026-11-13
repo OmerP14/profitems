@@ -413,10 +413,18 @@
 .serit__p:not(:first-child) .serit__kisa { left: calc(var(--slant) * .25 + 12px); }
 .serit__sec { position: absolute; inset: 0; z-index: 1; width: 100%; padding: 0; border: 0; background: none; cursor: pointer; font-size: 0; color: transparent; }
 .serit__sec:focus-visible { outline: 3px solid #fff; outline-offset: -6px; }
-.serit__detay { display: none; }
+.ht__serit { display: grid; gap: 32px; }
+.serit__detay { display: grid; min-height: 300px; }
 .serit__detay > * { display: none; }
 .serit__detay > .is-on { display: block; animation: serit-in .5s cubic-bezier(.22, 1, .36, 1); }
-.serit__ad { margin: 0 0 6px !important; max-width: none !important; text-transform: uppercase; font-style: italic; font-weight: 800; font-variation-settings: "wdth" 62; line-height: .92; letter-spacing: -0.02em; word-spacing: .18em; font-size: 14vw !important; }
+.serit__ad { margin: 0 0 6px !important; max-width: none !important; text-transform: uppercase; font-style: italic; font-weight: 800; font-variation-settings: "wdth" 62; line-height: .92; letter-spacing: -0.02em; word-spacing: .18em; font-size: clamp(2.5rem, 4.2vw, 4.75rem) !important; }
+.ht .serit__alt { color: var(--on-dark-muted); }
+.serit__bilgi { list-style: none; margin: 0 0 24px; padding: 0; display: grid; gap: 10px; max-width: 60ch; font-size: 1.0625rem; line-height: 1.35; font-weight: 600; color: #fff; }
+.serit__bilgi li { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 12px; align-items: baseline; }
+.serit__bilgi li::before { content: ""; width: 22px; height: 8px; background: var(--accent); clip-path: polygon(30% 0, 100% 0, 70% 100%, 0 100%); transform: translateY(-1px); }
+.serit__eylem { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 24px; }
+.serit__belge { color: #fff; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; }
+.serit__belge:hover { color: var(--accent); }
 .serit__alt { margin: 0 0 16px !important; font-size: 1rem !important; font-weight: 700; color: var(--muted); }
 .serit__detay .btn { margin-top: 6px; }
 @keyframes serit-in { from { opacity: 0; transform: translateY(14px); } }
@@ -515,11 +523,10 @@
   .serit { --slant: 8vw; --seam: 6px; --buyu: 2; height: min(58svh, 500px); min-height: 360px; }
   .serit__p.is-on .serit__kisa { opacity: 0; }
   .serit__kisa { font-size: 1.5rem; }
-  .serit__detay { display: block; padding-top: 28px; min-height: 220px; }
+  .serit__ad { font-size: 14vw !important; }
   .serit__detay p { max-width: 40ch; }
   .ht { grid-template-columns: 1fr; padding: 96px var(--margin); }
   .ht .serit__alt { color: var(--on-dark-muted); }
-  .ht .serit__detay { min-height: 220px; }
   .ht .serit__detay p:not(.serit__ad):not(.serit__alt) { color: #fff; }
   .hp { padding: 104px var(--margin) 140px; }
   .hp__grid { grid-template-columns: 1fr; gap: 56px; }

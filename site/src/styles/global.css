@@ -44,10 +44,7 @@
 @keyframes vt-in { from { opacity: 0; transform: translateY(18px); } }
 .nav__logo { view-transition-name: logo; }
 .chat__toggle { view-transition-name: chat; }
-@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
-@media (prefers-reduced-motion: reduce) {
-  @view-transition { navigation: none; }
-}
+html { scroll-behavior: smooth; }
 
 :root {
   --bg: #eceff1;
@@ -232,6 +229,3 @@ img, svg { display: block; max-width: 100%; }
   .footer__logo { grid-column: 1 / -1; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation: none !important; transition: none !important; }
-}

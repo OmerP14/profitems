@@ -117,17 +117,12 @@ const [son, ...digerleri] = await yazilar();
     .rest__list a { grid-template-columns: 1fr; gap: 14px; padding: 16px; }
     .rest__meta { flex-direction: row; text-align: left; }
   }
-  @media (prefers-reduced-motion: reduce) {
-    :global(.js) .b-hero__title .line > span, :global(.js) [data-rise] { opacity: 1; transform: none; }
-  }
 </style>
 
 <script>
 import { animate, stagger, inView } from 'motion';
 window.__motion = true;
-const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-if (reduce) { document.body.classList.add('is-in'); }
-else {
+{
   const ease = [0.22, 1, 0.36, 1] as const;
   animate('.b-hero__title .line > span', { y: ['105%', '0%'] }, { type: 'spring', stiffness: 140, damping: 20 });
   document.querySelectorAll('.b-hero, .rest').forEach(block => {

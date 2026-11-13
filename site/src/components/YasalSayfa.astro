@@ -88,16 +88,12 @@ const { yol, satirlar, bolumler } = Astro.props;
     .y-toc ul { position: static; }
     .y-text { padding-top: 40px; }
   }
-  @media (prefers-reduced-motion: reduce) {
-    :global(.js) .y-head__title .line > span { transform: none; }
-  }
 </style>
 
 <script>
 import { animate, stagger } from 'motion';
 window.__motion = true;
-if (matchMedia('(prefers-reduced-motion: reduce)').matches) document.body.classList.add('is-in');
-else animate('.y-head__title .line > span', { y: ['105%', '0%'] }, { type: 'spring', stiffness: 140, damping: 20, delay: stagger(0.09) });
+animate('.y-head__title .line > span', { y: ['105%', '0%'] }, { type: 'spring', stiffness: 140, damping: 20, delay: stagger(0.09) });
 
 // the contents list follows the reader: the section on screen is marked
 const links = new Map([...document.querySelectorAll('.y-toc a')].map(a => [a.getAttribute('href')!.slice(1), a]));

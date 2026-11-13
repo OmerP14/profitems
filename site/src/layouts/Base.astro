@@ -131,7 +131,7 @@ press('.goal, .btn, .chat__toggle, .chat__quick button', el => {
 
 // one motion language for every page: the same curve everywhere, movement tied to the scroll so it follows the finger
 const EASE = [0.22, 1, 0.36, 1] as const;
-if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+{
   // the first screen leaves as you scroll on: its words drift up and fade, like a page turning over
   // (the moving element must sit inside the measured box: moving the box itself shifts its own measurement)
   const words = document.querySelector<HTMLElement>('.hero__main, .h-hero__text, .e-hero__title, .b-hero__head, .k-hero__title, .p-title');

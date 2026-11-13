@@ -91,7 +91,6 @@
 .goals__note { display: grid; margin: 0; color: var(--ink); font-weight: 600; opacity: 0; transform: translateY(6px); }
 .goals__lead.has-note .goals__intro { opacity: 0; transform: translateY(-6px); }
 .goals__lead.has-note .goals__note { opacity: 1; transform: none; }
-@media (prefers-reduced-motion: reduce) { .goals__intro, .goals__note { transition: none; } }
 .goals__ghost { visibility: hidden; }
 
 .cert { display: grid; grid-template-columns: 76px 1fr; gap: 14px; align-items: center; margin: 0 0 20px; }
@@ -202,10 +201,6 @@
 }
 .bolge-pop__list span { flex: none; color: var(--accent); font-weight: 800; font-style: italic; font-variant-numeric: tabular-nums; }
 .bolge-pop__note { margin: 16px 0 0; font-size: var(--step-small); color: var(--muted); }
-@media (prefers-reduced-motion: reduce) {
-  .bolge-pop, .bolge-pop::backdrop { transition: none; }
-  .story__step.is-active .info { animation: none; }
-}
 /* a browser without popovers would show the box in the page: leave the sentence on its own there */
 @supports not selector(:popover-open) { .info, .bolge-pop { display: none; } }
 .story__figure {
@@ -273,16 +268,12 @@
 .story__bar span { flex: 1; height: 8px; cursor: pointer; background: rgba(0, 0, 0, .12); clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%); position: relative; overflow: hidden; }
 .story__bar span::after { content: ""; position: absolute; inset: 0; background: var(--accent); transform: translateX(-101%); transition: transform .5s cubic-bezier(.22, 1, .36, 1); }
 .story__bar span.is-on::after { transform: none; }
-@media (prefers-reduced-motion: reduce) {
-  .story--live.story--stack .story__step, .story--live.story--stack .story__step .story__big, .story__bar span::after { transition: none; }
-}
 
 #rig .fig-band { fill: var(--accent); }
 .story__3d { display: none; }
 .story__figure.is-3d #rig, .story__figure.is-3d-wait #rig { visibility: hidden; }
 .story__figure.is-3d .story__3d { display: block; position: absolute; inset: 0; animation: manken-gel .6s cubic-bezier(.22, 1, .36, 1); }
 @keyframes manken-gel { from { opacity: 0; transform: translateY(16px); } }
-@media (prefers-reduced-motion: reduce) { .story__figure.is-3d .story__3d { animation: none; } }
 .story__figure.is-3d::before, .story__figure.is-3d-wait::before {
   content: ""; position: absolute; z-index: 0; left: 18%; right: 18%; top: 14%; bottom: 0;
   background: var(--accent); clip-path: polygon(48% 0, 100% 0, 52% 100%, 0 100%);
@@ -348,13 +339,6 @@
   .hero__cert .cert p { font-size: .9375rem; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .hero__title .line > span, .hero__title .line--hot > span, .ticker { animation: none; }
-  .ticker__track { animation: none; }
-  /* no running charge: the whole trace stands still in red instead */
-  .pulse__spark { animation: none; stroke-dasharray: none; }
-  .pad .ring { opacity: 0; }
-}
 
 /* ===================== after the story: one claim per section ===================== */
 .hs { color: var(--ink); }
@@ -544,8 +528,4 @@
   .hv__title { font-size: 16vw; margin-bottom: 40px; }
   .hv__grid { grid-template-columns: 1fr; gap: 36px; }
   .hv__actions .btn { width: 100%; justify-content: center; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .gc, .gc img, .gc__t span, .gc__fig, .serit__p, .serit__p img, .rail__c { transition: none; }
-  .serit__detay > .is-on { animation: none; }
 }

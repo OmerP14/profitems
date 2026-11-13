@@ -237,11 +237,6 @@ const acikGen = ((saat(kapanis) - saat(acilis)) / 24) * 100;
     .plaque__band { top: auto; height: 62%; right: -30vw; width: 120vw; }
     .plaque__img { transform: rotate(-3deg); }
   }
-  @media (prefers-reduced-motion: reduce) {
-    :global(.js) .reach__title .line > span, :global(.js) [data-rise] { opacity: 1; transform: none; }
-    .plaque__img { transition: none; animation: none; }
-    :global(.js) .plaque:not(.is-open) .plaque__band { transform: none; }
-  }
 </style>
 
 <script is:inline define:vars={{ acilis, kapanis }}>
@@ -266,9 +261,7 @@ const acikGen = ((saat(kapanis) - saat(acilis)) / 24) * 100;
 <script>
 import { animate, stagger, inView } from 'motion';
 (window as any).__motion = true;
-const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-if (reduce) { document.body.classList.add('is-in'); }
-else {
+{
   const ease = [0.22, 1, 0.36, 1] as const;
   animate('.reach__title .line > span', { y: ['105%', '0%'] }, { type: 'spring', stiffness: 140, damping: 20, delay: stagger(0.09) });
   // signature: the open hours fill the strip from opening time to closing time
@@ -298,7 +291,7 @@ document.getElementById('harita-ac').addEventListener('click', () => {
   if (!('IntersectionObserver' in window)) { sec.classList.add('is-open'); return; }
   const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { sec.classList.add('is-open'); io.disconnect(); } }, { threshold: .25 });
   io.observe(sec);
-  if (!matchMedia('(hover: hover) and (prefers-reduced-motion: no-preference)').matches) return;
+  if (!matchMedia('(hover: hover)').matches) return;
   sec.addEventListener('pointermove', e => {
     const r = sec.getBoundingClientRect();
     const x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;

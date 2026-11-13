@@ -295,20 +295,12 @@ const hizmetVerisi = Astro.site ? {
     .s-b::before { background: linear-gradient(180deg, rgba(0, 0, 0, .45) 0%, rgba(0, 0, 0, .55) 45%, rgba(0, 0, 0, .9) 75%); } /* scrim */
     .h-cta { padding: calc(96px + 6vh) var(--margin) 96px; }
   }
-  @media (prefers-reduced-motion: reduce) {
-    :global(.js) .h-hero__title .line > span, :global(.js) [data-rise] { opacity: 1; transform: none; }
-    :global(.js) .cut--r:not(.is-open) { clip-path: polygon(14% 0, 100% 0, 86% 100%, 0 100%); }
-    :global(.js) .cut--l:not(.is-open) { clip-path: polygon(0 0, 86% 0, 100% 100%, 14% 100%); }
-    .h-show__img { transition: none; }
-  }
 </style>
 
 <script>
 import { animate, stagger, inView } from 'motion';
 window.__motion = true;
-const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-if (reduce) { document.body.classList.add('is-in'); }
-else {
+{
   const ease = [0.22, 1, 0.36, 1];
   animate('.h-hero__title .line > span', { y: ['105%', '0%'] }, { type: 'spring', stiffness: 140, damping: 20, delay: stagger(0.09) });
   animate('.h-hero__band', { x: ['40%', '0%'] }, { duration: 1.1, ease });
@@ -327,7 +319,7 @@ setTimeout(() => { if (!window.__motion) document.body.classList.add('is-in'); }
 (() => {
   const cuts = document.querySelectorAll('.cut');
   const open = el => { el.classList.add('is-open'); el.closest('.frame')?.classList.add('is-open'); };
-  if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) { cuts.forEach(open); return; }
+  if (!('IntersectionObserver' in window)) { cuts.forEach(open); return; }
   const io = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) { open(e.target); io.unobserve(e.target); } }), { rootMargin: '0px 0px -12% 0px' });
   cuts.forEach(el => io.observe(el));
 })();
@@ -358,8 +350,6 @@ setTimeout(() => { if (!window.__motion) document.body.classList.add('is-in'); }
     a.addEventListener('pointerenter', () => { stop(); show(i); });
     a.addEventListener('focus', () => { stop(); show(i); });
   });
-  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    timer = setInterval(() => show((cur + 1) % links.length), 3200);
-  }
+  timer = setInterval(() => show((cur + 1) % links.length), 3200);
 })();
 </script>

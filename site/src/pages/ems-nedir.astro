@@ -313,17 +313,12 @@ const sssVerisi = {
     .q summary { padding: 18px; }
     .q p { padding: 0 18px 20px; }
   }
-  @media (prefers-reduced-motion: reduce) {
-    :global(.js) .e-hero__title .line > span, :global(.js) [data-rise], :global(.js) .pulse polygon { opacity: 1; transform: none; }
-  }
 </style>
 
 <script>
 import { animate, stagger, inView } from 'motion';
 window.__motion = true;
-const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-if (reduce) { document.body.classList.add('is-in'); }
-else {
+{
   const ease = [0.22, 1, 0.36, 1] as const;
   // one orchestrated entrance: the headline rises, then the impulse train switches on from left to right
   animate('.e-hero__title .line > span', { y: ['105%', '0%'] }, { type: 'spring', stiffness: 140, damping: 20, delay: stagger(0.09) });
@@ -344,9 +339,8 @@ setTimeout(() => { if (!window.__motion) document.body.classList.add('is-in'); }
   const narrow = matchMedia('(max-width: 860px)').matches;
   // the poster is chosen here, not in the markup, so a phone never downloads the wide one too
   v.poster = narrow ? v.dataset.posterNarrow : v.dataset.posterWide;
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const saver = navigator.connection && navigator.connection.saveData;
-  if (reduce || saver || !('IntersectionObserver' in window)) return;
+  if (saver || !('IntersectionObserver' in window)) return;
   const io = new IntersectionObserver(([e]) => {
     if (!e.isIntersecting) { if (v.src) v.pause(); return; }
     if (!v.src) v.src = narrow ? v.dataset.srcNarrow : v.dataset.src;

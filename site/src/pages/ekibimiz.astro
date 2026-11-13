@@ -1,0 +1,580 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import WhatsAppIcon from '../components/WhatsAppIcon.astro';
+import { isletme, whatsappLinki } from '../data/isletme';
+import { ekip, hocaSayisiYazi } from '../data/ekip';
+
+const randevu = (h: (typeof ekip)[number]) => ({ mesaj: `Merhaba, ${h.ad} ile EMS seansı için bilgi almak istiyorum.`, etiket: `${h.kisaAd} ile randevu al` });
+const belgeAlt = (ad: string, b: (typeof ekip)[number]['belgeler'][number]) =>
+  `${ad} adına düzenlenmiş belge: ${b.baslik}, ${b.kurum}${b.kod ? `, ${b.kodEtiket!.toLowerCase()} ${b.kod}` : ''}`;
+---
+<Base yol="/ekibimiz">
+<Nav tema="acik" />
+
+<main>
+  <section class="k-hero" aria-labelledby="ekip-baslik">
+    <h1 class="k-hero__title" id="ekip-baslik">
+      <span class="line"><span>Ekibimiz</span></span>
+    </h1>
+    <p class="k-hero__lead" data-rise>{isletme.adres.ilce}'daki stüdyomuzda seanslarını bu {hocaSayisiYazi} hoca yönetir. Hangisiyle çalışmak istediğini seç, ona yaz.</p>
+  </section>
+
+  <!-- the logo's slash, once per coach: one slanted panel each, the red showing through the seams.
+       The photographs stay clear: only a small name tag sits on them, everything else is written underneath -->
+  <section class="k-ekip" aria-label="Hocalar">
+    <ul class="trio">
+      {ekip.map((h, i) => (
+        <li class:list={['trio__p', { 'is-on': i === 0 }]} data-i={i}>
+          <img class="trio__img" src={`/img/ekip/${h.id}.webp`} srcset={`/img/ekip/${h.id}-720.webp 720w, /img/ekip/${h.id}.webp ${h.fotoGenislik}w`} sizes="(max-width: 860px) 70vw, 50vw" alt={`${h.ad}, ${h.unvan}`} width={h.fotoGenislik} height={h.fotoYukseklik} style={`object-position:${h.odak}`} loading={i === 0 ? 'eager' : 'lazy'} decoding="async">
+          <span class="trio__kisa" aria-hidden="true">{h.kisaAd}</span>
+          <h2 class="trio__ad">
+            <button class="trio__sec" type="button" aria-expanded={i === 0 ? 'true' : 'false'} aria-controls={`${h.id}-detay`} aria-label={h.ad}>{h.kisaAd}</button>
+          </h2>
+        </li>
+      ))}
+    </ul>
+    <!-- the chosen coach's details, under the photographs; all items share one cell so the height never jumps -->
+    <div class="k-detay" aria-live="polite">
+      {ekip.map((h, i) => (
+        <div class:list={['k-detay__item', { 'is-on': i === 0 }]} id={`${h.id}-detay`}>
+          <div class="k-detay__kim">
+            <p class="k-detay__ad">{h.ad}</p>
+            <p class="k-detay__unvan">{h.unvan}</p>
+          </div>
+          <div class="k-detay__ne">
+            {h.tanitim && <p class="k-detay__tanitim">{h.tanitim}</p>}
+            <ul class="bilgi" aria-label="Eğitim ve belgeler">
+              {h.bilgiler.map(b => <li>{b}</li>)}
+            </ul>
+            <div class="k-detay__eylem">
+              <a class="btn" href={whatsappLinki(randevu(h).mesaj)} target="_blank" rel="noopener"><WhatsAppIcon /> {randevu(h).etiket}</a>
+              <a class="k-detay__belge" href={`#belge-${h.id}`}>Belgelerini gör</a>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- the certificate wall: pick a coach, their photograph lands as a polaroid, the certificates as taped cards,
+       then the stamp comes down. Every picture opens at full resolution. Without script every board shows -->
+  <section class="kb" id="belgelerimiz" aria-labelledby="kb-baslik">
+    <div class="kb__head">
+      <div>
+        <p class="kb__ust" data-rise>Sertifika duvarı</p>
+        <h2 id="kb-baslik" data-rise>Belgelerimiz</h2>
+      </div>
+      <p class="kb__lead" data-rise>Hocalarımızın belgeleri, olduğu gibi. Bir hoca seç, belgeye dokun, büyüt. Bakanlık belgelerindeki QR kod ve doğrulama kodu belgenin sol altında.</p>
+    </div>
+
+    <div class="kb__sekme" role="tablist" aria-label="Hoca seç">
+      {ekip.map((h, i) => (
+        <button class="kb__tab" type="button" role="tab" id={`kbt-${h.id}`} aria-controls={`belge-${h.id}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} data-id={h.id}>
+          <span class="kb__av"><img src={`/img/ekip/${h.id}-yuz.webp`} alt="" width="200" height="200" loading="lazy" decoding="async"></span>
+          <span class="kb__tab-ad">{h.kisaAd}</span>
+          <span class="kb__tab-say">{h.belgeler.length} belge</span>
+        </button>
+      ))}
+    </div>
+
+    {ekip.map((h, i) => (
+      <article class:list={['pano', { 'is-on': i === 0 }]} id={`belge-${h.id}`} role="tabpanel" aria-labelledby={`kbt-${h.id}`}>
+        <figure class="polaroid">
+          <a class="kb__a" href={`/img/ekip/${h.id}.webp`} data-lb data-w={h.fotoGenislik} data-h={h.fotoYukseklik} data-cap={`${h.ad} · ${h.unvan}`}>
+            <img src={`/img/ekip/${h.id}-720.webp`} alt={`${h.ad}, Profit EMS stüdyosunda`} width={h.fotoGenislik} height={h.fotoYukseklik} loading="lazy" decoding="async">
+          </a>
+          <figcaption>{h.ad}<small>{h.unvan}</small></figcaption>
+        </figure>
+        <div class:list={['pano__kartlar', `pano__kartlar--${h.belgeler.length}`]}>
+          {h.belgeler.map((b, j) => (
+            <figure class="kart" style={`--i:${j + 1}`}>
+              <span class="bant" aria-hidden="true"></span>
+              <a class="kb__a" href={`/img/ekip/belge-${b.dosya}.webp`} data-lb data-w={b.genislik} data-h={b.yukseklik} data-cap={`${h.ad} · ${b.baslik} · ${b.kurum}${b.kod ? ` · ${b.kodEtiket}: ${b.kod}` : ''}`}>
+                <img src={`/img/ekip/belge-${b.dosya}-800.webp`} srcset={`/img/ekip/belge-${b.dosya}-800.webp 800w, /img/ekip/belge-${b.dosya}.webp ${b.genislik}w`} sizes="(max-width: 860px) 92vw, 44vw" alt={belgeAlt(h.ad, b)} width={b.genislik} height={b.yukseklik} loading="lazy" decoding="async">
+                <span class="kb__zoom" aria-hidden="true">Büyüt</span>
+              </a>
+              <figcaption>
+                <b>{b.baslik}</b>
+                <span class="kart__kurum">{b.kurum}</span>
+                {b.kod && <span class="kart__kod">{b.kodEtiket} <b>{b.kod}</b></span>}
+              </figcaption>
+            </figure>
+          ))}
+          <span class="damga" aria-hidden="true">Belgeli<small>Profit EMS</small></span>
+        </div>
+      </article>
+    ))}
+  </section>
+
+  <!-- one shared viewer for every certificate and photo, at full resolution -->
+  <dialog class="lb" id="lb" aria-label="Büyük görünüm">
+    <form method="dialog"><button class="lb__kapat" aria-label="Kapat">✕</button></form>
+    <img class="lb__img" alt="" decoding="async">
+    <p class="lb__cap"></p>
+  </dialog>
+
+  <!-- the facility certificate as a seal: the badge floats over the logo's slash, its name turning round it;
+       any tap opens it large, so the QR code can be scanned straight off the screen -->
+  <section class="kt" aria-labelledby="belge-baslik">
+    <div class="kt__rozet" data-rise>
+      <svg class="kt__halka" viewBox="0 0 400 400" aria-hidden="true">
+        <defs><path id="kt-yol" d="M200,200 m-172,0 a172,172 0 1,1 344,0 a172,172 0 1,1 -344,0"></path></defs>
+        <text><textPath href="#kt-yol" textLength="1075" lengthAdjust="spacing">TÜRKİYE CİMNASTİK FEDERASYONU · YETERLİLİK BELGELİ TESİS · </textPath></text>
+      </svg>
+      <a class="kt__a" href="/img/tcf-belge-1712.webp" data-lb data-w="1712" data-h="2000" data-cap="Profit EMS · Türkiye Cimnastik Federasyonu yeterlilik belgesi">
+        <img src="/img/tcf-belge.webp" srcset="/img/tcf-belge.webp 856w, /img/tcf-belge-1712.webp 1712w" sizes="(max-width: 860px) 46vw, 270px" alt="Türkiye Cimnastik Federasyonu yeterlilik belgesi: Bu tesis Türkiye Cimnastik Federasyonu yeterlilik belgesine sahiptir. Tesis hakkında bilgi için QR kodu okutunuz." width="856" height="1000" loading="lazy" decoding="async">
+      </a>
+    </div>
+    <div class="kt__text">
+      <p class="kt__ust" data-rise>Resmî belge</p>
+      <h2 id="belge-baslik" data-rise>Belgeli tesis</h2>
+      <p data-rise>Profit EMS, Türkiye Cimnastik Federasyonu yeterlilik belgesine sahip bir tesis. Sözümüze değil, belgeye bak:</p>
+      <ol class="kt__adim" data-rise>
+        <li>Belgeye dokun, büyüt.</li>
+        <li>Telefonunun kamerasıyla QR kodu okut.</li>
+        <li>Tesis bilgisini kendin doğrula.</li>
+      </ol>
+      <div class="kt__eylem" data-rise><a class="btn" href="/img/tcf-belge-1712.webp" data-lb data-w="1712" data-h="2000" data-cap="Profit EMS · Türkiye Cimnastik Federasyonu yeterlilik belgesi">Belgeyi büyük gör</a>
+        <a class="kt__dogrula" href="https://yeterlilik.tcf.gov.tr/Facility/Detail?uniqueId=900063" target="_blank" rel="noopener">Federasyon sayfasında doğrula <span aria-hidden="true">↗</span></a></div>
+    </div>
+  </section>
+
+  <section class="k-cta" aria-labelledby="tanis-baslik">
+    <h2 id="tanis-baslik" data-rise>Tanışalım</h2>
+    <p data-rise>Hangi hocayla çalışmak istediğini yaz, sana uygun saati birlikte bulalım. {isletme.saatler.metin} açığız.</p>
+    <div class="k-cta__actions" data-rise>
+      <a class="btn btn--light" href={whatsappLinki('Merhaba, Profit EMS hocalarıyla tanışmak ve randevu almak istiyorum.')} target="_blank" rel="noopener"><WhatsAppIcon /> WhatsApp'tan yaz</a>
+      <a class="btn btn--ghost" href={`tel:${isletme.telefonUluslararasi}`}>Ara: {isletme.telefon}</a>
+    </div>
+  </section>
+</main>
+</Base>
+
+<style>
+  h1, h2 {
+    margin: 0; text-transform: uppercase; font-style: italic; font-weight: 800;
+    font-variation-settings: "wdth" 62; line-height: .92; letter-spacing: -0.02em;
+  }
+  p { margin: 0 0 18px; max-width: 42ch; font-size: clamp(1.125rem, 1rem + .35vw, 1.3125rem); }
+  .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+  /* ---------- first screen: the word, the sentence ---------- */
+  .k-hero {
+    display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: end; gap: 24px var(--margin);
+    padding: 3vh var(--margin) 40px;
+  }
+  .k-hero__title { font-size: clamp(5rem, min(13vw, 21svh), 13rem); }
+  .k-hero__title .line { display: block; overflow: hidden; padding: .03em .06em .02em 0; }
+  .k-hero__title .line > span { display: inline-block; }
+  .k-hero__lead { margin: 0 0 1.2vw; font-size: clamp(1.25rem, 1.05rem + .6vw, 1.625rem); line-height: 1.3; font-weight: 500; max-width: 30ch; }
+
+  /* ---------- the panels ---------- */
+  .k-ekip { --slant: 6vw; --seam: 10px; padding: 0 var(--margin); }
+  .trio {
+    list-style: none; margin: 0; padding: 0;
+    display: flex; height: min(70svh, 760px); min-height: 520px;
+    position: relative; isolation: isolate;
+  }
+  /* the red behind the panels, kept 2px inside the top and bottom so it only ever shows in the seams */
+  .trio::before { content: ""; position: absolute; inset: 2px 0; z-index: -1; background: var(--accent); }
+  .trio__p {
+    position: relative; isolation: isolate; overflow: hidden; flex: 1 1 0; min-width: 0;
+    background: var(--ink); color: #fff;
+    transition: flex-grow .75s cubic-bezier(.22, 1, .36, 1);
+  }
+  .trio__p + .trio__p { margin-left: calc(var(--seam) - var(--slant)); }
+  /* outer corners sit 1px past the box so no red bleeds round the edge; only the slanted seams show it */
+  .trio__p:first-child { clip-path: polygon(-1px -1px, calc(100% + 1px) -1px, calc(100% - var(--slant)) calc(100% + 1px), -1px calc(100% + 1px)); }
+  .trio__p:not(:first-child):not(:last-child) { clip-path: polygon(var(--slant) -1px, calc(100% + 1px) -1px, calc(100% - var(--slant)) calc(100% + 1px), 0 calc(100% + 1px)); }
+  .trio__p:last-child { clip-path: polygon(var(--slant) -1px, calc(100% + 1px) -1px, calc(100% + 1px) calc(100% + 1px), 0 calc(100% + 1px)); }
+  .trio__p.is-on { flex-grow: 2.3; }
+
+  .trio__img {
+    position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover;
+    filter: grayscale(1) brightness(.55); transform: scale(1.04);
+    transition: filter .6s, transform 1.2s cubic-bezier(.22, 1, .36, 1);
+  }
+  .trio__p.is-on .trio__img { filter: none; transform: none; }
+  .trio__p:not(.is-on):hover .trio__img { filter: grayscale(.4) brightness(.75); }
+
+  /* the name tag: a small slanted chip at the foot of a closed panel, gone once the panel opens */
+  .trio__ad { position: absolute; left: 20px; bottom: 26px; margin: 0; font-size: clamp(1rem, 1.35vw, 1.375rem); transition: opacity .3s, transform .4s cubic-bezier(.22, 1, .36, 1); }
+  .trio__p:first-child .trio__ad { left: 24px; }
+  .trio__sec { all: unset; cursor: pointer; display: inline-block; padding: 8px 18px 7px; background: var(--accent); color: #fff; clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%); }
+  .trio__p.is-on .trio__ad { opacity: 0; transform: translateY(12px); }
+  /* the whole panel is clickable (handled in the script); the tag is the keyboard's button */
+  .trio__p { cursor: pointer; }
+  /* no blue tap flash or text selection when a panel or chip is tapped on a phone */
+  .trio__p, .trio__sec, .kb__tab, .kb__a { -webkit-tap-highlight-color: transparent; }
+  .trio, .kb__sekme { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+  .trio__sec:focus-visible { outline: none; }
+  .trio__p:has(.trio__sec:focus-visible) { outline: 3px solid #fff; outline-offset: -8px; }
+  .trio__kisa { display: none; }
+
+  /* ---------- the chosen coach, written underneath ---------- */
+  .k-detay { display: grid; padding: 44px 0 0; }
+  .k-detay__item {
+    grid-area: 1 / 1; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 20px calc(var(--margin) * 2); align-items: start;
+    visibility: hidden; opacity: 0; transform: translateY(12px);
+    transition: opacity .45s, transform .55s cubic-bezier(.22, 1, .36, 1), visibility 0s .45s;
+  }
+  .k-detay__item.is-on { visibility: visible; opacity: 1; transform: none; transition-delay: 0s; }
+  .k-detay__ad {
+    margin: 0 0 10px; max-width: none; font-size: clamp(3rem, 6vw, 6rem); line-height: .92;
+    font-style: italic; font-weight: 800; font-variation-settings: "wdth" 62; text-transform: uppercase; letter-spacing: -0.02em; word-spacing: .12em;
+  }
+  .k-detay__unvan { margin: 0; font-size: 1rem; font-weight: 600; color: var(--muted); }
+  .k-detay__tanitim { margin: 0 0 18px; }
+  .k-detay__eylem { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 24px; }
+  .k-detay__belge { display: inline-block; padding: 12px 0; font-weight: 700; color: inherit; text-underline-offset: 4px; }
+  .k-detay__belge:hover { color: var(--accent); }
+
+  /* education and certificate lines: one per row, the red slash as the bullet */
+  .bilgi { list-style: none; margin: 4px 0 26px; padding: 0; display: grid; gap: 10px; max-width: 56ch; font-size: 1.0625rem; line-height: 1.35; font-weight: 600; }
+  .bilgi li { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 12px; align-items: baseline; }
+  .bilgi li::before { content: ""; width: 22px; height: 8px; background: var(--accent); clip-path: polygon(30% 0, 100% 0, 70% 100%, 0 100%); transform: translateY(-1px); }
+
+  /* ---------- the certificate wall ---------- */
+  .kb {
+    position: relative; isolation: isolate; overflow: hidden; margin-top: 140px;
+    background: var(--ink); color: #fff; scroll-margin-top: 40px;
+    padding: calc(96px + 6vw) var(--margin) 140px;
+    clip-path: polygon(0 6vw, 100% 0, 100% 100%, 0 100%);
+  }
+  .kb__head { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 24px var(--margin); align-items: end; }
+  .kb__ust { margin: 0 0 10px; font-size: .875rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+  .kb h2 { font-size: clamp(3.5rem, 9vw, 9rem); }
+  .kb__lead { margin: 0; max-width: 40ch; color: var(--on-dark-muted); }
+
+  .kb__sekme { display: none; }
+  :global(.js) .kb__sekme { display: flex; flex-wrap: wrap; gap: 12px; margin: 56px 0 64px; }
+  .kb__tab {
+    appearance: none; border: 0; margin: 0; font: inherit; cursor: pointer; text-align: left;
+    display: grid; grid-template-columns: 52px auto; grid-template-rows: auto auto; column-gap: 14px; align-items: center;
+    padding: 8px 26px 8px 8px; background: rgba(255, 255, 255, .09); color: #fff;
+    clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+    transition: background .3s, color .3s, transform .35s cubic-bezier(.22, 1, .36, 1);
+  }
+  /* the little portrait: a face crop (public/img/ekip/<id>-yuz.webp) */
+  .kb__av { grid-row: 1 / 3; width: 52px; height: 52px; overflow: hidden; clip-path: polygon(8px 0, 100% 0, calc(100% - 8px) 100%, 0 100%); }
+  .kb__av img { display: block; width: 100%; height: 100%; object-fit: cover; filter: grayscale(1); transition: filter .3s; }
+  .kb__tab-ad { align-self: end; font-style: italic; font-weight: 800; font-variation-settings: "wdth" 62; text-transform: uppercase; font-size: 1.375rem; line-height: 1; }
+  .kb__tab-say { align-self: start; font-size: .8125rem; font-weight: 600; opacity: .7; }
+  .kb__tab:hover { background: rgba(255, 255, 255, .18); transform: translateY(-3px); }
+  .kb__tab[aria-selected="true"] { background: #fff; color: var(--ink); }
+  .kb__tab[aria-selected="true"] img, .kb__tab:hover img { filter: none; }
+  .kb__tab:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+
+  /* "Belgelerini gör" brings the board to the top of the screen, just under the menu bar */
+  .pano { scroll-margin-top: 104px; display: grid; grid-template-columns: minmax(200px, 290px) minmax(0, 1fr); gap: 56px clamp(40px, 6vw, 96px); align-items: center; }
+  .pano + .pano { margin-top: 120px; }
+  :global(.js) .pano:not(.is-on) { display: none; }
+  :global(.js) .pano + .pano { margin-top: 0; }
+
+  /* the photograph, as a polaroid */
+  .polaroid {
+    --r: -5deg; margin: 0; background: #fff; color: var(--ink); padding: 12px 12px 18px;
+    transform: rotate(var(--r)); box-shadow: 0 34px 60px -24px rgba(0, 0, 0, .8);
+    transition: transform .5s cubic-bezier(.22, 1, .36, 1);
+    animation: kart-gel .8s cubic-bezier(.22, 1, .36, 1) backwards;
+  }
+  .polaroid:hover { transform: rotate(-1deg) translateY(-6px); }
+  .polaroid img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; }
+  .polaroid figcaption {
+    margin-top: 14px; font-style: italic; font-weight: 800; font-variation-settings: "wdth" 62; text-transform: uppercase;
+    font-size: 1.625rem; line-height: 1; word-spacing: .1em;
+  }
+  .polaroid small { display: block; margin-top: 4px; font-style: normal; font-weight: 600; font-variation-settings: normal; text-transform: none; font-size: .875rem; color: var(--muted); }
+
+  /* the certificates, as taped cards; two of them fan out, overlapping */
+  .pano__kartlar { position: relative; display: grid; padding: 20px 0 30px; }
+  /* the logo's slash, huge, behind the cards */
+  .pano__kartlar::before {
+    content: ""; position: absolute; z-index: -1; top: -18%; bottom: -40%; left: 22%; width: min(60%, 520px);
+    background: var(--accent); clip-path: polygon(42% 0, 100% 0, 58% 100%, 0 100%);
+  }
+  .kart {
+    --r: 2deg; position: relative; grid-area: 1 / 1; justify-self: center; width: min(100%, 660px); margin: 0;
+    background: #fff; color: var(--ink); padding: 10px 10px 14px;
+    transform: rotate(var(--r)); box-shadow: 0 34px 70px -26px rgba(0, 0, 0, .85);
+    transition: transform .5s cubic-bezier(.22, 1, .36, 1), box-shadow .5s;
+    animation: kart-gel .85s cubic-bezier(.22, 1, .36, 1) backwards; animation-delay: calc(var(--i) * .13s);
+  }
+  .pano__kartlar--2 .kart { width: 66%; }
+  .pano__kartlar--2 .kart:nth-of-type(1) { --r: -4deg; justify-self: start; align-self: start; }
+  .pano__kartlar--2 .kart:nth-of-type(2) { --r: 3.5deg; justify-self: end; align-self: end; margin-top: 170px; }
+  .kart:hover, .kart:focus-within { z-index: 3; transform: rotate(0deg) translateY(-10px) scale(1.03); box-shadow: 0 44px 80px -24px rgba(0, 0, 0, .9); }
+  .kart img { display: block; width: 100%; height: auto; }
+  .bant {
+    position: absolute; z-index: 2; top: -15px; left: 50%; width: 112px; height: 30px;
+    background: rgba(238, 222, 186, .86); box-shadow: 0 2px 6px rgba(0, 0, 0, .18);
+    transform: translateX(-50%) rotate(-4deg);
+  }
+  .kart:nth-of-type(2) .bant { left: 30%; transform: translateX(-50%) rotate(5deg); }
+  .kart figcaption { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; padding: 12px 4px 0; font-size: .9375rem; line-height: 1.3; }
+  .kart__kurum { color: var(--muted); }
+  .kart__kod {
+    margin-left: auto; padding: 4px 12px; background: var(--accent); color: #fff; font-size: .8125rem; font-weight: 600;
+    clip-path: polygon(6px 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
+  }
+  .kart__kod b { font-variant-numeric: tabular-nums; letter-spacing: .04em; }
+
+  .kb__a { position: relative; display: block; }
+  .kb__a:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+  .kb__zoom {
+    position: absolute; right: 10px; bottom: 10px; padding: 6px 12px; background: rgba(0, 0, 0, .78); color: #fff;
+    font-size: .8125rem; font-weight: 700; opacity: 0; transition: opacity .3s;
+  }
+  .kart:hover .kb__zoom, .kb__a:focus-visible .kb__zoom { opacity: 1; }
+
+  /* the stamp comes down last */
+  .damga {
+    position: absolute; z-index: 4; left: -3%; bottom: 32%; pointer-events: none;
+    padding: 10px 20px 9px; border: 4px solid var(--accent); border-radius: 8px; background: rgba(255, 255, 255, .94);
+    color: var(--accent); text-align: center; line-height: .95;
+    font-style: italic; font-weight: 800; font-variation-settings: "wdth" 62; text-transform: uppercase; font-size: 2rem;
+    transform: rotate(-12deg); box-shadow: 0 10px 24px -10px rgba(0, 0, 0, .6);
+    animation: damga-bas .5s cubic-bezier(.3, 1.6, .5, 1) backwards; animation-delay: .62s;
+  }
+  /* with two cards the empty top-right corner takes it */
+  .pano__kartlar--2 .damga { left: auto; right: 3%; top: 2%; bottom: auto; }
+  .damga small { display: block; margin-top: 4px; font-style: normal; font-size: .6875rem; letter-spacing: .16em; font-variation-settings: normal; }
+  @keyframes kart-gel { from { opacity: 0; transform: translateY(80px) rotate(calc(var(--r) - 12deg)) scale(.94); } }
+  @keyframes damga-bas { from { opacity: 0; transform: rotate(-12deg) scale(2.4); } }
+
+  /* ---------- the viewer ---------- */
+  .lb { width: 100vw; height: 100svh; max-width: none; max-height: none; margin: 0; padding: 56px 16px 20px; border: 0; background: rgba(10, 10, 10, .94); color: #fff; }
+  .lb[open] { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
+  .lb::backdrop { background: rgba(0, 0, 0, .6); }
+  .lb__img { display: block; max-width: min(100%, 1600px); max-height: calc(100svh - 120px); width: auto; height: auto; object-fit: contain; background: #fff; }
+  .lb__cap { margin: 0; max-width: 70ch; text-align: center; font-size: .9375rem; color: rgba(255, 255, 255, .82); }
+  .lb form { position: absolute; top: 10px; right: 10px; margin: 0; }
+  .lb__kapat { width: 48px; height: 48px; border: 0; border-radius: 0; background: rgba(255, 255, 255, .12); color: #fff; font-size: 1.25rem; cursor: pointer; }
+  .lb__kapat:hover { background: var(--accent); }
+
+  /* ---------- facility certificate, as a seal ---------- */
+  .kt {
+    display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 56px calc(var(--margin) * 3); align-items: center;
+    padding: 150px var(--margin) 100px; overflow: hidden;
+  }
+  .kt__rozet { position: relative; isolation: isolate; width: min(100%, 480px); aspect-ratio: 1; justify-self: center; display: grid; place-items: center; }
+  .kt__rozet::before {
+    content: ""; position: absolute; z-index: -1; inset: -8% 20%;
+    background: var(--accent); clip-path: polygon(42% 0, 100% 0, 58% 100%, 0 100%);
+  }
+  .kt__halka { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; animation: kt-don 30s linear infinite; }
+  .kt__halka text { fill: var(--ink); font-size: 19px; font-weight: 800; font-style: italic; letter-spacing: .1em; }
+  .kt__a {
+    position: relative; display: block; width: 56%; -webkit-tap-highlight-color: transparent;
+    filter: drop-shadow(0 26px 30px rgba(0, 0, 0, .35));
+    animation: kt-sal 6s ease-in-out infinite;
+    transition: transform .5s cubic-bezier(.22, 1, .36, 1);
+  }
+  /* kept upright and unscaled at all times: a tilted or scaled badge is redrawn soft, and its small print blurs */
+  .kt__a:hover { transform: translateY(-8px); }
+  .kt__a:focus-visible { outline: 3px solid var(--ink); outline-offset: 6px; }
+  .kt__a img { display: block; width: 100%; height: auto; image-rendering: high-quality; }
+  @keyframes kt-don { to { rotate: 360deg; } }
+  @keyframes kt-sal { 50% { translate: 0 -12px; } }
+
+  .kt__ust { margin: 0 0 10px; font-size: .875rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+  .kt h2 { font-size: clamp(3.5rem, 8vw, 8rem); margin-bottom: 26px; }
+  .kt p { max-width: 44ch; }
+  .kt__eylem { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 26px; }
+  .kt__dogrula { display: inline-block; padding: 12px 0; font-weight: 700; color: inherit; text-underline-offset: 4px; }
+  .kt__dogrula:hover { color: var(--accent); }
+  .kt__adim { list-style: none; counter-reset: adim; margin: 6px 0 36px; padding: 0; display: grid; gap: 14px; }
+  .kt__adim li {
+    counter-increment: adim; display: grid; grid-template-columns: 52px minmax(0, 1fr); align-items: baseline;
+    font-size: clamp(1.0625rem, 1rem + .3vw, 1.25rem); font-weight: 600;
+  }
+  .kt__adim li::before {
+    content: "0" counter(adim); color: var(--accent); font-size: 1.875rem; line-height: 1;
+    font-style: italic; font-weight: 800; font-variation-settings: "wdth" 62;
+  }
+
+  /* ---------- closing band ---------- */
+  .k-cta { background: var(--accent); color: #fff; padding: calc(120px + 8vh) var(--margin) 120px; clip-path: polygon(0 8vh, 100% 0, 100% 100%, 0 100%); }
+  .k-cta h2 { font-size: clamp(3.5rem, 8vw, 8.5rem); margin-bottom: 24px; }
+  .k-cta p { max-width: 46ch; margin-bottom: 32px; }
+  .k-cta__actions { display: flex; flex-wrap: wrap; gap: 12px; }
+  .btn--ghost { background: rgba(0, 0, 0, .18); color: #fff; }
+  .btn--ghost:hover { background: rgba(0, 0, 0, .32); }
+
+  /* ---------- entrances (only when script runs) ---------- */
+  :global(.js) .k-hero__title .line > span { transform: translateY(105%); }
+  :global(.js) [data-rise] { opacity: 0; transform: translateY(22px); }
+  :global(.is-in) .k-hero__title .line > span, :global(.is-in) [data-rise] { opacity: 1; transform: none; transition: transform .8s var(--ease-out), opacity .8s; }
+
+  @media (max-width: 860px) {
+    .k-hero { grid-template-columns: 1fr; padding: 6vh var(--margin) 48px; }
+    .k-hero__title { font-size: 26vw; }
+    /* on a phone the same slanted strips stay side by side: tap or swipe to choose,
+       the chosen one widens into colour and its details appear underneath */
+    .k-ekip { --slant: 9vw; --seam: 6px; }
+    .trio { height: min(60svh, 520px); min-height: 360px; touch-action: pan-y; }
+    .trio__p.is-on { flex-grow: 2.4; }
+    .trio__p:active .trio__img { transform: scale(1.07); transition-duration: .2s; }
+    .trio__ad { font-size: 0; left: 0; bottom: 0; }
+    .trio__sec { padding: 0; background: none; }
+    .trio__p:has(.trio__sec:focus-visible) { outline-offset: -5px; }
+    .trio__p::after { content: ""; position: absolute; inset: 55% 0 0; z-index: -1; background: linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, .7)); }
+    .trio__kisa {
+      display: block; position: absolute; left: 12px; bottom: 16px;
+      writing-mode: vertical-rl; transform: rotate(180deg);
+      font-style: italic; font-weight: 800; font-variation-settings: "wdth" 62; text-transform: uppercase;
+      font-size: 1.625rem; line-height: 1; letter-spacing: -0.01em; color: #fff;
+      transition: opacity .3s;
+    }
+    .trio__p.is-on .trio__kisa, .trio__p.is-on::after { opacity: 0; }
+
+    .k-detay { padding-top: 28px; }
+    .k-detay__item { grid-template-columns: 1fr; gap: 0; }
+    .k-detay__item:not(.is-on) { display: none; }
+    .k-detay__ad { font-size: 15vw; }
+    .k-detay__unvan { margin-bottom: 18px; }
+    .k-detay .btn { min-height: 54px; padding: 0 24px; }
+
+    .kb { margin-top: 96px; padding: calc(72px + 8vw) var(--margin) 96px; clip-path: polygon(0 8vw, 100% 0, 100% 100%, 0 100%); }
+    .pano__kartlar::before { top: -6%; bottom: -8%; left: 14%; width: 72%; }
+    .kb__head { grid-template-columns: 1fr; }
+    .kb h2 { font-size: 19vw; }
+    /* the coach chips scroll sideways in one row */
+    :global(.js) .kb__sekme {
+      flex-wrap: nowrap; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
+      margin: 36px calc(var(--margin) * -1) 44px; padding: 4px var(--margin);
+    }
+    .kb__tab { flex: none; scroll-snap-align: start; grid-template-columns: 44px auto; padding-right: 20px; }
+    .kb__av { width: 44px; height: 44px; }
+    .kb__tab-ad { font-size: 1.125rem; }
+    .pano { grid-template-columns: 1fr; gap: 44px; }
+    .polaroid { --r: -3deg; width: 64%; justify-self: center; }
+    .pano__kartlar { gap: 40px; padding-bottom: 40px; }
+    .kart, .pano__kartlar--2 .kart { --r: 1.5deg; grid-area: auto; width: 100%; margin-top: 0; justify-self: stretch; }
+    .pano__kartlar--2 .kart:nth-of-type(1) { --r: -1.5deg; }
+    .kb__zoom { opacity: 1; }
+    .kart__kod { margin-left: 0; }
+    .damga, .pano__kartlar--2 .damga { font-size: 1.375rem; left: auto; top: auto; right: 6px; bottom: 0; }
+    .lb { padding: 64px 8px 16px; }
+
+    .kt { grid-template-columns: 1fr; gap: 48px; padding: 96px var(--margin) 80px; }
+    .kt__rozet { width: min(82vw, 400px); }
+    .kt h2 { font-size: 17vw; }
+    .k-cta { padding: calc(96px + 6vh) var(--margin) 96px; }
+  }
+</style>
+
+<script>
+import { animate, stagger, inView } from 'motion';
+window.__motion = true;
+{
+  const ease = [0.22, 1, 0.36, 1];
+  // one orchestrated entrance: the word rises, then the panels slide up in turn
+  animate('.k-hero__title .line > span', { y: ['105%', '0%'] }, { type: 'spring', stiffness: 140, damping: 20 });
+  animate('.k-hero [data-rise]', { opacity: [0, 1], y: [22, 0] }, { duration: 0.7, ease, delay: 0.25 });
+  animate('.trio__p', { opacity: [0, 1], y: [60, 0] }, { type: 'spring', stiffness: 120, damping: 20, delay: stagger(0.1, { startDelay: 0.3 }) });
+  document.querySelectorAll('.kb__head, .kt, .k-cta').forEach(block => {
+    inView(block, () => {
+      animate(block.querySelectorAll('[data-rise]'), { opacity: [0, 1], y: [22, 0] }, { duration: 0.7, ease, delay: stagger(0.08, { startDelay: 0.1 }) });
+    }, { amount: 0.2 });
+  });
+}
+</script>
+<script is:inline>
+setTimeout(() => { if (!window.__motion) document.body.classList.add('is-in'); }, 1500);
+
+// choosing a coach: pointing at a panel, tabbing to it or tapping it widens it and shows their details underneath
+(() => {
+  const panels = [...document.querySelectorAll('.trio__p')];
+  const details = [...document.querySelectorAll('.k-detay__item')];
+  const choose = p => {
+    if (p.classList.contains('is-on')) return;
+    panels.forEach((x, i) => {
+      const on = x === p;
+      x.classList.toggle('is-on', on);
+      x.querySelector('.trio__sec').setAttribute('aria-expanded', String(on));
+      details[i]?.classList.toggle('is-on', on);
+    });
+  };
+  // a sideways swipe across the strips moves to the next or previous coach
+  const trio = document.querySelector('.trio');
+  let x0 = null, y0 = null;
+  trio.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+  trio.addEventListener('touchend', e => {
+    if (x0 === null) return;
+    const dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0;
+    x0 = null;
+    if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) return;
+    const cur = panels.findIndex(x => x.classList.contains('is-on'));
+    const next = Math.max(0, Math.min(panels.length - 1, cur + (dx < 0 ? 1 : -1)));
+    choose(panels[next]);
+  }, { passive: true });
+  panels.forEach(p => {
+    p.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') choose(p); });
+    p.addEventListener('click', () => choose(p));
+    p.addEventListener('focusin', () => choose(p));
+  });
+})();
+
+// the certificate wall: one coach's board at a time, chosen with the chips (arrow keys move between them);
+// "Belgelerini gör" links and #belge-<id> addresses open that coach's board
+(() => {
+  const tabs = [...document.querySelectorAll('.kb__tab')];
+  const wall = document.getElementById('belgelerimiz');
+  if (!tabs.length || !wall) return;
+  // a board's pictures start loading as soon as its chip is pointed at or chosen, not when the lazy loader gets round to it
+  const warm = id => document.querySelectorAll(`#belge-${id} img[loading="lazy"]`).forEach(i => { i.loading = 'eager'; });
+  tabs.forEach(t => t.addEventListener('pointerenter', () => warm(t.dataset.id), { once: true }));
+  const select = (id, focus) => {
+    warm(id);
+    tabs.forEach(t => {
+      const on = t.dataset.id === id;
+      t.setAttribute('aria-selected', String(on));
+      t.tabIndex = on ? 0 : -1;
+      if (on && focus) t.focus();
+    });
+    wall.querySelectorAll('.pano').forEach(p => p.classList.toggle('is-on', p.id === `belge-${id}`));
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => select(t.dataset.id));
+    t.addEventListener('keydown', e => {
+      const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+      if (!d) return;
+      e.preventDefault();
+      select(tabs[(i + d + tabs.length) % tabs.length].dataset.id, true);
+    });
+  });
+  const fromHash = h => {
+    const m = /^#belge-(.+)$/.exec(h || '');
+    if (!m || !tabs.some(t => t.dataset.id === m[1])) return false;
+    select(m[1]);
+    return true;
+  };
+  document.querySelectorAll('a[href^="#belge-"]').forEach(a => a.addEventListener('click', e => {
+    const h = a.getAttribute('href');
+    if (!fromHash(h)) return;
+    e.preventDefault();
+    history.replaceState(null, '', h);
+    document.querySelector(h).scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }));
+  if (fromHash(location.hash)) document.querySelector(location.hash).scrollIntoView({ block: 'start' });
+})();
+
+// the viewer: a certificate or photo opens at full resolution; without script the link opens the image itself
+(() => {
+  const lb = document.getElementById('lb');
+  if (!lb || typeof lb.showModal !== 'function') return;
+  const img = lb.querySelector('.lb__img'), cap = lb.querySelector('.lb__cap');
+  document.querySelectorAll('[data-lb]').forEach(a => a.addEventListener('click', e => {
+    e.preventDefault();
+    img.src = a.href; img.width = +a.dataset.w; img.height = +a.dataset.h;
+    img.alt = a.querySelector('img')?.alt || '';
+    cap.textContent = a.dataset.cap || '';
+    lb.showModal();
+  }));
+  // a tap outside the picture closes it
+  lb.addEventListener('click', e => { if (e.target === lb) lb.close(); });
+  lb.addEventListener('close', () => { img.removeAttribute('src'); });
+})();
+</script>

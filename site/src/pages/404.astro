@@ -77,17 +77,12 @@ import { menu } from '../data/seo';
     .n-hero__title { font-size: 17vw; }
     .n-hero__list { grid-template-columns: 1fr; }
   }
-  @media (prefers-reduced-motion: reduce) {
-    .n-hero__fig :global(.bf__pad) { animation: none; }
-    :global(.js) .n-hero__title .line > span { transform: none; }
-  }
 </style>
 
 <script>
 import { animate, stagger } from 'motion';
 window.__motion = true;
-if (matchMedia('(prefers-reduced-motion: reduce)').matches) document.body.classList.add('is-in');
-else {
+{
   animate('.n-hero__title .line > span', { y: ['105%', '0%'] }, { type: 'spring', stiffness: 140, damping: 20, delay: stagger(0.09) });
   animate('.n-hero__band', { x: ['40%', '0%'] }, { duration: 1.1, ease: [0.22, 1, 0.36, 1] });
 }

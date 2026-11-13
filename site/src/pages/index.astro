@@ -5,7 +5,7 @@ import WhatsAppIcon from '../components/WhatsAppIcon.astro';
 import BolgeFigur from '../components/BolgeFigur.astro';
 import { isletme, whatsappLinki, tamAdres, yolTarifiLinki } from '../data/isletme';
 import { hizmetler, calismaBolgeleri as bolgeler } from '../data/hizmetler';
-import { ekip, ekipYayinda } from '../data/ekip';
+import { ekip, ekipYayinda, hocaSayisiYazi } from '../data/ekip';
 import { galeri, mekanYayinda } from '../data/mekan';
 import { yazilar, tarihYaz } from '../data/blog';
 import '../styles/home.css';
@@ -225,15 +225,15 @@ const serit = [...seritSirasi.map(id => kisaAd(hizmetler.find(h => h.id === id)!
   <section class="ht" aria-labelledby="ht-baslik">
     <div class="ht__text">
       <h2 class="hs-h2" id="ht-baslik" data-rise>Seansını hocan yönetir</h2>
-      <p data-rise>{isletme.adres.ilce}'daki stüdyomuzda seanslarını üç hoca yönetir. Onları tanı, hangisiyle çalışacağını seç.</p>
+      <p data-rise>{isletme.adres.ilce}'daki stüdyomuzda seanslarını {hocaSayisiYazi} hoca yönetir. Onları tanı, hangisiyle çalışacağını seç.</p>
       <a class="btn btn--light" href="/ekibimiz" data-rise>Ekibimizi tanı</a>
     </div>
     <div class="ht__serit" data-serit>
       <ul class="serit">
         {ekip.map((h, i) => (
           <li class:list={['serit__p', { 'is-on': i === 0 }]}>
-            <img src={`/img/ekip/${h.id}-1200.webp`} alt="" width="1200" height="1600" loading="lazy" decoding="async" style={`object-position:${h.odak}`}>
-            <span class="serit__kisa" aria-hidden="true">{h.ad ? h.ad.split(' ')[0] : 'Yakında'}</span>
+            <img src={`/img/ekip/${h.id}-720.webp`} alt="" width={h.fotoGenislik} height={h.fotoYukseklik} loading="lazy" decoding="async" style={`object-position:${h.odak}`}>
+            <span class="serit__kisa" aria-hidden="true">{h.kisaAd}</span>
             <button class="serit__sec" type="button" aria-pressed={i === 0 ? 'true' : 'false'}>{h.ad || 'Yakında'}</button>
           </li>
         ))}
@@ -385,9 +385,8 @@ document.querySelectorAll('[data-serit]').forEach(grup => {
   const v = document.querySelector('.stage__video');
   const narrow = matchMedia('(max-width: 860px)').matches;
   v.poster = narrow ? v.dataset.posterNarrow : v.dataset.posterWide;
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const saver = navigator.connection && navigator.connection.saveData;
-  if (reduce || saver) return;
+  if (saver) return;
   v.src = narrow ? v.dataset.srcNarrow : v.dataset.srcWide;
   v.play().catch(() => {});
 })();
@@ -440,25 +439,18 @@ document.querySelectorAll('.goal').forEach(btn => {
 import { animate, stagger, press, inView } from 'motion';
 
 window.__motion = true;
-const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const ease = [0.22, 1, 0.36, 1];
 const tap = { type: 'spring', stiffness: 400, damping: 20 };
 
-// the first screen animates in plain CSS (home.css); with reduced motion the rest simply shows
-if (reduce) document.body.classList.add('is-in');
-
 // the sections after the story: heading, then text, then the rest, once each comes into view
-if (!reduce) {
-  document.querySelectorAll('.hs > section').forEach(block => {
-    inView(block, () => {
-      animate(block.querySelectorAll('[data-rise]'), { opacity: [0, 1], y: [24, 0] }, { duration: 0.7, ease, delay: stagger(0.07, { startDelay: 0.05 }) });
-    }, { amount: 0.15 });
-  });
-} else document.querySelectorAll('.hs [data-rise]').forEach(el => { el.style.opacity = '1'; el.style.transform = 'none'; });
+document.querySelectorAll('.hs > section').forEach(block => {
+  inView(block, () => {
+    animate(block.querySelectorAll('[data-rise]'), { opacity: [0, 1], y: [24, 0] }, { duration: 0.7, ease, delay: stagger(0.07, { startDelay: 0.05 }) });
+  }, { amount: 0.15 });
+});
 
 // choosing a goal sends an impulse through the figure
 document.addEventListener('goal:change', () => {
-  if (reduce) return;
   animate('#rig', { x: [0, -3, 3, -2, 1, 0] }, { duration: 0.35 });
   animate('#pads-front .pad.is-on .pad__body', { scale: [1, 1.22, 1] }, { duration: 0.45, ease, delay: stagger(0.03) });
 });
@@ -467,7 +459,6 @@ document.addEventListener('goal:change', () => {
 // EMS story: the figure is rebuilt from joint positions on every animation frame
 
 const section = document.getElementById('ems-nedir');
-const reduceStory = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const svgNS = 'http://www.w3.org/2000/svg';
 const $ = id => document.getElementById(id);
 const rig = $('rig');
@@ -620,145 +611,141 @@ function render(p) {
 
 }
 
-if (reduceStory) {
-  render(.31);                 // dressed, pads on, standing; text stays as a plain list
-} else {
-  section.classList.add('story--live');
-  let ems3d = null, lastP = 0;
-  render(0);
-  // the steps move sideways (swipe, drag, trackpad, arrow keys or the buttons); each step then plays out
-  // on its own, card by card: the figure dresses itself, the pads go on, it turns, it squats; never left half-way
-  const bar = [...section.querySelectorAll('.story__bar span')];
-  const pin = section.querySelector('.story__pin');
-  const nav = section.querySelector('.story__nav');
-  const count = nav.querySelector('.story__count b');
-  const [prev, next] = nav.querySelectorAll('.story__arrow');
-  // the two squats (progress .78–.93) keep their own tempo, about 1.4 s each, but only on the squat step itself;
-  // passing through it the figure skips them (it stands at both ends), so it never trails behind the cards
-  const SQUAT = [.78, .93], SQUAT_MS = 2900, STAND = [.78, .855, .93];
-  const move = d => Math.min(1500, 650 + Math.abs(d) * 1800);
-  const squatMs = d => Math.abs(d) / (SQUAT[1] - SQUAT[0]) * SQUAT_MS;
-  let tween = 0;
-  const playTo = target => {
-    cancelAnimationFrame(tween);
-    const legs = [];
-    let from = lastP;
-    const add = (to, dur, even) => { if (Math.abs(to - from) > 1e-4) legs.push({ from, d: to - from, dur, even }); from = to; };
-    const up = target > from;
-    if (up && target === SQUAT[1]) {
-      if (from < SQUAT[0]) add(SQUAT[0], move(SQUAT[0] - from));
-      add(SQUAT[1], squatMs(SQUAT[1] - from), true);
-    } else {
-      // caught mid-squat by the next step: stand up quickly first
-      if (from > SQUAT[0] + 1e-4 && from < SQUAT[1] - 1e-4) {
-        const stand = up ? STAND.find(v => v > from) : STAND.findLast(v => v < from);
-        add(stand, squatMs(stand - from) * .4, true);
-      }
-      if (up ? from < SQUAT[1] && target > SQUAT[1] : from > SQUAT[0] && target < SQUAT[0]) {
-        const [enter, leave] = up ? SQUAT : [SQUAT[1], SQUAT[0]];
-        if (up ? from < enter : from > enter) add(enter, move(enter - from));
-        from = leave;
-      }
-      add(target, move(target - from));
+section.classList.add('story--live');
+let ems3d = null, lastP = 0;
+render(0);
+// the steps move sideways (swipe, drag, trackpad, arrow keys or the buttons); each step then plays out
+// on its own, card by card: the figure dresses itself, the pads go on, it turns, it squats; never left half-way
+const bar = [...section.querySelectorAll('.story__bar span')];
+const pin = section.querySelector('.story__pin');
+const nav = section.querySelector('.story__nav');
+const count = nav.querySelector('.story__count b');
+const [prev, next] = nav.querySelectorAll('.story__arrow');
+// the two squats (progress .78–.93) keep their own tempo, about 1.4 s each, but only on the squat step itself;
+// passing through it the figure skips them (it stands at both ends), so it never trails behind the cards
+const SQUAT = [.78, .93], SQUAT_MS = 2900, STAND = [.78, .855, .93];
+const move = d => Math.min(1500, 650 + Math.abs(d) * 1800);
+const squatMs = d => Math.abs(d) / (SQUAT[1] - SQUAT[0]) * SQUAT_MS;
+let tween = 0;
+const playTo = target => {
+  cancelAnimationFrame(tween);
+  const legs = [];
+  let from = lastP;
+  const add = (to, dur, even) => { if (Math.abs(to - from) > 1e-4) legs.push({ from, d: to - from, dur, even }); from = to; };
+  const up = target > from;
+  if (up && target === SQUAT[1]) {
+    if (from < SQUAT[0]) add(SQUAT[0], move(SQUAT[0] - from));
+    add(SQUAT[1], squatMs(SQUAT[1] - from), true);
+  } else {
+    // caught mid-squat by the next step: stand up quickly first
+    if (from > SQUAT[0] + 1e-4 && from < SQUAT[1] - 1e-4) {
+      const stand = up ? STAND.find(v => v > from) : STAND.findLast(v => v < from);
+      add(stand, squatMs(stand - from) * .4, true);
     }
-    if (!legs.length) return;
-    let leg = 0, t0 = performance.now();
-    const frame = now => {
-      const L = legs[leg];
-      const k = clamp((now - t0) / L.dur);
-      // the squat itself already slows at the bottom and top, so its leg runs at even speed
-      const e = L.even ? k : -(Math.cos(Math.PI * k) - 1) / 2;
-      lastP = L.from + L.d * e;
-      render(lastP);
-      if (ems3d) ems3d.setProgress(lastP);
-      if (k >= 1) { leg++; t0 = now; }
-      if (leg < legs.length) tween = requestAnimationFrame(frame);
-    };
-    tween = requestAnimationFrame(frame);
-  };
-  const go = i => {
-    const idx = clamp(i, 0, steps.length - 1);
-    if (idx === current) return;
-    if (current >= 0) nav.classList.add('is-used');
-    current = idx;
-    steps.forEach((el, j) => { el.classList.toggle('is-active', j === idx); el.classList.toggle('is-past', j < idx); });
-    bar.forEach((b, j) => b.classList.toggle('is-on', j <= idx));
-    count.textContent = idx + 1;
-    prev.disabled = idx === 0;
-    next.disabled = idx === steps.length - 1;
-    // each card plays only its own move: the figure jumps to where the card before it ends,
-    // so moves that were skipped (fast taps) or are being left (going back) are never replayed at speed
-    const start = idx ? anchors[idx - 1] : 0;
-    if (Math.abs(lastP - start) > 1e-4) {
-      cancelAnimationFrame(tween);
-      lastP = start;
-      render(start);
-      if (ems3d) ems3d.setProgress(start);
+    if (up ? from < SQUAT[1] && target > SQUAT[1] : from > SQUAT[0] && target < SQUAT[0]) {
+      const [enter, leave] = up ? SQUAT : [SQUAT[1], SQUAT[0]];
+      if (up ? from < enter : from > enter) add(enter, move(enter - from));
+      from = leave;
     }
-    playTo(anchors[idx]);
-  };
-  section.classList.add('story--stack');
-  nav.hidden = false;
-  prev.disabled = true;
-  // the first card comes in once the stage is mostly on screen; until then the figure waits undressed
-  new IntersectionObserver(([e]) => { if (e.isIntersecting && current < 0) go(0); }, { threshold: .5 }).observe(pin);
-
-  prev.addEventListener('click', () => go(current - 1));
-  next.addEventListener('click', () => go(current + 1));
-  bar.forEach((b, j) => b.addEventListener('click', () => go(j)));
-  section.addEventListener('keydown', e => {
-    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); go(current + (e.key === 'ArrowRight' ? 1 : -1)); }
-  });
-  // swipe on phones, drag with the mouse; vertical page scrolling stays untouched (touch-action: pan-y)
-  let sx = null, sy = 0;
-  pin.addEventListener('pointerdown', e => { if (e.button === 0 && !e.target.closest('a, button, [popover]')) { sx = e.clientX; sy = e.clientY; } });
-  pin.addEventListener('pointerup', e => {
-    if (sx === null) return;
-    const dx = e.clientX - sx, dy = e.clientY - sy;
-    sx = null;
-    if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.2) go(current + (dx < 0 ? 1 : -1));
-  });
-  pin.addEventListener('pointercancel', () => { sx = null; });
-  // two-finger sideways swipe on a trackpad: one step per gesture (the momentum tail is swallowed), no browser back-swipe
-  let acc = 0, lock = 0;
-  pin.addEventListener('wheel', e => {
-    if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
-    e.preventDefault();
-    const now = performance.now();
-    if (now < lock) { lock = now + 220; return; }
-    acc += e.deltaX;
-    if (Math.abs(acc) > 40) { go(current + Math.sign(acc)); acc = 0; lock = now + 500; }
-  }, { passive: false });
-
-  // the 3D mannequin loads only when the story is near, and never before the page has finished loading
-  // and gone quiet, so it cannot hold up the first screen; the SVG figure stays as the fallback
-  const holder = $('ems-3d');
-  const settled = new Promise(r => {
-    const idle = () => ('requestIdleCallback' in window ? requestIdleCallback(() => r(), { timeout: 800 }) : setTimeout(r, 200));
-    if (document.readyState === 'complete') idle(); else addEventListener('load', idle, { once: true });
-  });
-  const gl = 'WebGL2RenderingContext' in window;
-  if (gl) {
-    let started = false;
-    new IntersectionObserver(async ([e]) => {
-      if (ems3d) ems3d.setActive(e.isIntersecting);
-      if (!e.isIntersecting || started) return;
-      started = true;
-      try {
-        await settled;
-        const { createEms3D } = await import('../scripts/ems3d.js');
-        ems3d = await createEms3D(holder, { modelUrl: '/model/ems-manken.glb', seatsUrl: '/model/ems-pedler.json' });
-        ems3d.setProgress(lastP);
-        holder.parentElement.classList.add('is-3d');
-        holder.parentElement.classList.remove('is-3d-wait');
-        document.addEventListener('goal:change', ev => ems3d.setGoal(ev.detail));
-      } catch (err) {
-        // 3D failed: bring the drawn figure back
-        holder.parentElement.classList.remove('is-3d-wait');
-        console.warn('3D figür yüklenemedi, çizim kullanılıyor', err);
-      }
-    }, { rootMargin: '600px 0px' }).observe(section);
+    add(target, move(target - from));
   }
+  if (!legs.length) return;
+  let leg = 0, t0 = performance.now();
+  const frame = now => {
+    const L = legs[leg];
+    const k = clamp((now - t0) / L.dur);
+    // the squat itself already slows at the bottom and top, so its leg runs at even speed
+    const e = L.even ? k : -(Math.cos(Math.PI * k) - 1) / 2;
+    lastP = L.from + L.d * e;
+    render(lastP);
+    if (ems3d) ems3d.setProgress(lastP);
+    if (k >= 1) { leg++; t0 = now; }
+    if (leg < legs.length) tween = requestAnimationFrame(frame);
+  };
+  tween = requestAnimationFrame(frame);
+};
+const go = i => {
+  const idx = clamp(i, 0, steps.length - 1);
+  if (idx === current) return;
+  if (current >= 0) nav.classList.add('is-used');
+  current = idx;
+  steps.forEach((el, j) => { el.classList.toggle('is-active', j === idx); el.classList.toggle('is-past', j < idx); });
+  bar.forEach((b, j) => b.classList.toggle('is-on', j <= idx));
+  count.textContent = idx + 1;
+  prev.disabled = idx === 0;
+  next.disabled = idx === steps.length - 1;
+  // each card plays only its own move: the figure jumps to where the card before it ends,
+  // so moves that were skipped (fast taps) or are being left (going back) are never replayed at speed
+  const start = idx ? anchors[idx - 1] : 0;
+  if (Math.abs(lastP - start) > 1e-4) {
+    cancelAnimationFrame(tween);
+    lastP = start;
+    render(start);
+    if (ems3d) ems3d.setProgress(start);
+  }
+  playTo(anchors[idx]);
+};
+section.classList.add('story--stack');
+nav.hidden = false;
+prev.disabled = true;
+// the first card comes in once the stage is mostly on screen; until then the figure waits undressed
+new IntersectionObserver(([e]) => { if (e.isIntersecting && current < 0) go(0); }, { threshold: .5 }).observe(pin);
+
+prev.addEventListener('click', () => go(current - 1));
+next.addEventListener('click', () => go(current + 1));
+bar.forEach((b, j) => b.addEventListener('click', () => go(j)));
+section.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); go(current + (e.key === 'ArrowRight' ? 1 : -1)); }
+});
+// swipe on phones, drag with the mouse; vertical page scrolling stays untouched (touch-action: pan-y)
+let sx = null, sy = 0;
+pin.addEventListener('pointerdown', e => { if (e.button === 0 && !e.target.closest('a, button, [popover]')) { sx = e.clientX; sy = e.clientY; } });
+pin.addEventListener('pointerup', e => {
+  if (sx === null) return;
+  const dx = e.clientX - sx, dy = e.clientY - sy;
+  sx = null;
+  if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.2) go(current + (dx < 0 ? 1 : -1));
+});
+pin.addEventListener('pointercancel', () => { sx = null; });
+// two-finger sideways swipe on a trackpad: one step per gesture (the momentum tail is swallowed), no browser back-swipe
+let acc = 0, lock = 0;
+pin.addEventListener('wheel', e => {
+  if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+  e.preventDefault();
+  const now = performance.now();
+  if (now < lock) { lock = now + 220; return; }
+  acc += e.deltaX;
+  if (Math.abs(acc) > 40) { go(current + Math.sign(acc)); acc = 0; lock = now + 500; }
+}, { passive: false });
+
+// the 3D mannequin loads only when the story is near, and never before the page has finished loading
+// and gone quiet, so it cannot hold up the first screen; the SVG figure stays as the fallback
+const holder = $('ems-3d');
+const settled = new Promise(r => {
+  const idle = () => ('requestIdleCallback' in window ? requestIdleCallback(() => r(), { timeout: 800 }) : setTimeout(r, 200));
+  if (document.readyState === 'complete') idle(); else addEventListener('load', idle, { once: true });
+});
+const gl = 'WebGL2RenderingContext' in window;
+if (gl) {
+  let started = false;
+  new IntersectionObserver(async ([e]) => {
+    if (ems3d) ems3d.setActive(e.isIntersecting);
+    if (!e.isIntersecting || started) return;
+    started = true;
+    try {
+      await settled;
+      const { createEms3D } = await import('../scripts/ems3d.js');
+      ems3d = await createEms3D(holder, { modelUrl: '/model/ems-manken.glb', seatsUrl: '/model/ems-pedler.json' });
+      ems3d.setProgress(lastP);
+      holder.parentElement.classList.add('is-3d');
+      holder.parentElement.classList.remove('is-3d-wait');
+      document.addEventListener('goal:change', ev => ems3d.setGoal(ev.detail));
+    } catch (err) {
+      // 3D failed: bring the drawn figure back
+      holder.parentElement.classList.remove('is-3d-wait');
+      console.warn('3D figür yüklenemedi, çizim kullanılıyor', err);
+    }
+  }, { rootMargin: '600px 0px' }).observe(section);
 }
 </script>
 </Base>

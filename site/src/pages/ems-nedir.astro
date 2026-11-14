@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Nav from '../components/Nav.astro';
 import WhatsAppIcon from '../components/WhatsAppIcon.astro';
+import YaziLinki from '../components/YaziLinki.astro';
 import { isletme, whatsappLinki } from '../data/isletme';
 import { seansAkisi, sss } from '../data/sss';
 
@@ -65,6 +66,7 @@ const sssVerisi = {
       <h2 id="uyari-baslik" data-rise>Uyarı nereden gelir?</h2>
       <p data-rise>Kasların, beyinden sinirler yoluyla gelen elektrik sinyaliyle kasılır. EMS bu sinyale dışarıdan destek verir: cihaz, kıyafetteki pedler üzerinden kaslara hafif bir uyarı gönderir.</p>
       <p data-rise>Sen hareket ederken kas hem kendi sinyalini hem pedden gelen uyarıyı alır. Basit bir squat bile böylece daha yoğun bir çalışmaya dönüşür.</p>
+      <div data-rise><YaziLinki yazi="ems-mi-klasik-antrenman-mi" /></div>
     </div>
     <div class="sig__fig" data-rise>
       <p class="sig__label">Her harekette</p>
@@ -88,6 +90,7 @@ const sssVerisi = {
       <h2 id="tarih-baslik" data-rise>Yeni bir fikir değil</h2>
       <p data-rise>1862'de Fransız hekim Duchenne de Boulogne, ciltten verdiği elektrikle yüz kaslarını tek tek kasıp fotoğrafladı.</p>
       <p data-rise>Bugünkü EMS cihazları aynı ilkeyle çalışır: uyarı ciltteki pedden kasa ulaşır. Fark, bugün bütün büyük kas gruplarının aynı anda ve kontrollü bir şiddetle çalışması.</p>
+      <div data-rise><YaziLinki yazi="ems-hakkinda-yanlis-bilinenler" /></div>
     </div>
   </section>
 
@@ -107,6 +110,7 @@ const sssVerisi = {
           </li>
         ))}
       </ol>
+      <div data-rise><YaziLinki yazi="ilk-ems-seansina-hazirlik" /></div>
     </div>
   </section>
 

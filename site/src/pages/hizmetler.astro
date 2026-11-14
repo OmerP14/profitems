@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import Nav from '../components/Nav.astro';
 import WhatsAppIcon from '../components/WhatsAppIcon.astro';
 import BolgeFigur from '../components/BolgeFigur.astro';
+import YaziLinki from '../components/YaziLinki.astro';
 import { isletme, whatsappLinki } from '../data/isletme';
 import { hizmetler } from '../data/hizmetler';
 
@@ -72,6 +73,7 @@ const hizmetVerisi = Astro.site ? {
         <div class="zones__fig"><BolgeFigur zones={zay.bolge} etiket={`${zay.ad} için çalışan bölgeler`} /></div>
         <p><strong>Çalışan bölgeler</strong>{zay.bolgeler}</p>
       </div>
+      <div data-rise><YaziLinki yazi="ems-ile-zayiflama" /></div>
     </div>
   </section>
 
@@ -111,6 +113,7 @@ const hizmetVerisi = Astro.site ? {
         <div class="zones__fig"><BolgeFigur zones={kas.bolge} etiket={`${kas.ad} için çalışan bölgeler`} /></div>
         <p><strong>Çalışan bölgeler</strong>{kas.bolgeler}</p>
       </div>
+      <div data-rise><YaziLinki yazi="ems-mi-klasik-antrenman-mi" /></div>
     </div>
   </section>
 
@@ -124,6 +127,7 @@ const hizmetVerisi = Astro.site ? {
         <div class="zones__fig"><BolgeFigur zones={bel.bolge} koyu etiket={`${bel.ad} için çalışan bölgeler`} /></div>
         <p><strong>Çalışan bölgeler</strong>{bel.bolgeler}</p>
       </div>
+      <div data-rise><YaziLinki yazi="bel-agrisi-ve-ems" koyu /></div>
     </div>
   </section>
 

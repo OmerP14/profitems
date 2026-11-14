@@ -1,0 +1,39 @@
+---
+// A small link from a page section to the blog post on the same subject: the logo's slash, then the post's title.
+// The title comes from the post itself; a post marked as a draft (or removed) shows no link.
+import { getEntry } from 'astro:content';
+
+interface Props { yazi: string; koyu?: boolean }
+const { yazi, koyu = false } = Astro.props;
+const entry = await getEntry('blog', yazi);
+const goster = entry && !(import.meta.env.PROD && entry.data.taslak);
+---
+{goster && (
+  <a class:list={['yazi', { 'yazi--koyu': koyu }]} href={`/blog/${entry.id}`}>
+    <span class="yazi__on">Blogda oku</span>
+    <span class="yazi__ad">{entry.data.baslik}</span>
+  </a>
+)}
+
+<style>
+  .yazi {
+    display: inline-grid; grid-template-columns: 26px auto; column-gap: 14px; align-items: center;
+    margin-top: 28px; padding: 4px 0; text-decoration: none; color: var(--ink);
+    transition: transform .25s var(--ease-out);
+  }
+  .yazi::before {
+    content: ""; grid-row: span 2; width: 26px; height: 10px; background: var(--accent);
+    clip-path: polygon(30% 0, 100% 0, 70% 100%, 0 100%); transition: width .25s var(--ease-out);
+  }
+  .yazi__on { font-size: var(--step-small); font-weight: 600; color: var(--muted); }
+  .yazi__ad {
+    font-size: clamp(1.0625rem, 1rem + .25vw, 1.25rem); font-weight: 700; line-height: 1.25;
+    text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px;
+    transition: color .2s;
+  }
+  .yazi:hover { transform: translateX(6px); }
+  .yazi:hover .yazi__ad { color: var(--accent-deep); }
+  .yazi--koyu { color: #fff; }
+  .yazi--koyu .yazi__on { color: var(--on-dark-muted); }
+  .yazi--koyu:hover .yazi__ad { color: #fff; text-decoration-thickness: 2px; }
+</style>
